@@ -2,226 +2,205 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f7f8fc">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#f8fafc">
 <title>Thời khóa biểu · Cao đẳng Y tế Hà Tĩnh</title>
 <style>
-:root{
-  color-scheme:light;
-  --bg:#f7f8fc;
-  --surface:#ffffff;
-  --surface-2:#fbfcfe;
-  --line:#e6eaf2;
-  --line-strong:#d7ddea;
-  --text:#0f172a;
-  --text-2:#334155;
-  --muted:#64748b;
-  --muted-2:#94a3b8;
-  --primary:#4f6ef7;
-  --primary-2:#7c5cff;
-  --cyan:#06b6d4;
-  --green:#10b981;
-  --amber:#f59e0b;
-  --red:#ef4444;
-  --shadow-sm:0 1px 2px rgba(15,23,42,.04),0 1px 3px rgba(15,23,42,.06);
-  --shadow-md:0 4px 12px rgba(15,23,42,.06),0 2px 4px rgba(15,23,42,.04);
-  --shadow-lg:0 20px 40px -12px rgba(15,23,42,.12),0 8px 16px -8px rgba(15,23,42,.08);
-  --r-sm:10px;
-  --r-md:14px;
-  --r-lg:20px;
+:root {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --primary: #3b82f6;
+  --primary-bg: #eff6ff;
+  --line: #e2e8f0;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
 }
-*{box-sizing:border-box}
-body{
-  margin:0;min-height:100vh;
-  font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(800px 400px at 0% 0%, rgba(79,110,247,.06), transparent 60%),
-    radial-gradient(700px 400px at 100% 0%, rgba(124,92,255,.05), transparent 60%),
-    var(--bg);
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
 }
-.wrap{max-width:1120px;margin:auto;padding:36px 20px 72px}
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
 
 /* ===== HEADER ===== */
-.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;margin-bottom:28px}
-.eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--primary);
+.hero { margin-bottom: 24px; }
+.hero h1 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 6px;
+  color: #0f172a;
 }
-.eyebrow::before{content:"";width:20px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--primary),var(--primary-2))}
-.hero h1{
-  font-size:clamp(32px,5vw,48px);line-height:1.02;letter-spacing:-.04em;margin:12px 0 10px;
-  background:linear-gradient(110deg,#0f172a 0%,#1e293b 40%,#4f6ef7 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
+.sub { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; }
+.status {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 500; color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
 }
-.sub{color:var(--muted);margin:0;font-size:14.5px;max-width:520px}
-.status{
-  display:inline-flex;align-items:center;gap:10px;
-  padding:10px 16px;border-radius:999px;
-  background:var(--surface);border:1px solid var(--line);
-  box-shadow:var(--shadow-sm);
-  color:var(--text-2);font-size:12.5px;font-weight:600;white-space:nowrap;
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+.dot.bad { background: #ef4444; }
+.spinner {
+  display: inline-block; width: 12px; height: 12px;
+  border: 2px solid #e2e8f0; border-top-color: var(--primary);
+  border-radius: 50%; animation: spin .7s linear infinite; vertical-align: -2px; margin-right: 6px;
 }
-.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(16,185,129,.15);flex:none}
-.dot.bad{background:var(--red);box-shadow:0 0 0 4px rgba(239,68,68,.15)}
-.spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(15,23,42,.15);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* ===== PANEL ===== */
-.panel{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:var(--r-lg);
-  padding:22px;
-  box-shadow:var(--shadow-lg);
+/* ===== CONTROL PANEL ===== */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
 }
-.toolbar{display:grid;grid-template-columns:1.1fr 1.3fr auto auto;gap:12px;align-items:end}
-.field label{display:block;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;margin:0 0 7px 3px}
-.field input{
-  width:100%;min-width:0;
-  background:var(--surface-2);color:var(--text);
-  border:1px solid var(--line-strong);border-radius:var(--r-sm);
-  padding:12px 14px;font:inherit;outline:none;transition:.16s;
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
-.field input::placeholder{color:var(--muted-2)}
-.field input:hover{border-color:#c3cbdc}
-.field input:focus{
-  border-color:var(--primary);background:#fff;
-  box-shadow:0 0 0 4px rgba(79,110,247,.12);
+.field label {
+  display: block; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-muted); margin-bottom: 6px;
 }
-button{
-  border:0;border-radius:var(--r-sm);
-  padding:12px 18px;font:700 13.5px system-ui,sans-serif;cursor:pointer;
-  background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;
-  box-shadow:0 8px 20px -8px rgba(79,110,247,.55);
-  transition:.16s;white-space:nowrap;
+.field input {
+  width: 100%; background: var(--bg); color: var(--text-main);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 12px; font-size: 14px; outline: none; transition: 0.2s;
+  font-family: inherit;
 }
-button:hover{transform:translateY(-1px);box-shadow:0 12px 24px -10px rgba(79,110,247,.65)}
-button:active{transform:translateY(0)}
-button.secondary{
-  background:var(--surface);color:var(--text-2);
-  border:1px solid var(--line-strong);box-shadow:var(--shadow-sm);
+.field input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-bg); }
+button {
+  border: none; border-radius: 8px; padding: 10px 16px;
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;
+  font-family: inherit;
 }
-button.secondary:hover{background:var(--surface-2);border-color:#c3cbdc;transform:translateY(-1px);box-shadow:var(--shadow-md)}
-button:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: #2563eb; }
+.btn-secondary { background: var(--bg); color: var(--text-main); border: 1px solid var(--line); }
+.btn-secondary:hover { background: #f1f5f9; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.chip{
-  border:1px solid var(--line);background:var(--surface-2);color:var(--text-2);
-  border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:500;
+.actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+
+.notice {
+  margin-top: 16px; padding: 12px; border-radius: 8px;
+  font-size: 13px; background: var(--primary-bg); color: #1d4ed8;
+  border: 1px solid #bfdbfe; display: flex; align-items: flex-start; gap: 8px;
 }
-.chip b{color:var(--text);font-weight:800}
-.notice{
-  margin-top:14px;border:1px solid #fde68a;background:#fffbeb;
-  color:#92400e;padding:11px 14px;border-radius:var(--r-sm);font-size:12.5px;
-  display:flex;align-items:flex-start;gap:8px;line-height:1.5;
-}
-.notice::before{content:"ⓘ";font-weight:900;color:var(--amber);flex:none}
-.notice.error{border-color:#fecaca;background:#fef2f2;color:#991b1b}
-.notice.error::before{content:"✕";color:var(--red)}
+.notice::before { content: "💡"; font-size: 14px; }
+.notice.error { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.notice.error::before { content: "⚠️"; }
 
 /* ===== SECTION HEAD ===== */
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:32px 4px 14px}
-.section-head h2{font-size:20px;margin:0;letter-spacing:-.015em;color:var(--text)}
-.count{font-size:13px;color:var(--muted);font-weight:500}
-.week-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.week-nav button{padding:9px 14px}
-.week-label{
-  font-size:13px;font-weight:700;color:var(--text);
-  padding:9px 16px;border-radius:999px;
-  background:var(--surface);border:1px solid var(--line);
-  box-shadow:var(--shadow-sm);min-width:150px;text-align:center;
+.section-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 16px; padding: 0 4px;
+}
+.section-head h2 { font-size: 18px; font-weight: 700; margin: 0; color: #0f172a; }
+.count { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+.week-nav { display: flex; gap: 8px; margin-top: 12px; }
+.week-nav button { flex: 1; padding: 8px; font-size: 13px; }
+.week-label {
+  text-align: center; font-weight: 700; font-size: 14px;
+  padding: 8px 0; color: var(--text-main);
 }
 
-/* ===== DAY CARD ===== */
-.days{display:grid;gap:16px}
-.day{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:var(--r-lg);
-  overflow:hidden;
-  box-shadow:var(--shadow-md);
-  transition:.2s;
-}
-.day:hover{box-shadow:var(--shadow-lg)}
-.day-head{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:16px 20px;background:var(--surface-2);
-  border-bottom:1px solid var(--line);
-}
-.day-title{font-weight:800;font-size:15.5px;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
-.day-title::before{
-  content:"";width:4px;height:18px;border-radius:4px;
-  background:linear-gradient(180deg,var(--primary),var(--primary-2));
-}
-.day-count{
-  font-size:11px;font-weight:800;color:var(--primary);
-  background:rgba(79,110,247,.10);border:1px solid rgba(79,110,247,.20);
-  padding:3px 9px;border-radius:999px;
-}
-.day-date{color:var(--muted);font-size:12.5px;font-weight:600}
+/* ===== TIMELINE LIST ===== */
+.days { display: flex; flex-direction: column; gap: 32px; }
 
-/* ===== ITEM 3 CỘT ===== */
-.items{padding:14px;display:grid;gap:10px}
-.item{
-  display:grid;grid-template-columns:140px minmax(0,1fr) 120px;
-  align-items:stretch;background:var(--surface);
-  border:1px solid var(--line);border-radius:var(--r-md);
-  overflow:hidden;transition:.16s;
+.day-group { position: relative; }
+.day-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; padding-left: 4px;
 }
-.item:hover{border-color:#c9d3e8;box-shadow:var(--shadow-sm);transform:translateY(-1px)}
-.item.priority{
-  border-color:rgba(79,110,247,.35);
-  background:linear-gradient(180deg,rgba(79,110,247,.03),rgba(79,110,247,.01));
-  box-shadow:inset 4px 0 0 var(--primary);
+.day-title {
+  font-size: 15px; font-weight: 800; color: #0f172a;
+  display: flex; align-items: center; gap: 8px;
 }
-.item > *{padding:14px 16px}
+.day-title::before {
+  content: ""; display: block; width: 4px; height: 16px;
+  background: var(--primary); border-radius: 4px;
+}
+.day-date { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 
-.time{display:flex;flex-direction:column;justify-content:center;gap:3px;border-right:1px solid var(--line);background:var(--surface-2)}
-.time .session{color:var(--primary);font-weight:800;font-size:12.5px;letter-spacing:.02em}
-.time .periods{color:var(--muted);font-size:12px;font-weight:600}
-
-.info{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0}
-.subject{font-weight:700;font-size:14.5px;color:var(--text);overflow-wrap:anywhere;line-height:1.35}
-.subline{color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
-
-.class-cell{display:flex;align-items:center;justify-content:center;border-left:1px solid var(--line);background:var(--surface-2)}
-.class-pill{
-  border:1px solid rgba(79,110,247,.25);color:var(--primary);
-  background:rgba(79,110,247,.07);
-  border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;
-  white-space:nowrap;letter-spacing:.02em;
+.day-items {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
 }
 
-/* ===== EMPTY / FOOT ===== */
-.empty{
-  padding:56px 24px;text-align:center;color:var(--muted);
-  border:1px dashed var(--line-strong);border-radius:var(--r-lg);
-  background:var(--surface);
+.item {
+  display: flex; gap: 16px; padding: 16px;
+  border-bottom: 1px solid var(--line); position: relative;
+  transition: background 0.2s;
 }
-.empty strong{display:block;color:var(--text);font-size:17px;margin-bottom:6px}
-.foot{color:var(--muted-2);font-size:12px;text-align:center;margin-top:36px;line-height:1.7;max-width:620px;margin-left:auto;margin-right:auto}
+.item:last-child { border-bottom: none; }
+.item:hover { background: #f8fafc; }
 
-/* ===== RESPONSIVE ===== */
-@media(max-width:820px){
-  .wrap{padding:24px 16px 56px}
-  .toolbar{grid-template-columns:1fr 1fr}
-  .toolbar button{width:100%}
-  .item{grid-template-columns:120px minmax(0,1fr);grid-template-areas:"time info" "class class"}
-  .class-cell{grid-area:class;border-left:0;border-top:1px solid var(--line);justify-content:flex-start;padding:11px 16px}
+/* Cột thời gian (bên trái) */
+.item-time {
+  flex: 0 0 70px; display: flex; flex-direction: column; gap: 4px;
+  border-right: 1px solid var(--line); padding-right: 12px;
 }
-@media(max-width:560px){
-  .hero{flex-direction:column;align-items:flex-start}
-  .toolbar{grid-template-columns:1fr}
-  .panel{padding:16px;border-radius:16px}
-  .item{grid-template-columns:104px minmax(0,1fr);grid-template-areas:"time info" "class class"}
-  .item > *{padding:12px 13px}
-  .section-head{flex-direction:column;align-items:stretch}
-  .week-nav{justify-content:space-between}
-  .week-label{flex:1;min-width:0}
-  .day-head{padding:14px 16px}
-  .items{padding:12px}
+.item-session { font-size: 13px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
+.item-periods { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
+/* Cột nội dung (bên phải) */
+.item-content { flex: 1; min-width: 0; }
+.item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
+.item-subject { font-size: 15px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
+.item-class {
+  flex-shrink: 0; background: var(--primary-bg); color: var(--primary);
+  font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px;
+}
+.item-details { font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; }
+.item-details span { display: block; }
+
+/* Highlight cho lớp ưu tiên */
+.item.priority { background: #f0fdf4; }
+.item.priority .item-session { color: #059669; }
+.item.priority .item-class { background: #d1fae5; color: #047857; }
+
+/* Empty state */
+.empty {
+  text-align: center; padding: 48px 24px; background: var(--surface);
+  border: 1px dashed var(--line); border-radius: var(--radius-lg);
+}
+.empty strong { display: block; font-size: 16px; color: var(--text-main); margin-bottom: 4px; }
+
+/* Footer */
+.foot { text-align: center; font-size: 12px; color: var(--text-light); margin-top: 40px; }
+
+/* ===== RESPONSIVE CHO MOBILE ===== */
+@media (max-width: 600px) {
+  .wrap { padding: 16px 12px 48px; }
+  .hero h1 { font-size: 24px; }
+  .toolbar { grid-template-columns: 1fr; }
+  .actions-grid { grid-template-columns: 1fr; }
+  .item { padding: 14px 12px; gap: 12px; }
+  .item-time { flex: 0 0 60px; }
+  .item-subject { font-size: 14px; }
 }
 </style>
 </head>
@@ -229,11 +208,8 @@ button:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
 <main class="wrap">
 
 <header class="hero">
-  <div>
-    <div class="eyebrow">Cổng lịch học công khai</div>
-    <h1>Thời khóa biểu</h1>
-    <p class="sub">Trường Cao đẳng Y tế Hà Tĩnh · Tra cứu theo tuần, tự làm mới, dữ liệu đồng bộ định kỳ.</p>
-  </div>
+  <h1>Thời khóa biểu</h1>
+  <p class="sub">Cao đẳng Y tế Hà Tĩnh · Tra cứu & đồng bộ</p>
   <div class="status" role="status">
     <span class="dot" id="dot"></span><span id="status">Sẵn sàng kết nối</span>
   </div>
@@ -242,38 +218,31 @@ button:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
 <section class="panel">
   <div class="toolbar">
     <div class="field">
-      <label for="date">CHỌN NGÀY TRONG TUẦN</label>
+      <label for="date">Chọn ngày trong tuần</label>
       <input id="date" type="date" value="2026-11-06">
     </div>
     <div class="field">
-      <label for="filter">LỌC LỚP / MÔN / GIẢNG VIÊN</label>
-      <input id="filter" value="19D" placeholder="Nhập 19D hoặc tên môn">
+      <label for="filter">Tìm Lớp / Môn / Giảng viên</label>
+      <input id="filter" value="19D" placeholder="VD: 19D hoặc tên môn">
     </div>
-    <button id="load">Tải thời khóa biểu</button>
-    <button id="auto" class="secondary">Tự cập nhật: BẬT</button>
+  </div>
+  
+  <div class="actions-grid">
+    <button id="load" class="btn-primary">Tải thời khóa biểu</button>
+    <button id="auto" class="btn-secondary">Tự cập nhật: BẬT</button>
   </div>
 
-  <div class="chips">
-    <span class="chip">Ưu tiên <b>19D</b></span>
-    <span class="chip">Kiểm tra dữ liệu <b>5 phút</b></span>
-    <span class="chip">Nguồn <b>GitHub Actions · tự đồng bộ</b></span>
-  </div>
-
-  <div class="notice" id="notice">Đang chuẩn bị tải lịch từ hệ thống của trường.</div>
+  <div class="notice" id="notice">Hệ thống đang chuẩn bị dữ liệu...</div>
 </section>
 
 <div class="section-head">
-  <h2>Lịch học trong tuần</h2>
-  <div class="week-nav">
-    <button class="secondary" id="prev">← Tuần trước</button>
-    <span class="week-label" id="weekLabel">06/11/2026</span>
-    <button class="secondary" id="next">Tuần sau →</button>
-  </div>
+  <h2>Lịch học</h2>
+  <div class="count" id="count">Đang tải...</div>
 </div>
-
-<div class="section-head" style="margin-top:-6px">
-  <span class="count" id="count">Đang tải dữ liệu…</span>
-  <button class="secondary" id="csv">Xuất CSV</button>
+<div class="week-nav" style="margin-bottom: 24px;">
+  <button class="btn-secondary" id="prev">← Tuần trước</button>
+  <div class="week-label" id="weekLabel">06/11/2026</div>
+  <button class="btn-secondary" id="next">Tuần sau →</button>
 </div>
 
 <section class="days" id="results" aria-live="polite">
@@ -281,7 +250,7 @@ button:disabled{opacity:.55;cursor:wait;transform:none;box-shadow:none}
 </section>
 
 <footer class="foot">
-  GitHub Pages hiển thị dữ liệu JSON do GitHub Actions định kỳ lấy từ cổng lịch học công khai của Phòng Đào tạo.
+  Dữ liệu được tự động đồng bộ từ cổng Phòng Đào tạo.
 </footer>
 
 </main>
@@ -299,53 +268,62 @@ const monday=date=>{const d=new Date(date+'T12:00:00'),day=(d.getDay()+6)%7;d.se
 async function getSnapshot(weekStart){
   const url=`./data/week-${weekStart}.json?v=${Date.now()}`;
   let response;
-  try{response=await fetch(url,{cache:'no-store'})}catch(e){throw new Error('Không tải được dữ liệu JSON từ GitHub Pages. Kiểm tra kết nối mạng.')}
-  if(!response.ok)throw Object.assign(new Error(`Chưa có dữ liệu cho tuần ${fmtDate(weekStart)} (HTTP ${response.status}). GitHub Actions có thể chưa chạy hoặc tuần này nằm ngoài khoảng đồng bộ.`),{status:response.status});
+  try{response=await fetch(url,{cache:'no-store'})}catch(e){throw new Error('Không tải được dữ liệu JSON. Kiểm tra kết nối mạng.')}
+  if(!response.ok)throw Object.assign(new Error(`Chưa có dữ liệu cho tuần ${fmtDate(weekStart)} (HTTP ${response.status}).`),{status:response.status});
   const snapshot=await response.json();
   if(!snapshot||snapshot.ok!==true)throw new Error(snapshot?.error||'File dữ liệu lịch học chưa hợp lệ.');
   return snapshot;
 }
 function findRows(data){if(Array.isArray(data)){if(data.some(x=>x&&typeof x==='object'&&('subjectName'in x||'className'in x||'startPeriod'in x)))return data;for(const x of data){const r=findRows(x);if(r.length)return r}return []}if(data&&typeof data==='object'){for(const k of ['items','data','results','schedules','generalSchedules','records','value'])if(k in data){const r=findRows(data[k]);if(r.length)return r}for(const v of Object.values(data)){if(v&&typeof v==='object'){const r=findRows(v);if(r.length)return r}}}return []}
 function sessionName(r){const s=clean(r.sessionName).toLowerCase();if(s.includes('sang'))return 'Sáng';if(s.includes('chieu'))return 'Chiều';if(s.includes('toi'))return 'Tối';const n=Number(r.session);return n===0?'Sáng':n===1?'Chiều':n===2?'Tối':clean(r.sessionName)||'Chưa rõ ca'}
-function periods(r){const a=Number(r.startPeriod),b=Number(r.endPeriod);if(a>0&&b>=a)return `Tiết ${a}${b!==a?'–'+b:''}`;return `${Math.max(1,Number(r.periodCount)||1)} tiết`}
-function subject(r){const s=clean(r.subjectName);if(!s)return clean(r.title)|| (r.isActivitySchedule?'Hoạt động / sinh hoạt':'Chưa có tên môn');if(r.isExamSchedule)return 'Thi '+s;if(r.isActivitySchedule)return s;return `${s} (${clean(r.classTypeName)||(Number(r.lessonType)===1?'TH':'LT')})`}
+function periods(r){const a=Number(r.startPeriod),b=Number(r.endPeriod);if(a>0&&b>=a)return `Tiết ${a}${b!==a?'-'+b:''}`;return `${Math.max(1,Number(r.periodCount)||1)} tiết`}
+function subject(r){const s=clean(r.subjectName);if(!s)return clean(r.title)|| (r.isActivitySchedule?'Hoạt động':'Chưa có tên môn');if(r.isExamSchedule)return 'Thi '+s;if(r.isActivitySchedule)return s;return `${s} (${clean(r.classTypeName)||(Number(r.lessonType)===1?'TH':'LT')})`}
 function normalizeRows(raw){return raw.filter(r=>r&&typeof r==='object'&&!r.isPlannedOnly).map(r=>({...r,_date:clean(r.date).slice(0,10),_class:clean(r.className)||'Chưa phân lớp',_subject:subject(r),_session:sessionName(r),_periods:periods(r),_priority:/\b19d\b/i.test(clean(r.className))})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r._date))}
 function setStatus(text,bad=false,loading=false){$('status').innerHTML=(loading?'<span class="spinner"></span>':'')+text;$('dot').classList.toggle('bad',bad)}
 function render(){
   const f=norm($('filter').value);const week=monday($('date').value);const end=addDays(week,6);
   const filtered=rows.filter(r=>r._date>=week&&r._date<=end&&(!f||[r._class,r._subject,r.teacherName,r.room,r.sessionName].some(v=>norm(v).includes(f))));
   filtered.sort((a,b)=>a._date.localeCompare(b._date)||Number(a.session)-Number(b.session)||Number(a.startPeriod)-Number(b.startPeriod)||a._class.localeCompare(b._class,'vi'));
-  $('weekLabel').textContent=fmtDate(week)+' – '+fmtDate(end);
-  $('count').textContent=`${filtered.length} lịch học${f?' · Đang lọc: '+$('filter').value:''}`;
+  $('weekLabel').textContent=fmtDate(week)+' - '+fmtDate(end);
+  $('count').textContent=`${filtered.length} lịch học${f?' · Lọc: '+$('filter').value:''}`;
   const root=$('results');root.innerHTML='';
-  if(!filtered.length){root.innerHTML='<div class="empty"><strong>Không có lịch phù hợp</strong>Thử xóa bộ lọc hoặc chọn tuần khác. Nếu hệ thống chưa công bố lịch, dữ liệu có thể đang trống.</div>';return}
+  if(!filtered.length){root.innerHTML='<div class="empty"><strong>Không có lịch phù hợp</strong>Thử xóa bộ lọc hoặc chọn tuần khác.</div>';return}
   for(let i=0;i<7;i++){
     const day=addDays(week,i),list=filtered.filter(r=>r._date===day);if(!list.length)continue;
     const d=new Date(day+'T12:00:00');
-    const box=document.createElement('article');box.className='day';
+    const box=document.createElement('article');box.className='day-group';
+    
     const head=document.createElement('div');head.className='day-head';
-    const titleWrap=document.createElement('div');titleWrap.style.display='flex';titleWrap.style.alignItems='center';titleWrap.style.gap='8px';
     const title=document.createElement('div');title.className='day-title';title.textContent=['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][d.getDay()];
-    const cnt=document.createElement('span');cnt.className='day-count';cnt.textContent=list.length;
-    titleWrap.append(title,cnt);
     const date=document.createElement('div');date.className='day-date';date.textContent=fmtDate(day);
-    head.append(titleWrap,date);box.append(head);
-    const items=document.createElement('div');items.className='items';
+    head.append(title,date);box.append(head);
+    
+    const items=document.createElement('div');items.className='day-items';
     for(const r of list){
       const item=document.createElement('div');item.className='item'+(r._priority?' priority':'');
-      const time=document.createElement('div');time.className='time';
-      const ses=document.createElement('span');ses.className='session';ses.textContent=r._session;
-      const per=document.createElement('span');per.className='periods';per.textContent=r._periods;
+      
+      const time=document.createElement('div');time.className='item-time';
+      const ses=document.createElement('span');ses.className='item-session';ses.textContent=r._session;
+      const per=document.createElement('span');per.className='item-periods';per.textContent=r._periods;
       time.append(ses,per);
-      const info=document.createElement('div');info.className='info';
-      const name=document.createElement('div');name.className='subject';name.textContent=r._subject;
-      const sub=document.createElement('div');sub.className='subline';
-      const parts=[];if(clean(r.teacherName))parts.push('GV: '+clean(r.teacherName));if(clean(r.room))parts.push('Phòng: '+clean(r.room));if(clean(r.classTypeName))parts.push(clean(r.classTypeName));
-      sub.textContent=parts.join(' · ')||'Chưa có thông tin bổ sung';
-      info.append(name,sub);
-      const classCell=document.createElement('div');classCell.className='class-cell';
-      const cls=document.createElement('span');cls.className='class-pill';cls.textContent=r._class;classCell.append(cls);
-      item.append(time,info,classCell);items.append(item);
+      
+      const content=document.createElement('div');content.className='item-content';
+      
+      const header=document.createElement('div');header.className='item-header';
+      const name=document.createElement('div');name.className='item-subject';name.textContent=r._subject;
+      const cls=document.createElement('div');cls.className='item-class';cls.textContent=r._class;
+      header.append(name,cls);
+      
+      const details=document.createElement('div');details.className='item-details';
+      if(clean(r.teacherName)){const gv=document.createElement('span');gv.textContent='GV: '+clean(r.teacherName);details.append(gv)}
+      if(clean(r.room)||clean(r.classTypeName)){
+          const rm=document.createElement('span');
+          const p=[];if(clean(r.room))p.push('Phòng: '+clean(r.room));if(clean(r.classTypeName))p.push(clean(r.classTypeName));
+          rm.textContent=p.join(' · ');details.append(rm)
+      }
+      
+      content.append(header,details);
+      item.append(time,content);items.append(item);
     }
     box.append(items);root.append(box);
   }
@@ -356,11 +334,10 @@ async function load(){
   try{
     const snapshot=await getSnapshot(start);const raw=findRows(snapshot.data);lastRaw=raw;rows=normalizeRows(raw);render();
     const fetched=snapshot.fetchedAt?new Date(snapshot.fetchedAt).toLocaleString('vi-VN'):'không rõ';
-    const age=snapshot.fetchedAt?Math.max(0,Math.round((Date.now()-new Date(snapshot.fetchedAt).getTime())/60000)):null;
-    $('notice').textContent=rows.length?`Đã tải ${rows.length} lịch · Đồng bộ lần cuối: ${fetched}${age!==null?' · '+age+' phút trước':''}.`:`Dữ liệu tuần này đã được tải nhưng chưa có lịch được công bố.`;
-    setStatus('Dữ liệu từ '+fetched);
+    $('notice').textContent=`Đã tải ${rows.length} lịch · Đồng bộ: ${fetched}.`;
+    setStatus('Đã kết nối');
   }catch(e){
-    const msg=e.message||'Không xác định được nguyên nhân.';
+    const msg=e.message||'Lỗi không xác định.';
     $('notice').textContent=msg;$('notice').classList.add('error');setStatus('Chưa có dữ liệu',true);
     if(!rows.length)$('results').innerHTML='<div class="empty"><strong>Chưa tải được thời khóa biểu</strong>'+msg+'</div>';
   }finally{busy=false;$('load').disabled=false}
