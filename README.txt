@@ -1,40 +1,40 @@
-THỜI KHÓA BIỂU - BẢN GITHUB PAGES + CLOUDFLARE WORKER
+THOI KHOA BIEU - GITHUB PAGES + GITHUB ACTIONS (KHONG CAN PROXY NGOAI)
 
-GÓI NÀY GỒM
-- index.html: trang lịch học để đưa lên GitHub Pages.
-- worker.js: mã proxy chạy trên Cloudflare Workers.
+CO CHE
+- GitHub Actions chay dinh ky, goi API cong khai cua Phong Dao tao tu may chu GitHub.
+- Du lieu duoc luu thanh JSON trong thu muc data/ cua repository.
+- GitHub Pages chi doc JSON cung nguon, nen trinh duyet nguoi xem khong goi API truong va khong gap loi CORS.
+- Khong can Cloudflare, Netlify, PowerShell, API key hay may chu proxy rieng.
 
-LƯU Ý
-GitHub Pages chỉ lưu và phân phối HTML tĩnh, không chạy được API proxy. Vì vậy cần triển khai worker.js một lần trên Cloudflare Workers. Bản thân trang HTML không thể tự vượt CORS.
+QUAN TRONG
+- Nen de repository o che do PUBLIC de GitHub-hosted standard runner cua Actions mien phi.
+- GitHub Actions co the tre lich chay; cron 15 phut khong co nghia la du lieu chac chan cap nhat dung tung 15 phut.
+- Goi API truong van co the bi truong chan, doi API, hoac tra loi khong phai JSON. Khi do workflow se bao loi va giu ban JSON tot truoc do.
+- Goi nay dong bo 9 tuan: 2 tuan truoc, tuan hien tai va 2 tuan tiep theo. Chon tuan nam ngoai khoang nay se chua co snapshot.
+- Neu repository public khong co hoat dong trong 60 ngay, GitHub co the tu dong tat scheduled workflow. Can vao Actions de bat lai.
 
-BƯỚC 1 - TẠO WORKER
-1. Đăng nhập https://dash.cloudflare.com/
-2. Vào Workers & Pages.
-3. Chọn Create application / Create Worker.
-4. Đặt tên ví dụ: tkb-cdytht-proxy.
-5. Chọn Edit code.
-6. Xóa mã mẫu, mở worker.js trong gói này, sao chép toàn bộ và dán vào trình soạn thảo.
-7. Nhấn Deploy.
-8. Sao chép địa chỉ dạng https://tkb-cdytht-proxy.<ten-tai-khoan>.workers.dev
+CAI DAT
+1. Giai nen ZIP.
+2. Tai TOAN BO noi dung thu muc TKB_CDYT_GITHUB_ACTIONS len repository GitHub dang dung. Giu nguyen cau truc, dac biet la thu muc an .github/workflows.
+3. Dam bao index.html nam o thu muc goc repository.
+4. Vao repository > Settings > Actions > General.
+5. Tim Workflow permissions, chon "Read and write permissions", Save.
+6. Vao tab Actions. Neu GitHub hien nut "I understand my workflows, go ahead and enable them" thi bam enable.
+7. Chon workflow "Update public timetable data" > Run workflow > Run workflow de chay thu lan dau.
+8. Cho job chay xong. Mo thu muc data/ trong repository. Can thay cac file week-YYYY-MM-DD.json va status.json.
+9. Bat GitHub Pages: Settings > Pages > Deploy from a branch > main > /(root) > Save.
+10. Mo website GitHub Pages. Mac dinh loc lop 19D. Bam Tai thoi khoa bieu neu can.
 
-BƯỚC 2 - ĐƯA HTML LÊN GITHUB PAGES
-1. Tạo hoặc mở repository GitHub.
-2. Tải index.html trong gói này lên repository và đặt đúng tên index.html ở thư mục gốc (root).
-3. Vào Settings > Pages.
-4. Chọn Deploy from a branch, chọn nhánh main và thư mục /(root), rồi Save.
+NEU MUON UPLOAD QUA GITHUB WEB
+- GitHub web upload co the kho upload thu muc an .github. Neu khong thay .github/workflows/update-schedule.yml tren repository, can tao thu muc va file nay thu cong tren GitHub: Add file > Create new file, nhap dung duong dan .github/workflows/update-schedule.yml, dan noi dung tu file cung ten trong ZIP, Commit changes.
+- Tuong tu, dam bao scripts/fetch_schedule.py duoc upload dung duong dan.
 
-BƯỚC 3 - KẾT NỐI
-1. Mở website GitHub Pages.
-2. Mở mục “Cấu hình kết nối GitHub Pages / Proxy”.
-3. Dán địa chỉ Worker đã sao chép (không thêm đường dẫn API ở cuối).
-4. Nhấn “Lưu địa chỉ Proxy”.
-5. Trang sẽ tự tải lịch và tự cập nhật mỗi 60 giây.
+KIEM TRA LOI
+- Actions > Update public timetable data > mo run moi nhat > xem buoc Fetch timetable snapshots.
+- Mo data/status.json de xem thoi diem dong bo va loi tung tuan.
+- Neu API truong tra 404/HTML/khong phai JSON, day la loi tu API nguon; GitHub Actions khong the tu tao ra du lieu.
 
-KIỂM TRA WORKER
-Mở thử URL này trên trình duyệt, thay bằng địa chỉ Worker của bạn:
-https://TEN-WORKER.workers.dev/api/attendance/general-schedules/week?date=2026-11-02&schoolYear=2026%20-%202027&semester=1
-
-Nếu Worker trả HTTP 404 hoặc HTML thay vì JSON, có thể API nguồn đã đổi đường dẫn, cần kiểm tra lại API của trang trường. Worker chỉ chuyển tiếp dữ liệu; nó không thể bỏ qua đăng nhập, chống bot hoặc giới hạn truy cập của máy chủ trường.
-
-BẢO MẬT
-Worker hiện chỉ cho phép GET đến 4 đường dẫn API lịch học được liệt kê trong mã. Không có API key hoặc mật khẩu trong HTML.
+CAP NHAT
+- Workflow chay moi 30 phut (cron phut 11 va 41 UTC).
+- Trang web tu doc lai snapshot moi moi 5 phut khi tab dang mo.
+- Muon dong bo ngay: vao Actions va bam Run workflow.
