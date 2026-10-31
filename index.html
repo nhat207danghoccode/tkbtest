@@ -21,7 +21,11 @@
 </div>
 <div class="chips"><span class="chip">Ưu tiên <b>19D</b></span><span class="chip">Tự làm mới <b>60 giây</b></span><span class="chip">Dữ liệu <b>API Phòng Đào tạo</b></span></div>
 <div class="notice" id="notice">Đang chuẩn bị tải lịch từ hệ thống của trường.</div>
-
+<details class="settings"><summary>Cấu hình kết nối GitHub Pages / Proxy</summary>
+<div class="field"><label for="proxyUrl">ĐỊA CHỈ CLOUDFLARE WORKER</label><input id="proxyUrl" type="url" placeholder="https://ten-worker.ten-tai-khoan.workers.dev"></div>
+<small>Dán địa chỉ Worker sau khi triển khai. Cấu hình được lưu trên trình duyệt này.</small>
+<div class="actions"><button id="saveProxy" class="secondary" type="button">Lưu địa chỉ Proxy</button><button id="clearProxy" class="secondary" type="button">Xóa cấu hình</button></div>
+</details>
 </section>
 <div class="section-head"><h2>Lịch học trong tuần</h2><div class="week-nav"><button class="secondary" id="prev">← Tuần trước</button><span class="week-label" id="weekLabel">06/11/2026</span><button class="secondary" id="next">Tuần sau →</button></div></div>
 <div class="section-head" style="margin-top:-5px"><span class="count" id="count">Đang tải dữ liệu…</span><button class="secondary" id="csv">Xuất CSV</button></div>
@@ -39,7 +43,8 @@ const getSchoolConfig=date=>{const d=new Date(date+'T12:00:00'),y=d.getFullYear(
 const addDays=(date,n)=>{const d=new Date(date+'T12:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const monday=date=>{const d=new Date(date+'T12:00:00'),day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 function endpoint(path,params){const q=new URLSearchParams(params);return path+'?'+q.toString()}
-async function getJson(path,params){const u=endpoint(path,params);const r=await fetch(u,{cache:'no-store',headers:{'Accept':'application/json'}});const text=await r.text();let data;try{data=text?JSON.parse(text):null}catch{throw new Error(`API trả về dữ liệu không phải JSON (HTTP ${r.status}).`)}if(!r.ok)throw Object.assign(new Error(data?.message||data?.title||data?.error||`Máy chủ trả HTTP ${r.status}`),{status:r.status});return data}
+function proxyBase(){return clean(localStorage.getItem('tkb_proxy_url')||$('proxyUrl').value).replace(/\/$/,'')}
+async function getJson(path,params){const base=proxyBase();if(!base)throw new Error('Chưa cấu hình Proxy. Mở mục “Cấu hình kết nối GitHub Pages / Proxy” và dán địa chỉ Cloudflare Worker.');const u=base+endpoint(path,params);let r;try{r=await fetch(u,{cache:'no-store',headers:{'Accept':'application/json'}})}catch(e){throw new Error('Không gọi được Proxy. Kiểm tra địa chỉ Worker và cấu hình CORS.')}const text=await r.text();let data;try{data=text?JSON.parse(text):null}catch{throw Object.assign(new Error(`Proxy/máy chủ trường trả dữ liệu không phải JSON (HTTP ${r.status}). Kiểm tra Worker và API nguồn.`),{status:r.status})}if(!r.ok)throw Object.assign(new Error(data?.message||data?.title||data?.error||`Proxy trả HTTP ${r.status}`),{status:r.status});return data}
 function findRows(data){if(Array.isArray(data)){if(data.some(x=>x&&typeof x==='object'&&('subjectName'in x||'className'in x||'startPeriod'in x)))return data;for(const x of data){const r=findRows(x);if(r.length)return r}return []}if(data&&typeof data==='object'){for(const k of ['items','data','results','schedules','generalSchedules','records','value'])if(k in data){const r=findRows(data[k]);if(r.length)return r}for(const v of Object.values(data)){if(v&&typeof v==='object'){const r=findRows(v);if(r.length)return r}}}return []}
 function sessionName(r){const s=clean(r.sessionName).toLowerCase();if(s.includes('sang'))return 'Sáng';if(s.includes('chieu'))return 'Chiều';if(s.includes('toi'))return 'Tối';const n=Number(r.session);return n===0?'Sáng':n===1?'Chiều':n===2?'Tối':clean(r.sessionName)||'Chưa rõ ca'}
 function periods(r){const a=Number(r.startPeriod),b=Number(r.endPeriod);if(a>0&&b>=a)return `Tiết ${a}${b!==a?'–'+b:''}`;return `${Math.max(1,Number(r.periodCount)||1)} tiết`}
@@ -57,7 +62,10 @@ catch(e){const msg=e.message||'Không xác định được nguyên nhân.';$('n
 finally{busy=false;$('load').disabled=false}}
 function schedule(){if(timer)clearInterval(timer);if(autoOn)timer=setInterval(load,60000)}
 $('load').addEventListener('click',load);$('date').addEventListener('change',load);$('filter').addEventListener('input',render);$('prev').addEventListener('click',()=>{$('date').value=addDays(monday($('date').value),-7);load()});$('next').addEventListener('click',()=>{$('date').value=addDays(monday($('date').value),7);load()});$('auto').addEventListener('click',()=>{autoOn=!autoOn;$('auto').textContent='Tự cập nhật: '+(autoOn?'BẬT':'TẮT');schedule();if(autoOn)load()});$('csv').addEventListener('click',()=>{const f=norm($('filter').value),week=monday($('date').value),end=addDays(week,6),list=rows.filter(r=>r._date>=week&&r._date<=end&&(!f||[r._class,r._subject,r.teacherName,r.room].some(v=>norm(v).includes(f))));if(!list.length){alert('Không có dữ liệu để xuất.');return}const q=v=>'"'+clean(v).replace(/"/g,'""')+'"';const lines=[['Ngày','Lớp','Ca','Tiết','Môn học','Giảng viên','Phòng'].map(q).join(','),...list.map(r=>[r._date,r._class,r._session,r._periods,r._subject,r.teacherName,r.room].map(q).join(','))];const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='thoi-khoa-bieu-'+week+'.csv';a.click();URL.revokeObjectURL(url)});
-schedule();load();
+$('proxyUrl').value=localStorage.getItem('tkb_proxy_url')||'';
+$('saveProxy').addEventListener('click',()=>{const v=clean($('proxyUrl').value).replace(/\/$/,'');if(v&&!/^https:\/\//i.test(v)){alert('Địa chỉ Worker phải bắt đầu bằng https://');return}if(!v){alert('Hãy dán địa chỉ Cloudflare Worker.');return}localStorage.setItem('tkb_proxy_url',v);$('notice').textContent='Đã lưu địa chỉ Proxy. Đang tải lại lịch…';load()});
+$('clearProxy').addEventListener('click',()=>{localStorage.removeItem('tkb_proxy_url');$('proxyUrl').value='';$('notice').textContent='Đã xóa cấu hình Proxy. Hãy nhập lại địa chỉ Worker để tải lịch.';setStatus('Chưa cấu hình Proxy',true)});
+schedule();if(localStorage.getItem('tkb_proxy_url'))load();else{setStatus('Chưa cấu hình Proxy',true);$('notice').textContent='Cần triển khai Worker và nhập địa chỉ Proxy trước khi tải lịch.';$('results').innerHTML='<div class="empty"><strong>Chưa cấu hình kết nối</strong>Mở mục cấu hình Proxy ở phía trên để bắt đầu.</div>';}
 })();
 </script>
 </body>
