@@ -71,8 +71,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     today = datetime.now(TZ).date()
     current = monday(today)
-    # Cache two weeks before and two weeks after the current week.
-    weeks = [current + timedelta(weeks=i) for i in range(-2, 3)]
+    # Cache two weeks before and twelve weeks after the current week.
+    weeks = [current + timedelta(weeks=i) for i in range(-2, 13)]
     session = requests.Session()
     successes = 0
     failures = []
