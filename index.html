@@ -2,24 +2,24 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="theme-color" content="#f8fafc">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f7f6">
 <title>Thời khóa biểu · Cao đẳng Y tế Hà Tĩnh</title>
 <style>
 :root {
   color-scheme: light;
-  --bg: #f8fafc;
+  --bg: #f4f7f6;
   --surface: #ffffff;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
-  --primary: #3b82f6;
-  --primary-bg: #eff6ff;
-  --line: #e2e8f0;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.05);
+  --text: #1a1c29;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --primary: #4f46e5; /* Tím than */
+  --primary-light: #eef2ff;
+  --accent: #0d9488; /* Xanh ngọc */
+  --accent-light: #ccfbf1;
+  --radius: 16px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 }
 
 * { box-sizing: border-box; }
@@ -27,180 +27,127 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg);
-  color: var(--text-main);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
 
-.wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 24px 16px 64px;
-}
+.wrap { max-width: 1000px; margin: 0 auto; padding: 32px 20px 64px; }
 
 /* ===== HEADER ===== */
-.hero { margin-bottom: 24px; }
-.hero h1 {
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin: 0 0 6px;
-  color: #0f172a;
-}
-.sub { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; }
+.hero { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+.hero h1 { font-size: 32px; font-weight: 900; letter-spacing: -0.03em; margin: 0 0 8px; color: #111827; }
+.sub { color: var(--muted); font-size: 15px; margin: 0; }
 .status {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 6px 12px; border-radius: 999px;
-  background: var(--surface); border: 1px solid var(--line);
-  font-size: 12px; font-weight: 500; color: var(--text-muted);
-  box-shadow: var(--shadow-sm);
+  padding: 8px 16px; border-radius: 999px; background: var(--surface);
+  border: 1px solid var(--line); font-size: 13px; font-weight: 600;
+  box-shadow: var(--shadow); color: #374151;
 }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
-.dot.bad { background: #ef4444; }
-.spinner {
-  display: inline-block; width: 12px; height: 12px;
-  border: 2px solid #e2e8f0; border-top-color: var(--primary);
-  border-radius: 50%; animation: spin .7s linear infinite; vertical-align: -2px; margin-right: 6px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px #d1fae5; }
+.dot.bad { background: #ef4444; box-shadow: 0 0 0 3px #fee2e2; }
 
-/* ===== CONTROL PANEL ===== */
+/* ===== TOOLBAR ===== */
 .panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  box-shadow: var(--shadow-sm);
-  margin-bottom: 24px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+  margin-bottom: 32px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;
 }
-.toolbar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.field label {
-  display: block; font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  color: var(--text-muted); margin-bottom: 6px;
-}
+.field { flex: 1 1 200px; }
+.field label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em; }
 .field input {
-  width: 100%; background: var(--bg); color: var(--text-main);
-  border: 1px solid var(--line); border-radius: 8px;
-  padding: 10px 12px; font-size: 14px; outline: none; transition: 0.2s;
-  font-family: inherit;
+  width: 100%; background: #f9fafb; color: var(--text); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px 16px; font-size: 15px; outline: none; transition: 0.2s; font-family: inherit;
 }
-.field input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-bg); }
+.field input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); background: #fff; }
 button {
-  border: none; border-radius: 8px; padding: 10px 16px;
-  font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s;
-  font-family: inherit;
+  border: none; border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: 0.2s; font-family: inherit; white-space: nowrap;
 }
 .btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: #2563eb; }
-.btn-secondary { background: var(--bg); color: var(--text-main); border: 1px solid var(--line); }
-.btn-secondary:hover { background: #f1f5f9; }
-button:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.btn-primary:hover { background: #4338ca; }
+.btn-secondary { background: #f3f4f6; color: #374151; }
+.btn-secondary:hover { background: #e5e7eb; }
 
 .notice {
-  margin-top: 16px; padding: 12px; border-radius: 8px;
-  font-size: 13px; background: var(--primary-bg); color: #1d4ed8;
-  border: 1px solid #bfdbfe; display: flex; align-items: flex-start; gap: 8px;
+  margin-top: 16px; padding: 12px 16px; border-radius: 10px; font-size: 14px;
+  background: var(--primary-light); color: #3730a3; border: 1px solid #c7d2fe;
 }
-.notice::before { content: "💡"; font-size: 14px; }
-.notice.error { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
-.notice.error::before { content: "⚠️"; }
+.notice.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
 
-/* ===== SECTION HEAD ===== */
-.section-head {
-  display: flex; justify-content: space-between; align-items: flex-end;
-  margin-bottom: 16px; padding: 0 4px;
+/* ===== WEEK NAV ===== */
+.week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; background: var(--surface); padding: 12px; border-radius: 999px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+.week-nav button { padding: 8px 16px; font-size: 13px; border-radius: 999px; }
+.week-label { font-weight: 800; font-size: 16px; color: var(--text); }
+
+/* ===== DẠNG THẺ (GRID LAYOUT) ===== */
+.schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+/* Thẻ Card */
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  border: 1px solid var(--line); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; overflow: hidden; transition: 0.2s;
 }
-.section-head h2 { font-size: 18px; font-weight: 700; margin: 0; color: #0f172a; }
-.count { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
 
-.week-nav { display: flex; gap: 8px; margin-top: 12px; }
-.week-nav button { flex: 1; padding: 8px; font-size: 13px; }
-.week-label {
-  text-align: center; font-weight: 700; font-size: 14px;
-  padding: 8px 0; color: var(--text-main);
-}
-
-/* ===== TIMELINE LIST ===== */
-.days { display: flex; flex-direction: column; gap: 32px; }
-
-.day-group { position: relative; }
-.day-head {
+/* Đầu thẻ: Thứ / Ngày */
+.card-header {
+  background: #f9fafb; padding: 12px 16px; border-bottom: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 12px; padding-left: 4px;
 }
-.day-title {
-  font-size: 15px; font-weight: 800; color: #0f172a;
-  display: flex; align-items: center; gap: 8px;
-}
-.day-title::before {
-  content: ""; display: block; width: 4px; height: 16px;
-  background: var(--primary); border-radius: 4px;
-}
-.day-date { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+.day-title { font-weight: 800; font-size: 15px; color: var(--text); }
+.day-date { font-size: 13px; font-weight: 600; color: var(--muted); }
 
-.day-items {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+/* Thân thẻ: 2 cột (Thời gian | Nội dung) */
+.card-body { display: flex; flex: 1; }
+
+/* Cột Trái: Thời gian */
+.col-time {
+  flex: 0 0 80px; background: #fff; padding: 16px 12px;
+  border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px;
+}
+.time-session { font-weight: 800; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+.time-period { font-size: 13px; font-weight: 600; color: var(--muted); }
+
+/* Cột Phải: Nội dung */
+.col-content { flex: 1; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.subject-name { font-size: 16px; font-weight: 800; line-height: 1.35; color: #111827; }
+
+.info-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13.5px; color: var(--muted); }
+.info-icon { flex-shrink: 0; width: 16px; height: 16px; opacity: 0.6; margin-top: 2px;}
+
+/* Badge Lớp */
+.badge-class {
+  display: inline-block; align-self: flex-start; margin-top: auto;
+  background: #f3f4f6; color: #4b5563; font-size: 12px; font-weight: 800;
+  padding: 4px 10px; border-radius: 6px;
 }
 
-.item {
-  display: flex; gap: 16px; padding: 16px;
-  border-bottom: 1px solid var(--line); position: relative;
-  transition: background 0.2s;
-}
-.item:last-child { border-bottom: none; }
-.item:hover { background: #f8fafc; }
-
-/* Cột thời gian (bên trái) */
-.item-time {
-  flex: 0 0 70px; display: flex; flex-direction: column; gap: 4px;
-  border-right: 1px solid var(--line); padding-right: 12px;
-}
-.item-session { font-size: 13px; font-weight: 800; color: var(--primary); text-transform: uppercase; }
-.item-periods { font-size: 12px; font-weight: 600; color: var(--text-muted); }
-
-/* Cột nội dung (bên phải) */
-.item-content { flex: 1; min-width: 0; }
-.item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 4px; }
-.item-subject { font-size: 15px; font-weight: 700; color: var(--text-main); line-height: 1.3; }
-.item-class {
-  flex-shrink: 0; background: var(--primary-bg); color: var(--primary);
-  font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px;
-}
-.item-details { font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; }
-.item-details span { display: block; }
-
-/* Highlight cho lớp ưu tiên */
-.item.priority { background: #f0fdf4; }
-.item.priority .item-session { color: #059669; }
-.item.priority .item-class { background: #d1fae5; color: #047857; }
+/* Highlight cho Lớp Ưu Tiên (19D) */
+.card.priority { border-color: #99f6e4; box-shadow: 0 0 0 1px #99f6e4, var(--shadow); }
+.card.priority .card-header { background: #f0fdfa; border-bottom-color: #ccfbf1; }
+.card.priority .col-time { background: #f0fdfa; border-right-color: #ccfbf1; }
+.card.priority .time-session { color: var(--accent); }
+.card.priority .badge-class { background: var(--accent-light); color: #0f766e; }
 
 /* Empty state */
 .empty {
-  text-align: center; padding: 48px 24px; background: var(--surface);
-  border: 1px dashed var(--line); border-radius: var(--radius-lg);
+  grid-column: 1 / -1; text-align: center; padding: 64px 20px;
+  background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius);
 }
-.empty strong { display: block; font-size: 16px; color: var(--text-main); margin-bottom: 4px; }
+.empty strong { display: block; font-size: 18px; color: var(--text); margin-bottom: 8px; }
 
-/* Footer */
-.foot { text-align: center; font-size: 12px; color: var(--text-light); margin-top: 40px; }
+.foot { text-align: center; font-size: 13px; color: var(--muted); margin-top: 48px; }
 
-/* ===== RESPONSIVE CHO MOBILE ===== */
-@media (max-width: 600px) {
-  .wrap { padding: 16px 12px 48px; }
-  .hero h1 { font-size: 24px; }
-  .toolbar { grid-template-columns: 1fr; }
-  .actions-grid { grid-template-columns: 1fr; }
-  .item { padding: 14px 12px; gap: 12px; }
-  .item-time { flex: 0 0 60px; }
-  .item-subject { font-size: 14px; }
+/* Responsive */
+@media (max-width: 640px) {
+  .wrap { padding: 24px 16px 48px; }
+  .hero { flex-direction: column; align-items: flex-start; }
+  .panel { flex-direction: column; align-items: stretch; }
+  .schedule-grid { grid-template-columns: 1fr; }
+  .week-nav { border-radius: var(--radius); }
 }
 </style>
 </head>
@@ -208,49 +155,42 @@ button:disabled { opacity: 0.6; cursor: not-allowed; }
 <main class="wrap">
 
 <header class="hero">
-  <h1>Thời khóa biểu</h1>
-  <p class="sub">Cao đẳng Y tế Hà Tĩnh · Tra cứu & đồng bộ</p>
+  <div>
+    <h1>Thời khóa biểu</h1>
+    <p class="sub">Cao đẳng Y tế Hà Tĩnh · Lịch học tự động cập nhật</p>
+  </div>
   <div class="status" role="status">
     <span class="dot" id="dot"></span><span id="status">Sẵn sàng kết nối</span>
   </div>
 </header>
 
 <section class="panel">
-  <div class="toolbar">
-    <div class="field">
-      <label for="date">Chọn ngày trong tuần</label>
-      <input id="date" type="date" value="2026-11-06">
-    </div>
-    <div class="field">
-      <label for="filter">Tìm Lớp / Môn / Giảng viên</label>
-      <input id="filter" value="19D" placeholder="VD: 19D hoặc tên môn">
-    </div>
+  <div class="field">
+    <label for="date">Chọn tuần</label>
+    <input id="date" type="date" value="2026-11-06">
   </div>
-  
-  <div class="actions-grid">
-    <button id="load" class="btn-primary">Tải thời khóa biểu</button>
-    <button id="auto" class="btn-secondary">Tự cập nhật: BẬT</button>
+  <div class="field">
+    <label for="filter">Lọc Lớp / Môn / Giảng viên</label>
+    <input id="filter" value="19D" placeholder="VD: 19D, Giải phẫu...">
   </div>
-
-  <div class="notice" id="notice">Hệ thống đang chuẩn bị dữ liệu...</div>
+  <button id="load" class="btn-primary">Tải thời khóa biểu</button>
+  <button id="auto" class="btn-secondary">Tự cập nhật: BẬT</button>
 </section>
 
-<div class="section-head">
-  <h2>Lịch học</h2>
-  <div class="count" id="count">Đang tải...</div>
-</div>
-<div class="week-nav" style="margin-bottom: 24px;">
+<div class="notice" id="notice">Đang tự động tải dữ liệu...</div>
+
+<div class="week-nav">
   <button class="btn-secondary" id="prev">← Tuần trước</button>
   <div class="week-label" id="weekLabel">06/11/2026</div>
   <button class="btn-secondary" id="next">Tuần sau →</button>
 </div>
 
-<section class="days" id="results" aria-live="polite">
-  <div class="empty"><strong>Đang kết nối</strong>Đang lấy dữ liệu thời khóa biểu…</div>
+<section class="schedule-grid" id="results" aria-live="polite">
+  <div class="empty"><strong>Đang tải dữ liệu...</strong>Vui lòng chờ trong giây lát.</div>
 </section>
 
 <footer class="foot">
-  Dữ liệu được tự động đồng bộ từ cổng Phòng Đào tạo.
+  Dữ liệu được đồng bộ tự động từ Phòng Đào tạo.
 </footer>
 
 </main>
@@ -262,16 +202,16 @@ const $=id=>document.getElementById(id);let rows=[],busy=false,autoOn=true,timer
 const clean=v=>(v??'').toString().replace(/\s+/g,' ').trim();
 const norm=v=>clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();
 const fmtDate=v=>{const [y,m,d]=v.split('-');return `${d}/${m}/${y}`};
-const getSchoolConfig=date=>{const d=new Date(date+'T12:00:00'),y=d.getFullYear(),m=d.getMonth()+1,start=m>=8?y:y-1;return{schoolYear:`${start} - ${start+1}`,semester:m>=8?1:2}};
 const addDays=(date,n)=>{const d=new Date(date+'T12:00:00');d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const monday=date=>{const d=new Date(date+'T12:00:00'),day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+
 async function getSnapshot(weekStart){
   const url=`./data/week-${weekStart}.json?v=${Date.now()}`;
   let response;
   try{response=await fetch(url,{cache:'no-store'})}catch(e){throw new Error('Không tải được dữ liệu JSON. Kiểm tra kết nối mạng.')}
   if(!response.ok)throw Object.assign(new Error(`Chưa có dữ liệu cho tuần ${fmtDate(weekStart)} (HTTP ${response.status}).`),{status:response.status});
   const snapshot=await response.json();
-  if(!snapshot||snapshot.ok!==true)throw new Error(snapshot?.error||'File dữ liệu lịch học chưa hợp lệ.');
+  if(!snapshot||snapshot.ok!==true)throw new Error(snapshot?.error||'File dữ liệu chưa hợp lệ.');
   return snapshot;
 }
 function findRows(data){if(Array.isArray(data)){if(data.some(x=>x&&typeof x==='object'&&('subjectName'in x||'className'in x||'startPeriod'in x)))return data;for(const x of data){const r=findRows(x);if(r.length)return r}return []}if(data&&typeof data==='object'){for(const k of ['items','data','results','schedules','generalSchedules','records','value'])if(k in data){const r=findRows(data[k]);if(r.length)return r}for(const v of Object.values(data)){if(v&&typeof v==='object'){const r=findRows(v);if(r.length)return r}}}return []}
@@ -280,83 +220,91 @@ function periods(r){const a=Number(r.startPeriod),b=Number(r.endPeriod);if(a>0&&
 function subject(r){const s=clean(r.subjectName);if(!s)return clean(r.title)|| (r.isActivitySchedule?'Hoạt động':'Chưa có tên môn');if(r.isExamSchedule)return 'Thi '+s;if(r.isActivitySchedule)return s;return `${s} (${clean(r.classTypeName)||(Number(r.lessonType)===1?'TH':'LT')})`}
 function normalizeRows(raw){return raw.filter(r=>r&&typeof r==='object'&&!r.isPlannedOnly).map(r=>({...r,_date:clean(r.date).slice(0,10),_class:clean(r.className)||'Chưa phân lớp',_subject:subject(r),_session:sessionName(r),_periods:periods(r),_priority:/\b19d\b/i.test(clean(r.className))})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r._date))}
 function setStatus(text,bad=false,loading=false){$('status').innerHTML=(loading?'<span class="spinner"></span>':'')+text;$('dot').classList.toggle('bad',bad)}
+
 function render(){
   const f=norm($('filter').value);const week=monday($('date').value);const end=addDays(week,6);
   const filtered=rows.filter(r=>r._date>=week&&r._date<=end&&(!f||[r._class,r._subject,r.teacherName,r.room,r.sessionName].some(v=>norm(v).includes(f))));
-  filtered.sort((a,b)=>a._date.localeCompare(b._date)||Number(a.session)-Number(b.session)||Number(a.startPeriod)-Number(b.startPeriod)||a._class.localeCompare(b._class,'vi'));
+  filtered.sort((a,b)=>a._date.localeCompare(b._date)||Number(a.session)-Number(b.session)||Number(a.startPeriod)-Number(b.startPeriod));
+  
   $('weekLabel').textContent=fmtDate(week)+' - '+fmtDate(end);
-  $('count').textContent=`${filtered.length} lịch học${f?' · Lọc: '+$('filter').value:''}`;
   const root=$('results');root.innerHTML='';
-  if(!filtered.length){root.innerHTML='<div class="empty"><strong>Không có lịch phù hợp</strong>Thử xóa bộ lọc hoặc chọn tuần khác.</div>';return}
-  for(let i=0;i<7;i++){
-    const day=addDays(week,i),list=filtered.filter(r=>r._date===day);if(!list.length)continue;
-    const d=new Date(day+'T12:00:00');
-    const box=document.createElement('article');box.className='day-group';
-    
-    const head=document.createElement('div');head.className='day-head';
-    const title=document.createElement('div');title.className='day-title';title.textContent=['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][d.getDay()];
-    const date=document.createElement('div');date.className='day-date';date.textContent=fmtDate(day);
-    head.append(title,date);box.append(head);
-    
-    const items=document.createElement('div');items.className='day-items';
-    for(const r of list){
-      const item=document.createElement('div');item.className='item'+(r._priority?' priority':'');
-      
-      const time=document.createElement('div');time.className='item-time';
-      const ses=document.createElement('span');ses.className='item-session';ses.textContent=r._session;
-      const per=document.createElement('span');per.className='item-periods';per.textContent=r._periods;
-      time.append(ses,per);
-      
-      const content=document.createElement('div');content.className='item-content';
-      
-      const header=document.createElement('div');header.className='item-header';
-      const name=document.createElement('div');name.className='item-subject';name.textContent=r._subject;
-      const cls=document.createElement('div');cls.className='item-class';cls.textContent=r._class;
-      header.append(name,cls);
-      
-      const details=document.createElement('div');details.className='item-details';
-      if(clean(r.teacherName)){const gv=document.createElement('span');gv.textContent='GV: '+clean(r.teacherName);details.append(gv)}
-      if(clean(r.room)||clean(r.classTypeName)){
-          const rm=document.createElement('span');
-          const p=[];if(clean(r.room))p.push('Phòng: '+clean(r.room));if(clean(r.classTypeName))p.push(clean(r.classTypeName));
-          rm.textContent=p.join(' · ');details.append(rm)
-      }
-      
-      content.append(header,details);
-      item.append(time,content);items.append(item);
-    }
-    box.append(items);root.append(box);
+  
+  if(!filtered.length){
+    root.innerHTML='<div class="empty"><strong>Không có lịch</strong>Thử chọn tuần khác hoặc xóa từ khóa lọc.</div>';
+    return;
   }
+
+  filtered.forEach(r => {
+    const d = new Date(r._date+'T12:00:00');
+    const dayName = ['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'][d.getDay()];
+
+    const card = document.createElement('article');
+    card.className = 'card' + (r._priority ? ' priority' : '');
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    header.innerHTML = `<div class="day-title">${dayName}</div><div class="day-date">${fmtDate(r._date)}</div>`;
+
+    // Body
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    // Cột Trái
+    const timeCol = document.createElement('div');
+    timeCol.className = 'col-time';
+    timeCol.innerHTML = `<div class="time-session">${r._session}</div><div class="time-period">${r._periods}</div>`;
+
+    // Cột Phải
+    const contentCol = document.createElement('div');
+    contentCol.className = 'col-content';
+    
+    let html = `<div class="subject-name">${r._subject}</div>`;
+    if(clean(r.teacherName)) html += `<div class="info-row"><svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><span>${clean(r.teacherName)}</span></div>`;
+    if(clean(r.room)) html += `<div class="info-row"><svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><span>Phòng ${clean(r.room)}</span></div>`;
+    html += `<div class="badge-class">${r._class}</div>`;
+    
+    contentCol.innerHTML = html;
+
+    body.append(timeCol, contentCol);
+    card.append(header, body);
+    root.append(card);
+  });
 }
+
 async function load(){
-  if(busy)return;busy=true;$('load').disabled=true;setStatus('Đang đọc dữ liệu',false,true);$('notice').classList.remove('error');
+  if(busy)return;busy=true;$('load').disabled=true;setStatus('Đang tải...',false,true);$('notice').classList.remove('error');
   const selected=$('date').value||'2026-11-06';const start=monday(selected);
   try{
-    const snapshot=await getSnapshot(start);const raw=findRows(snapshot.data);lastRaw=raw;rows=normalizeRows(raw);render();
-    const fetched=snapshot.fetchedAt?new Date(snapshot.fetchedAt).toLocaleString('vi-VN'):'không rõ';
-    $('notice').textContent=`Đã tải ${rows.length} lịch · Đồng bộ: ${fetched}.`;
+    const snapshot=await getSnapshot(start);
+    rows=normalizeRows(findRows(snapshot.data));
+    render();
+    $('notice').textContent = `Đã tải xong. Tự động cập nhật sau mỗi 5 phút.`;
     setStatus('Đã kết nối');
   }catch(e){
     const msg=e.message||'Lỗi không xác định.';
-    $('notice').textContent=msg;$('notice').classList.add('error');setStatus('Chưa có dữ liệu',true);
-    if(!rows.length)$('results').innerHTML='<div class="empty"><strong>Chưa tải được thời khóa biểu</strong>'+msg+'</div>';
+    $('notice').textContent=msg;$('notice').classList.add('error');setStatus('Lỗi kết nối',true);
+    if(!rows.length)$('results').innerHTML='<div class="empty"><strong>Không tải được dữ liệu</strong>'+msg+'</div>';
   }finally{busy=false;$('load').disabled=false}
 }
+
 function schedule(){if(timer)clearInterval(timer);if(autoOn)timer=setInterval(load,300000)}
-$('load').addEventListener('click',load);$('date').addEventListener('change',load);$('filter').addEventListener('input',render);
+
+$('load').addEventListener('click',load);
+$('date').addEventListener('change',load);
+$('filter').addEventListener('input',render);
 $('prev').addEventListener('click',()=>{$('date').value=addDays(monday($('date').value),-7);load()});
 $('next').addEventListener('click',()=>{$('date').value=addDays(monday($('date').value),7);load()});
-$('auto').addEventListener('click',()=>{autoOn=!autoOn;$('auto').textContent='Tự cập nhật: '+(autoOn?'BẬT':'TẮT');schedule();if(autoOn)load()});
-$('csv').addEventListener('click',()=>{
-  const f=norm($('filter').value),week=monday($('date').value),end=addDays(week,6);
-  const list=rows.filter(r=>r._date>=week&&r._date<=end&&(!f||[r._class,r._subject,r.teacherName,r.room].some(v=>norm(v).includes(f))));
-  if(!list.length){alert('Không có dữ liệu để xuất.');return}
-  const q=v=>'"'+clean(v).replace(/"/g,'""')+'"';
-  const lines=[['Ngày','Lớp','Ca','Tiết','Môn học','Giảng viên','Phòng'].map(q).join(','),...list.map(r=>[r._date,r._class,r._session,r._periods,r._subject,r.teacherName,r.room].map(q).join(','))];
-  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='thoi-khoa-bieu-'+week+'.csv';a.click();URL.revokeObjectURL(url);
+$('auto').addEventListener('click',()=>{
+  autoOn=!autoOn;
+  $('auto').textContent='Tự cập nhật: '+(autoOn?'BẬT':'TẮT');
+  schedule();
+  if(autoOn)load();
 });
-schedule();load();
+
+// Tự động chạy khi tải trang
+schedule();
+load();
 })();
 </script>
 </body>
