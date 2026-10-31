@@ -1,0 +1,36 @@
+const UPSTREAM = 'https://phongdaotao.cdytehatinh.edu.vn';
+const ALLOWED = new Set([
+  '/api/attendance/general-schedules/week',
+  '/api/attendance/general-schedules',
+  '/api/attendance/general-schedule-classes',
+  '/api/attendance/academic-weeks'
+]);
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const cors = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Accept',
+      'Cache-Control': 'no-store'
+    };
+    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+    if (request.method !== 'GET') return new Response('Method Not Allowed', { status: 405, headers: cors });
+    if (!ALLOWED.has(url.pathname)) return new Response('Not Found', { status: 404, headers: cors });
+    const target = new URL(UPSTREAM + url.pathname);
+    for (const [key, value] of url.searchParams) target.searchParams.set(key, value);
+    try {
+      const upstream = await fetch(target.toString(), {
+        method: 'GET',
+        headers: { 'Accept': 'application/json', 'Referer': UPSTREAM + '/xem-lich-hoc/lich-cong-khai' }
+      });
+      const headers = new Headers(cors);
+      headers.set('Content-Type', upstream.headers.get('Content-Type') || 'application/json; charset=utf-8');
+      return new Response(upstream.body, { status: upstream.status, headers });
+    } catch (error) {
+      return new Response(JSON.stringify({ message: 'Không thể kết nối máy chủ Phòng Đào tạo.' }), {
+        status: 502, headers: { ...cors, 'Content-Type': 'application/json; charset=utf-8' }
+      });
+    }
+  }
+};
