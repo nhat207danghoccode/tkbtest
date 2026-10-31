@@ -2,24 +2,24 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f4f7f6">
-<title>Thời khóa biểu · Cao đẳng Y tế Hà Tĩnh</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#f8fafc">
+<title>Thời khóa biểu · CĐ Y tế Hà Tĩnh</title>
 <style>
 :root {
   color-scheme: light;
-  --bg: #f4f7f6;
+  --bg: #f8fafc;
   --surface: #ffffff;
-  --text: #1a1c29;
-  --muted: #6b7280;
-  --line: #e5e7eb;
-  --primary: #4f46e5; /* Tím than */
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --primary: #4f46e5;
   --primary-light: #eef2ff;
-  --accent: #0d9488; /* Xanh ngọc */
+  --accent: #0d9488;
   --accent-light: #ccfbf1;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
   --radius: 16px;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 }
 
 * { box-sizing: border-box; }
@@ -32,172 +32,184 @@ body {
   line-height: 1.5;
 }
 
-.wrap { max-width: 1000px; margin: 0 auto; padding: 32px 20px 64px; }
+.wrap { max-width: 800px; margin: 0 auto; padding: 16px 16px 64px; }
 
-/* ===== HEADER ===== */
-.hero { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-.hero h1 { font-size: 32px; font-weight: 900; letter-spacing: -0.03em; margin: 0 0 8px; color: #111827; }
-.sub { color: var(--muted); font-size: 15px; margin: 0; }
-.status {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 16px; border-radius: 999px; background: var(--surface);
-  border: 1px solid var(--line); font-size: 13px; font-weight: 600;
-  box-shadow: var(--shadow); color: #374151;
+/* ===== HEADER (Siêu gọn) ===== */
+.top-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 4px 20px;
 }
-.dot { width: 10px; height: 10px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px #d1fae5; }
-.dot.bad { background: #ef4444; box-shadow: 0 0 0 3px #fee2e2; }
+.brand { display: flex; flex-direction: column; gap: 2px; }
+.brand-title { font-size: 20px; font-weight: 900; letter-spacing: -0.03em; color: #0f172a; margin: 0; }
+.brand-sub { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.status-dot {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  background: var(--surface); padding: 6px 12px; border-radius: 20px;
+  border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+.dot.loading { background: #f59e0b; animation: pulse 1.5s infinite; }
+.dot.error { background: #ef4444; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-/* ===== TOOLBAR ===== */
-.panel {
+/* ===== CONTROL BAR ===== */
+.controls { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+
+/* Thanh chuyển tuần */
+.week-pill {
+  display: flex; justify-content: space-between; align-items: center;
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
-  margin-bottom: 32px; display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;
+  border-radius: 999px; padding: 6px; box-shadow: var(--shadow-sm);
 }
-.field { flex: 1 1 200px; }
-.field label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em; }
-.field input {
-  width: 100%; background: #f9fafb; color: var(--text); border: 1px solid var(--line);
-  border-radius: 10px; padding: 12px 16px; font-size: 15px; outline: none; transition: 0.2s; font-family: inherit;
+.nav-btn {
+  background: transparent; border: none; padding: 10px 16px;
+  color: var(--muted); font-weight: 700; font-size: 14px; border-radius: 999px;
+  cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 4px;
 }
-.field input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); background: #fff; }
-button {
-  border: none; border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 700;
-  cursor: pointer; transition: 0.2s; font-family: inherit; white-space: nowrap;
+.nav-btn:hover { background: var(--bg); color: var(--text); }
+.date-display {
+  font-weight: 800; font-size: 15px; color: var(--text);
+  cursor: pointer; position: relative;
 }
-.btn-primary { background: var(--primary); color: white; }
-.btn-primary:hover { background: #4338ca; }
-.btn-secondary { background: #f3f4f6; color: #374151; }
-.btn-secondary:hover { background: #e5e7eb; }
-
-.notice {
-  margin-top: 16px; padding: 12px 16px; border-radius: 10px; font-size: 14px;
-  background: var(--primary-light); color: #3730a3; border: 1px solid #c7d2fe;
+/* Ẩn input date thật, click vào chữ sẽ bung lịch ra */
+.date-display input {
+  position: absolute; opacity: 0; width: 100%; height: 100%;
+  left: 0; top: 0; cursor: pointer;
 }
-.notice.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
 
-/* ===== WEEK NAV ===== */
-.week-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; background: var(--surface); padding: 12px; border-radius: 999px; border: 1px solid var(--line); box-shadow: var(--shadow); }
-.week-nav button { padding: 8px 16px; font-size: 13px; border-radius: 999px; }
-.week-label { font-weight: 800; font-size: 16px; color: var(--text); }
+/* Ô tìm kiếm */
+.search-box {
+  display: flex; align-items: center; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 999px; padding: 0 16px;
+  box-shadow: var(--shadow-sm); height: 48px; transition: 0.2s;
+}
+.search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+.search-box svg { width: 18px; height: 18px; color: var(--muted); margin-right: 10px; }
+.search-box input {
+  border: none; background: transparent; width: 100%; height: 100%;
+  font-size: 14px; color: var(--text); outline: none; font-family: inherit; font-weight: 500;
+}
 
-/* ===== DẠNG THẺ (GRID LAYOUT) ===== */
-.schedule-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+/* Nút Auto */
+.auto-btn {
+  background: transparent; border: none; color: var(--muted);
+  font-size: 12px; font-weight: 600; text-decoration: underline;
+  cursor: pointer; padding: 0; margin: 4px 0 0 8px; text-align: left; width: fit-content;
+}
 
-/* Thẻ Card */
+/* ===== DANH SÁCH THẺ LỊCH ===== */
+.schedule-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
 .card {
   background: var(--surface); border-radius: var(--radius);
-  border: 1px solid var(--line); box-shadow: var(--shadow);
-  display: flex; flex-direction: column; overflow: hidden; transition: 0.2s;
+  border: 1px solid var(--line); box-shadow: var(--shadow-sm);
+  display: flex; flex-direction: column; overflow: hidden;
 }
-.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-
-/* Đầu thẻ: Thứ / Ngày */
 .card-header {
-  background: #f9fafb; padding: 12px 16px; border-bottom: 1px solid var(--line);
+  padding: 12px 16px; border-bottom: 1px solid var(--line);
   display: flex; justify-content: space-between; align-items: center;
+  background: #f8fafc;
 }
-.day-title { font-weight: 800; font-size: 15px; color: var(--text); }
+.day-title { font-weight: 800; font-size: 13px; color: var(--text); text-transform: uppercase; letter-spacing: 0.05em; }
 .day-date { font-size: 13px; font-weight: 600; color: var(--muted); }
 
-/* Thân thẻ: 2 cột (Thời gian | Nội dung) */
 .card-body { display: flex; flex: 1; }
-
-/* Cột Trái: Thời gian */
 .col-time {
-  flex: 0 0 80px; background: #fff; padding: 16px 12px;
+  flex: 0 0 76px; background: #fff; padding: 16px 8px;
   border-right: 1px solid var(--line);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px;
 }
-.time-session { font-weight: 800; font-size: 14px; color: var(--primary); text-transform: uppercase; }
-.time-period { font-size: 13px; font-weight: 600; color: var(--muted); }
+.time-session { font-weight: 800; font-size: 13px; color: var(--primary); text-transform: uppercase; }
+.time-period { font-size: 12px; font-weight: 600; color: var(--muted); }
 
-/* Cột Phải: Nội dung */
-.col-content { flex: 1; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
-.subject-name { font-size: 16px; font-weight: 800; line-height: 1.35; color: #111827; }
+.col-content { flex: 1; padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.subject-name { font-size: 15px; font-weight: 800; line-height: 1.35; color: #0f172a; }
 
-.info-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13.5px; color: var(--muted); }
-.info-icon { flex-shrink: 0; width: 16px; height: 16px; opacity: 0.6; margin-top: 2px;}
+.info-row { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 500; }
+.info-icon { flex-shrink: 0; width: 14px; height: 14px; opacity: 0.7; margin-top: 2px;}
 
-/* Badge Lớp */
 .badge-class {
   display: inline-block; align-self: flex-start; margin-top: auto;
-  background: #f3f4f6; color: #4b5563; font-size: 12px; font-weight: 800;
-  padding: 4px 10px; border-radius: 6px;
+  background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 800;
+  padding: 3px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.03em;
 }
 
-/* Highlight cho Lớp Ưu Tiên (19D) */
-.card.priority { border-color: #99f6e4; box-shadow: 0 0 0 1px #99f6e4, var(--shadow); }
+/* Highlight 19D */
+.card.priority { border-color: #5eead4; box-shadow: 0 0 0 1px #5eead4, var(--shadow-sm); }
 .card.priority .card-header { background: #f0fdfa; border-bottom-color: #ccfbf1; }
 .card.priority .col-time { background: #f0fdfa; border-right-color: #ccfbf1; }
 .card.priority .time-session { color: var(--accent); }
 .card.priority .badge-class { background: var(--accent-light); color: #0f766e; }
 
-/* Empty state */
-.empty {
-  grid-column: 1 / -1; text-align: center; padding: 64px 20px;
-  background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius);
-}
-.empty strong { display: block; font-size: 18px; color: var(--text); margin-bottom: 8px; }
+/* Empty */
+.empty { text-align: center; padding: 60px 20px; background: var(--surface); border: 1px dashed var(--line); border-radius: var(--radius); }
+.empty strong { display: block; font-size: 16px; color: var(--text); margin-bottom: 4px; }
 
-.foot { text-align: center; font-size: 13px; color: var(--muted); margin-top: 48px; }
-
-/* Responsive */
-@media (max-width: 640px) {
-  .wrap { padding: 24px 16px 48px; }
-  .hero { flex-direction: column; align-items: flex-start; }
-  .panel { flex-direction: column; align-items: stretch; }
-  .schedule-grid { grid-template-columns: 1fr; }
-  .week-nav { border-radius: var(--radius); }
+@media (min-width: 768px) {
+  .wrap { padding: 40px 24px; }
+  .controls { flex-direction: row; align-items: center; }
+  .week-pill { flex: 1; }
+  .search-box { flex: 1; }
+  .auto-btn { margin: 0 0 0 12px; white-space: nowrap; }
+  .schedule-grid { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
 }
 </style>
 </head>
 <body>
 <main class="wrap">
 
-<header class="hero">
-  <div>
-    <h1>Thời khóa biểu</h1>
-    <p class="sub">Cao đẳng Y tế Hà Tĩnh · Lịch học tự động cập nhật</p>
+<header class="top-header">
+  <div class="brand">
+    <h1 class="brand-title">Lịch học</h1>
+    <span class="brand-sub">CĐ Y tế Hà Tĩnh</span>
   </div>
-  <div class="status" role="status">
-    <span class="dot" id="dot"></span><span id="status">Sẵn sàng kết nối</span>
+  <div class="status-dot" id="statusBadge">
+    <div class="dot" id="statusDot"></div>
+    <span id="statusText">Đang kết nối...</span>
   </div>
 </header>
 
-<section class="panel">
-  <div class="field">
-    <label for="date">Chọn tuần</label>
-    <input id="date" type="date" value="2026-11-06">
+<section class="controls">
+  <!-- Thanh chọn tuần -->
+  <div class="week-pill">
+    <button class="nav-btn" id="prev">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+    </button>
+    
+    <div class="date-display">
+      <span id="weekLabel">06/11/2026</span>
+      <!-- Input date ẩn để bấm vào ngày là bung lịch ra -->
+      <input id="date" type="date" value="2026-11-06">
+    </div>
+    
+    <button class="nav-btn" id="next">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+    </button>
   </div>
-  <div class="field">
-    <label for="filter">Lọc Lớp / Môn / Giảng viên</label>
-    <input id="filter" value="19D" placeholder="VD: 19D, Giải phẫu...">
+
+  <!-- Ô tìm kiếm -->
+  <div class="search-box">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+    <input id="filter" value="19D" placeholder="Tìm lớp, môn, giảng viên...">
   </div>
-  <button id="load" class="btn-primary">Tải thời khóa biểu</button>
-  <button id="auto" class="btn-secondary">Tự cập nhật: BẬT</button>
+  
+  <button class="auto-btn" id="auto">Tự động cập nhật: BẬT</button>
 </section>
 
-<div class="notice" id="notice">Đang tự động tải dữ liệu...</div>
-
-<div class="week-nav">
-  <button class="btn-secondary" id="prev">← Tuần trước</button>
-  <div class="week-label" id="weekLabel">06/11/2026</div>
-  <button class="btn-secondary" id="next">Tuần sau →</button>
+<!-- Badge đếm số lượng lịch -->
+<div style="font-size: 13px; font-weight: 600; color: var(--muted); margin: 0 4px 12px;" id="countBadge">
+  Đang tải dữ liệu...
 </div>
 
-<section class="schedule-grid" id="results" aria-live="polite">
-  <div class="empty"><strong>Đang tải dữ liệu...</strong>Vui lòng chờ trong giây lát.</div>
+<section class="schedule-grid" id="results">
+  <!-- Render danh sách thẻ -->
 </section>
-
-<footer class="foot">
-  Dữ liệu được đồng bộ tự động từ Phòng Đào tạo.
-</footer>
 
 </main>
 
 <script>
 (()=>{'use strict';
-const ORIGIN='https://phongdaotao.cdytehatinh.edu.vn';
 const $=id=>document.getElementById(id);let rows=[],busy=false,autoOn=true,timer=null,lastRaw=[];
 const clean=v=>(v??'').toString().replace(/\s+/g,' ').trim();
 const norm=v=>clean(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();
@@ -208,25 +220,33 @@ const monday=date=>{const d=new Date(date+'T12:00:00'),day=(d.getDay()+6)%7;d.se
 async function getSnapshot(weekStart){
   const url=`./data/week-${weekStart}.json?v=${Date.now()}`;
   let response;
-  try{response=await fetch(url,{cache:'no-store'})}catch(e){throw new Error('Không tải được dữ liệu JSON. Kiểm tra kết nối mạng.')}
-  if(!response.ok)throw Object.assign(new Error(`Chưa có dữ liệu cho tuần ${fmtDate(weekStart)} (HTTP ${response.status}).`),{status:response.status});
+  try{response=await fetch(url,{cache:'no-store'})}catch(e){throw new Error('Mất kết nối mạng.')}
+  if(!response.ok)throw Object.assign(new Error(`Chưa có dữ liệu tuần này.`),{status:response.status});
   const snapshot=await response.json();
-  if(!snapshot||snapshot.ok!==true)throw new Error(snapshot?.error||'File dữ liệu chưa hợp lệ.');
+  if(!snapshot||snapshot.ok!==true)throw new Error(snapshot?.error||'Lỗi dữ liệu.');
   return snapshot;
 }
 function findRows(data){if(Array.isArray(data)){if(data.some(x=>x&&typeof x==='object'&&('subjectName'in x||'className'in x||'startPeriod'in x)))return data;for(const x of data){const r=findRows(x);if(r.length)return r}return []}if(data&&typeof data==='object'){for(const k of ['items','data','results','schedules','generalSchedules','records','value'])if(k in data){const r=findRows(data[k]);if(r.length)return r}for(const v of Object.values(data)){if(v&&typeof v==='object'){const r=findRows(v);if(r.length)return r}}}return []}
-function sessionName(r){const s=clean(r.sessionName).toLowerCase();if(s.includes('sang'))return 'Sáng';if(s.includes('chieu'))return 'Chiều';if(s.includes('toi'))return 'Tối';const n=Number(r.session);return n===0?'Sáng':n===1?'Chiều':n===2?'Tối':clean(r.sessionName)||'Chưa rõ ca'}
+function sessionName(r){const s=clean(r.sessionName).toLowerCase();if(s.includes('sang'))return 'Sáng';if(s.includes('chieu'))return 'Chiều';if(s.includes('toi'))return 'Tối';const n=Number(r.session);return n===0?'Sáng':n===1?'Chiều':n===2?'Tối':clean(r.sessionName)||'Chưa rõ'}
 function periods(r){const a=Number(r.startPeriod),b=Number(r.endPeriod);if(a>0&&b>=a)return `Tiết ${a}${b!==a?'-'+b:''}`;return `${Math.max(1,Number(r.periodCount)||1)} tiết`}
-function subject(r){const s=clean(r.subjectName);if(!s)return clean(r.title)|| (r.isActivitySchedule?'Hoạt động':'Chưa có tên môn');if(r.isExamSchedule)return 'Thi '+s;if(r.isActivitySchedule)return s;return `${s} (${clean(r.classTypeName)||(Number(r.lessonType)===1?'TH':'LT')})`}
+function subject(r){const s=clean(r.subjectName);if(!s)return clean(r.title)|| (r.isActivitySchedule?'Hoạt động':'Chưa có tên');if(r.isExamSchedule)return 'Thi '+s;if(r.isActivitySchedule)return s;return `${s} (${clean(r.classTypeName)||(Number(r.lessonType)===1?'TH':'LT')})`}
 function normalizeRows(raw){return raw.filter(r=>r&&typeof r==='object'&&!r.isPlannedOnly).map(r=>({...r,_date:clean(r.date).slice(0,10),_class:clean(r.className)||'Chưa phân lớp',_subject:subject(r),_session:sessionName(r),_periods:periods(r),_priority:/\b19d\b/i.test(clean(r.className))})).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r._date))}
-function setStatus(text,bad=false,loading=false){$('status').innerHTML=(loading?'<span class="spinner"></span>':'')+text;$('dot').classList.toggle('bad',bad)}
+
+function setStatusUI(text, state="ok"){
+  $('statusText').textContent = text;
+  $('statusDot').className = 'dot ' + state;
+}
 
 function render(){
   const f=norm($('filter').value);const week=monday($('date').value);const end=addDays(week,6);
   const filtered=rows.filter(r=>r._date>=week&&r._date<=end&&(!f||[r._class,r._subject,r.teacherName,r.room,r.sessionName].some(v=>norm(v).includes(f))));
   filtered.sort((a,b)=>a._date.localeCompare(b._date)||Number(a.session)-Number(b.session)||Number(a.startPeriod)-Number(b.startPeriod));
   
+  // Format ngày hiển thị ngắn gọn hơn: 06/11 - 12/11
   $('weekLabel').textContent=fmtDate(week)+' - '+fmtDate(end);
+  
+  $('countBadge').textContent = `${filtered.length} lịch học` + (f ? ` (Lọc: ${$('filter').value})` : '');
+  
   const root=$('results');root.innerHTML='';
   
   if(!filtered.length){
@@ -241,21 +261,17 @@ function render(){
     const card = document.createElement('article');
     card.className = 'card' + (r._priority ? ' priority' : '');
 
-    // Header
     const header = document.createElement('div');
     header.className = 'card-header';
     header.innerHTML = `<div class="day-title">${dayName}</div><div class="day-date">${fmtDate(r._date)}</div>`;
 
-    // Body
     const body = document.createElement('div');
     body.className = 'card-body';
 
-    // Cột Trái
     const timeCol = document.createElement('div');
     timeCol.className = 'col-time';
     timeCol.innerHTML = `<div class="time-session">${r._session}</div><div class="time-period">${r._periods}</div>`;
 
-    // Cột Phải
     const contentCol = document.createElement('div');
     contentCol.className = 'col-content';
     
@@ -265,7 +281,6 @@ function render(){
     html += `<div class="badge-class">${r._class}</div>`;
     
     contentCol.innerHTML = html;
-
     body.append(timeCol, contentCol);
     card.append(header, body);
     root.append(card);
@@ -273,36 +288,32 @@ function render(){
 }
 
 async function load(){
-  if(busy)return;busy=true;$('load').disabled=true;setStatus('Đang tải...',false,true);$('notice').classList.remove('error');
+  if(busy)return;busy=true;setStatusUI('Đang tải...', 'loading');
   const selected=$('date').value||'2026-11-06';const start=monday(selected);
   try{
     const snapshot=await getSnapshot(start);
     rows=normalizeRows(findRows(snapshot.data));
     render();
-    $('notice').textContent = `Đã tải xong. Tự động cập nhật sau mỗi 5 phút.`;
-    setStatus('Đã kết nối');
+    setStatusUI('Đã cập nhật', 'ok');
   }catch(e){
-    const msg=e.message||'Lỗi không xác định.';
-    $('notice').textContent=msg;$('notice').classList.add('error');setStatus('Lỗi kết nối',true);
-    if(!rows.length)$('results').innerHTML='<div class="empty"><strong>Không tải được dữ liệu</strong>'+msg+'</div>';
-  }finally{busy=false;$('load').disabled=false}
+    setStatusUI('Lỗi kết nối', 'error');
+    $('results').innerHTML='<div class="empty"><strong>Không tải được dữ liệu</strong>'+(e.message||'')+'</div>';
+  }finally{busy=false}
 }
 
 function schedule(){if(timer)clearInterval(timer);if(autoOn)timer=setInterval(load,300000)}
 
-$('load').addEventListener('click',load);
 $('date').addEventListener('change',load);
 $('filter').addEventListener('input',render);
 $('prev').addEventListener('click',()=>{$('date').value=addDays(monday($('date').value),-7);load()});
 $('next').addEventListener('click',()=>{$('date').value=addDays(monday($('date').value),7);load()});
 $('auto').addEventListener('click',()=>{
   autoOn=!autoOn;
-  $('auto').textContent='Tự cập nhật: '+(autoOn?'BẬT':'TẮT');
+  $('auto').textContent='Tự động cập nhật: '+(autoOn?'BẬT':'TẮT');
   schedule();
   if(autoOn)load();
 });
 
-// Tự động chạy khi tải trang
 schedule();
 load();
 })();
