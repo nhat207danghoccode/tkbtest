@@ -252,16 +252,17 @@ body::after {
   background: rgba(15,23,42,.35);
   backdrop-filter: blur(4px);
   z-index: 999;
+  display: none;
   opacity: 0;
   pointer-events: none;
   transition: opacity .22s ease;
 }
-.week-picker-overlay.open { opacity: 1; pointer-events: auto; }
+.week-picker-overlay.open { display: block; opacity: 1; pointer-events: auto; }
 
 .week-picker {
   position: fixed;
   left: 50%; top: 50%;
-  transform: translate(-50%,-50%) scale(.92);
+  transform: translate(-50%,-48%) scale(.96);
   width: min(420px, calc(100vw - 32px));
   max-height: min(520px, calc(100vh - 100px));
   background: var(--surface);
@@ -269,13 +270,15 @@ body::after {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   z-index: 1000;
-  display: flex; flex-direction: column;
+  display: none;
+  flex-direction: column;
   opacity: 0;
   pointer-events: none;
-  transition: all .28s var(--ease);
+  transition: opacity .22s ease, transform .22s ease;
   overflow: hidden;
 }
 .week-picker.open {
+  display: flex;
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%,-50%) scale(1);
@@ -834,11 +837,22 @@ function buildPickerList(){
     if(active) active.scrollIntoView({block:'center',behavior:'auto'});
   });
 }
-function openWP(){ buildPickerList(); $('wpOverlay').classList.add('open'); $('wpPanel').classList.add('open'); }
-function closeWP(){ $('wpOverlay').classList.remove('open'); $('wpPanel').classList.remove('open'); }
-$('weekCenterBtn').onclick=openWP;
-$('wpOverlay').onclick=closeWP;
-$('wpClose').onclick=closeWP;
+function openWP(){
+  buildPickerList();
+  $('wpOverlay').classList.add('open');
+  $('wpPanel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeWP(){
+  $('wpOverlay').classList.remove('open');
+  $('wpPanel').classList.remove('open');
+  document.body.style.overflow='';
+}
+$('weekCenterBtn').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if($('wpPanel').classList.contains('open'))closeWP();else openWP();});
+$('wpOverlay').addEventListener('click',closeWP);
+$('wpClose').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeWP();});
+$('wpPanel').addEventListener('click',e=>e.stopPropagation());
+closeWP();
 
 async function getSnapshot(weekStart){
   const url=`./data/week-${weekStart}.json?v=${Date.now()}`;
@@ -1013,6 +1027,7 @@ $('autoToggle').onclick=()=>{
 };
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWP()});
+window.addEventListener('pageshow',closeWP);
 
 schedule();
 load();
