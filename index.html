@@ -727,7 +727,7 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
 
       <div class="week-center" id="weekCenterBtn" title="Bấm để chọn tuần nhanh">
         <span class="week-badge" id="weekBadge">Tuần 13</span>
-        <span class="date-range" id="dateRange">26/10 - 01/11/2026</span>
+        <span class="date-range" id="dateRange">02/11 - 08/11/2026</span>
       </div>
 
       <button class="nav-arrow" id="nextWeek" title="Tuần kế tiếp">
@@ -788,7 +788,7 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 
-const ANCHOR_MON = '2026-10-26';
+const ANCHOR_MON = '2026-11-02';
 const ANCHOR_WEEK = 13;
 const TOTAL_WEEKS = 30;
 
@@ -1030,7 +1030,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWP()});
 window.addEventListener('pageshow',closeWP);
 
 schedule();
-load();
+(async()=>{
+  const thisMon=getMonday(today());
+  const nextMon=addDays(thisMon,7);
+  try{
+    const nextSnap=await getSnapshot(nextMon);
+    const nextRows=normalizeRows(findRows(nextSnap.data));
+    if(nextRows.some(r=>r._date>=nextMon&&r._date<=addDays(nextMon,6))){
+      currentDate=nextMon;
+    }
+  }catch(e){}
+  load();
+})();
 })();
 </script>
 </body>
