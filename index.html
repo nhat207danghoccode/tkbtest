@@ -687,23 +687,22 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
 .creator-marquee{color:#3730a3!important;}
 #themeBtn{background:#fff!important;color:#334155!important;border:1px solid #dce3ed!important;}
 
-
 .export-group{display:flex;align-items:center;gap:6px;margin-left:auto}
 .export-btn{
-  display:inline-flex;align-items:center;gap:5px;
-  background:#fff;border:1.5px solid #cbd5e1;
-  color:#334155;font-size:11.5px;font-weight:700;
-  padding:7px 12px;border-radius:999px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#0d9488,#0f766e);
+  border:none;color:#fff;font-size:11.5px;font-weight:800;
+  padding:8px 14px;border-radius:999px;cursor:pointer;
   transition:all .2s ease;font-family:inherit;white-space:nowrap;
+  box-shadow:0 3px 12px rgba(13,148,136,.3);
+  letter-spacing:.01em;
 }
-.export-btn:hover{border-color:#4f46e5;color:#4f46e5;background:#eef2ff}
+.export-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(13,148,136,.4)}
 .export-btn:active{transform:scale(.96)}
 .export-btn svg{width:14px;height:14px}
-.export-btn.excel:hover{border-color:#16a34a;color:#16a34a;background:#f0fdf4}
-.export-btn.offline:hover{border-color:#0d9488;color:#0d9488;background:#f0fdfa}
 @media(max-width:520px){
   .export-group{width:100%;justify-content:flex-start;margin-left:0;margin-top:4px}
-  .export-btn{font-size:11px;padding:6px 10px}
+  .export-btn{font-size:11px;padding:7px 12px}
 }
 </style>
 </head>
@@ -778,13 +777,9 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
       <div class="toggle-track on" id="autoSwitch"></div>
     </div>
     <div class="export-group">
-      <button class="export-btn excel" id="exportExcelBtn" title="Tải file Excel">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        Excel
-      </button>
-      <button class="export-btn offline" id="exportOfflineBtn" title="Tải file HTML xem offline">
+      <button class="export-btn" id="exportOfflineBtn" title="Tải file xem offline">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        Offline
+        Lưu offline
       </button>
     </div>
   </div>
@@ -1057,7 +1052,7 @@ $('autoToggle').onclick=()=>{
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWP()});
 window.addEventListener('pageshow',closeWP);
 
-
+/* === EXPORT OFFLINE === */
 
 function getFilteredRowsForExport(){
   const mon=getMonday(currentDate), sun=addDays(mon,6);
@@ -1068,10 +1063,11 @@ function getFilteredRowsForExport(){
       ||(Number(a.startPeriod)||0)-(Number(b.startPeriod)||0));
 }
 
-function buildExportHTML(rowsToExport){
+function buildOfflineHTML(rowsToExport){
   const mon=getMonday(currentDate), sun=addDays(mon,6);
   const wn=weekNum(mon);
   const dayNames=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  const dayShort=['CN','T2','T3','T4','T5','T6','T7'];
   const byDate=new Map();
   rowsToExport.forEach(r=>{
     if(!byDate.has(r._date))byDate.set(r._date,[]);
@@ -1079,89 +1075,380 @@ function buildExportHTML(rowsToExport){
   });
   const sortedDates=[...byDate.keys()].sort();
 
-  let tableHTML='';
+  let timelineHTML='';
   sortedDates.forEach(date=>{
     const d=new Date(date+'T12:00:00');
     const dayRows=byDate.get(date);
-    dayRows.forEach((r,i)=>{
-      tableHTML+=`<tr>
-        ${i===0?`<td rowspan="${dayRows.length}" class="day-cell"><strong>${dayNames[d.getDay()]}</strong><br><span class="date-sub">${fmtFull(date)}</span></td>`:''}
-        <td><span class="session-badge ${norm(r._session)}">${r._session}</span></td>
-        <td class="time-cell">${r._periods}</td>
-        <td><strong>${r._subject}</strong></td>
-        <td>${clean(r.teacherName)||'—'}</td>
-        <td>${clean(r.room)||'—'}</td>
-        <td class="class-cell">${r._class}</td>
-      </tr>`;
+    const dow=d.getDay();
+    const isSun=dow===0;
+    const isSat=dow===6;
+    let sessionBlocks='';
+    dayRows.forEach(r=>{
+      const sc=norm(r._session);
+      const sIcon=r._session==='Sáng'?'☀':r._session==='Chiều'?'🌤':'🌙';
+      sessionBlocks+=`<div class="slot slot-${sc}">
+        <div class="slot-time">
+          <span class="slot-session">${sIcon} ${r._session}</span>
+          <span class="slot-periods">${r._periods}</span>
+        </div>
+        <div class="slot-body">
+          <div class="slot-subject">${r._subject}</div>
+          <div class="slot-meta">
+            ${clean(r.teacherName)?`<span class="slot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${clean(r.teacherName)}</span>`:''}
+            ${clean(r.room)?`<span class="slot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>${clean(r.room)}</span>`:''}
+            <span class="slot-tag slot-tag-class">${r._class}</span>
+          </div>
+        </div>
+      </div>`;
     });
+    timelineHTML+=`<div class="day-block ${isSun?'is-sun':isSat?'is-sat':''}">
+      <div class="day-marker">
+        <div class="day-dow">${dayShort[dow]}</div>
+        <div class="day-num">${String(d.getDate()).padStart(2,'0')}</div>
+        <div class="day-mon">th${d.getMonth()+1}</div>
+      </div>
+      <div class="day-content">
+        ${sessionBlocks}
+      </div>
+    </div>`;
   });
+
+  const firstDay=new Date(sortedDates[0]+'T12:00:00');
+  const lastDay=new Date(sortedDates[sortedDates.length-1]+'T12:00:00');
 
   return `<!doctype html>
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Thời khóa biểu Tuần ${wn} · CĐ Y tế Hà Tĩnh</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f1a">
+<title>TKB Tuần ${wn} · ${fmtShort(mon)}–${fmtShort(sun)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#172033;padding:12px;line-height:1.5;-webkit-font-smoothing:antialiased}
-.container{max-width:960px;margin:0 auto}
-.header{background:linear-gradient(135deg,#4f46e5,#06b6d4);color:#fff;padding:22px 20px;border-radius:16px;margin-bottom:14px;box-shadow:0 6px 24px rgba(79,70,229,.25)}
-.header h1{font-size:20px;font-weight:800;margin-bottom:4px}
-.header .sub{font-size:13px;opacity:.9;font-weight:600}
-.header .week-info{display:inline-block;background:rgba(255,255,255,.22);padding:5px 14px;border-radius:20px;font-size:13px;font-weight:800;margin-top:10px}
-.meta-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:12px;color:#64748b;font-weight:600}
-.card{background:#fff;border-radius:14px;padding:14px 12px;box-shadow:0 2px 12px rgba(15,23,42,.06);border:1px solid #e2e8f0;overflow:hidden}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-thead{display:none}
-tbody tr{border-bottom:1px solid #eef2f7}
-tbody tr:last-child{border-bottom:none}
-td{padding:10px 8px;vertical-align:top}
-.day-cell{background:#f8fafc;border-right:1px solid #e2e8f0;white-space:nowrap;font-size:12px;border-radius:8px 0 0 8px;min-width:72px}
-.date-sub{font-size:10.5px;color:#64748b;font-weight:600}
-.session-badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;text-transform:uppercase;white-space:nowrap}
-.session-badge.sang{background:#fef3c7;color:#92400e}
-.session-badge.chieu{background:#dbeafe;color:#1d4ed8}
-.session-badge.toi{background:#f3e8ff;color:#7e22ce}
-.time-cell{font-weight:700;color:#4f46e5;white-space:nowrap;font-size:12px}
-.class-cell{font-size:11px;font-weight:700;color:#0f766e;white-space:nowrap}
-.footer{text-align:center;margin-top:16px;font-size:11px;color:#94a3b8;font-weight:600;padding:10px}
-.empty{text-align:center;padding:40px 20px;color:#94a3b8}
-@media(max-width:600px){
-  body{padding:8px}
-  .header{padding:16px 14px;border-radius:12px}
-  .header h1{font-size:17px}
-  .card{padding:10px 6px;border-radius:10px}
-  td{padding:8px 5px;font-size:11.5px}
-  .day-cell{min-width:56px;font-size:10.5px}
-  .time-cell{font-size:10.5px}
+:root{
+  --ink:#0b1020;
+  --ink-2:#1c2440;
+  --paper:#f7f5f0;
+  --paper-2:#fffdf8;
+  --line:#e6e2d8;
+  --mute:#8a8578;
+  --accent:#e05e3d;
+  --accent-2:#c94a2b;
+  --teal:#0d9488;
+  --gold:#d4a017;
+  --blue:#3b6fd4;
+  --violet:#8b5cf6;
 }
+html,body{background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  line-height:1.5;
+  min-height:100vh;
+  padding:0 0 env(safe-area-inset-bottom);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(224,94,61,.06) 0%, transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba(13,148,136,.06) 0%, transparent 45%);
+  background-attachment:fixed;
+}
+
+.hero{
+  position:relative;
+  padding:28px 20px 22px;
+  background:linear-gradient(160deg,#0b1020 0%,#1a2342 100%);
+  color:#fff;
+  overflow:hidden;
+  border-radius:0 0 28px 28px;
+  box-shadow:0 10px 40px rgba(11,16,32,.25);
+}
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(224,94,61,.35) 0%, transparent 35%),
+    radial-gradient(circle at 85% 80%, rgba(13,148,136,.3) 0%, transparent 40%);
+  opacity:.7;
+  pointer-events:none;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  top:-50%; right:-20%;
+  width:70%; height:200%;
+  background:repeating-linear-gradient(45deg, transparent 0 20px, rgba(255,255,255,.02) 20px 21px);
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:800;letter-spacing:.15em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.7);
+  margin-bottom:10px;
+}
+.hero-eyebrow::before{
+  content:"";width:24px;height:1px;background:var(--accent);
+}
+.hero h1{
+  font-size:30px;font-weight:800;letter-spacing:-.03em;
+  line-height:1.1;margin-bottom:6px;
+}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-school{
+  font-size:13px;font-weight:600;color:rgba(255,255,255,.65);
+  margin-bottom:18px;
+}
+.hero-week{
+  display:flex;flex-wrap:wrap;align-items:center;gap:12px;
+  margin-top:18px;padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.week-chip{
+  display:inline-flex;align-items:baseline;gap:6px;
+  background:var(--accent);
+  padding:6px 14px;border-radius:10px;
+  box-shadow:0 4px 14px rgba(224,94,61,.35);
+}
+.week-chip .num{font-size:19px;font-weight:800;line-height:1}
+.week-chip .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.9}
+.hero-range{
+  font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.85);
+  letter-spacing:-.01em;
+}
+.hero-stats{
+  display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;
+}
+.hero-stat{
+  display:flex;align-items:center;gap:7px;
+  font-size:11.5px;font-weight:600;
+  color:rgba(255,255,255,.7);
+}
+.hero-stat b{color:#fff;font-weight:800;font-size:13px}
+.hero-stat::before{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px var(--accent);
+}
+
+.timeline{
+  max-width:720px;margin:0 auto;
+  padding:22px 16px 40px;
+}
+.timeline-header{
+  display:flex;align-items:center;gap:8px;
+  padding:0 4px 14px;
+  font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--mute);
+}
+.timeline-header::before{
+  content:"";flex:1;height:1px;background:var(--line);
+}
+.timeline-header::after{
+  content:"";flex:1;height:1px;background:var(--line);
+}
+
+.day-block{
+  display:flex;gap:14px;
+  margin-bottom:14px;
+  animation:fadeUp .4s ease both;
+}
+.day-block:nth-child(2){animation-delay:.03s}
+.day-block:nth-child(3){animation-delay:.06s}
+.day-block:nth-child(4){animation-delay:.09s}
+.day-block:nth-child(5){animation-delay:.12s}
+.day-block:nth-child(6){animation-delay:.15s}
+.day-block:nth-child(7){animation-delay:.18s}
+.day-block:nth-child(8){animation-delay:.21s}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.day-marker{
+  flex:0 0 56px;
+  padding-top:14px;
+  display:flex;flex-direction:column;
+  align-items:center;
+  position:relative;
+}
+.day-marker::after{
+  content:"";
+  position:absolute;
+  top:70px;bottom:-14px;left:50%;
+  width:1.5px;
+  background:linear-gradient(to bottom,var(--line),transparent);
+  transform:translateX(-50%);
+}
+.day-block:last-child .day-marker::after{display:none}
+.day-dow{
+  font-size:10px;font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--mute);
+}
+.day-num{
+  font-size:24px;font-weight:800;
+  line-height:1;letter-spacing:-.03em;
+  color:var(--ink);
+  margin:2px 0;
+}
+.day-mon{
+  font-size:10px;font-weight:700;
+  color:var(--mute);
+  text-transform:uppercase;
+}
+.day-block.is-sun .day-dow,
+.day-block.is-sun .day-num,
+.day-block.is-sun .day-mon{color:var(--accent)}
+.day-block.is-sat .day-num{color:var(--teal)}
+
+.day-content{
+  flex:1;min-width:0;
+  display:flex;flex-direction:column;gap:8px;
+}
+
+.slot{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px 15px;
+  display:flex;gap:12px;
+  position:relative;
+  overflow:hidden;
+  transition:all .2s ease;
+}
+.slot::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:3px;
+}
+.slot-sang::before{background:var(--gold)}
+.slot-chieu::before{background:var(--blue)}
+.slot-toi::before{background:var(--violet)}
+
+.slot-time{
+  flex:0 0 84px;
+  display:flex;flex-direction:column;gap:4px;
+  padding-left:4px;
+}
+.slot-session{
+  font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.slot-sang .slot-session{color:#b8820e}
+.slot-chieu .slot-session{color:var(--blue)}
+.slot-toi .slot-session{color:var(--violet)}
+.slot-periods{
+  font-size:11px;font-weight:700;
+  color:var(--mute);
+  font-variant-numeric:tabular-nums;
+}
+
+.slot-body{flex:1;min-width:0}
+.slot-subject{
+  font-size:14px;font-weight:800;
+  color:var(--ink);
+  line-height:1.35;
+  letter-spacing:-.01em;
+  margin-bottom:6px;
+}
+.slot-meta{
+  display:flex;flex-wrap:wrap;gap:8px;
+  align-items:center;
+}
+.slot-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;font-weight:600;
+  color:#5a5548;
+}
+.slot-tag svg{width:11px;height:11px;opacity:.6}
+.slot-tag-class{
+  margin-left:auto;
+  background:#f0ece1;
+  color:var(--ink-2);
+  font-weight:800;
+  padding:2px 8px;
+  border-radius:6px;
+  font-size:10px;
+  letter-spacing:.02em;
+}
+
+.empty-offline{
+  text-align:center;padding:60px 20px;
+  color:var(--mute);font-size:14px;
+}
+
+.footer{
+  max-width:720px;margin:0 auto;
+  padding:20px 16px 30px;
+  text-align:center;
+  border-top:1px solid var(--line);
+}
+.footer-sign{
+  font-size:11px;font-weight:700;
+  color:var(--mute);
+  letter-spacing:.05em;
+}
+.footer-sign b{color:var(--accent)}
+.footer-meta{
+  font-size:10px;color:var(--mute);
+  margin-top:6px;font-weight:500;
+}
+
+@media (max-width:420px){
+  .hero{padding:22px 16px 20px}
+  .hero h1{font-size:25px}
+  .hero-school{font-size:12px}
+  .timeline{padding:16px 12px 30px}
+  .day-block{gap:10px}
+  .day-marker{flex-basis:46px}
+  .day-num{font-size:21px}
+  .slot{padding:11px 12px;gap:8px;border-radius:12px}
+  .slot-time{flex-basis:64px}
+  .slot-subject{font-size:13px}
+  .slot-tag{font-size:10px}
+  .slot-tag-class{font-size:9px;padding:2px 6px}
+}
+
 @media print{
-  body{background:#fff;padding:0}
-  .header{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .card{box-shadow:none;border:1px solid #ddd}
-  .session-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff}
+  .hero{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;border-radius:0}
+  .slot{break-inside:avoid;box-shadow:none}
+  .timeline{padding:16px}
+  .day-block{break-inside:avoid}
 }
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <h1>📅 Thời khóa biểu</h1>
-    <div class="sub">Trường Cao đẳng Y tế Hà Tĩnh</div>
-    <div class="week-info">Tuần ${wn} · ${fmtShort(mon)} – ${fmtFull(sun)}</div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Thời khóa biểu</div>
+    <h1>Lịch học <em>tuần ${wn}</em></h1>
+    <div class="hero-school">Trường Cao đẳng Y tế Hà Tĩnh</div>
+    <div class="hero-week">
+      <div class="week-chip"><span class="num">${wn}</span><span class="lbl">Tuần</span></div>
+      <div class="hero-range">${fmtShort(mon)} – ${fmtFull(sun)}</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><b>${rowsToExport.length}</b> lịch học</div>
+      <div class="hero-stat"><b>${sortedDates.length}</b> ngày có tiết</div>
+    </div>
   </div>
-  <div class="meta-bar">
-    <span>📊 ${rowsToExport.length} lịch học</span>
-    <span>🕐 Xuất lúc: ${new Date().toLocaleString('vi-VN')}</span>
-  </div>
-  <div class="card">
-    ${rowsToExport.length?`<table>
-      <thead><tr><th>Ngày</th><th>Buổi</th><th>Tiết</th><th>Môn học</th><th>Giảng viên</th><th>Phòng</th><th>Lớp</th></tr></thead>
-      <tbody>${tableHTML}</tbody>
-    </table>`:'<div class="empty">Không có lịch học</div>'}
-  </div>
-  <div class="footer">✦ Nguyễn Phi Nhật · Nhat032007 ✦</div>
+</div>
+
+<div class="timeline">
+  <div class="timeline-header">Lịch trình</div>
+  ${rowsToExport.length?timelineHTML:'<div class="empty-offline">Không có lịch học trong tuần này</div>'}
+</div>
+
+<div class="footer">
+  <div class="footer-sign">✦ <b>Nguyễn Phi Nhật</b> · Nhat032007 ✦</div>
+  <div class="footer-meta">Xuất lúc ${new Date().toLocaleString('vi-VN')}</div>
 </div>
 </body>
 </html>`;
@@ -1179,71 +1466,15 @@ function downloadBlob(content, filename, mime){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-$('exportExcelBtn').onclick=()=>{
-  const exportRows=getFilteredRowsForExport();
-  if(!exportRows.length){alert('Không có dữ liệu để xuất. Vui lòng chọn tuần có lịch học.');return}
-  const mon=getMonday(currentDate), sun=addDays(mon,6), wn=weekNum(mon);
-  const dayNames=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
-  
-  let rowsHTML='';
-  exportRows.forEach(r=>{
-    const d=new Date(r._date+'T12:00:00');
-    rowsHTML+=`<tr>
-      <td>${dayNames[d.getDay()]}</td>
-      <td>${fmtFull(r._date)}</td>
-      <td>${r._session}</td>
-      <td>${r._periods}</td>
-      <td>${r._subject}</td>
-      <td>${clean(r.teacherName)||''}</td>
-      <td>${clean(r.room)||''}</td>
-      <td>${r._class}</td>
-    </tr>`;
-  });
-  
-  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8">
-<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Tuần ${wn}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
-<style>
-td,th{font-family:'Segoe UI',Arial,sans-serif;font-size:11pt;vertical-align:middle;padding:6px 8px}
-.title{font-size:16pt;font-weight:bold;color:#4f46e5}
-.subtitle{font-size:12pt;color:#0f766e;font-weight:600}
-.week-info{font-size:11pt;color:#475569}
-.header-cell{background:#4f46e5;color:#fff;font-weight:bold;font-size:11pt;text-align:center;border:1px solid #4338ca}
-.data-cell{border:1px solid #dce3ed}
-.day-cell{background:#f8fafc;font-weight:600}
-</style>
-</head><body>
-<table>
-  <tr><td colspan="8" class="title">THỜI KHÓA BIỂU</td></tr>
-  <tr><td colspan="8" class="subtitle">Trường Cao đẳng Y tế Hà Tĩnh</td></tr>
-  <tr><td colspan="8" class="week-info">Tuần ${wn} · ${fmtShort(mon)} – ${fmtFull(sun)} · Xuất lúc: ${new Date().toLocaleString('vi-VN')}</td></tr>
-  <tr><td colspan="8"></td></tr>
-  <tr>
-    <th class="header-cell">Thứ</th>
-    <th class="header-cell">Ngày</th>
-    <th class="header-cell">Buổi</th>
-    <th class="header-cell">Tiết</th>
-    <th class="header-cell">Môn học</th>
-    <th class="header-cell">Giảng viên</th>
-    <th class="header-cell">Phòng</th>
-    <th class="header-cell">Lớp</th>
-  </tr>
-  ${rowsHTML}
-</table>
-</body></html>`;
-  
-  downloadBlob('\ufeff'+html,`TKB_Tuan${wn}_${fmtShort(mon).replace('/','-')}.xls`,'application/vnd.ms-excel;charset=utf-8');
-};
-
 $('exportOfflineBtn').onclick=()=>{
   const exportRows=getFilteredRowsForExport();
   if(!exportRows.length){alert('Không có dữ liệu để xuất. Vui lòng chọn tuần có lịch học.');return}
   const mon=getMonday(currentDate), wn=weekNum(mon);
-  const html=buildExportHTML(exportRows);
-  downloadBlob(html,`TKB_Tuan${wn}_offline.html`,'text/html;charset=utf-8');
+  const html=buildOfflineHTML(exportRows);
+  downloadBlob(html,`TKB_Tuan${wn}_${fmtShort(mon).replace('/','-')}.html`,'text/html;charset=utf-8');
 };
 
-
+/* === END EXPORT === */
 
 schedule();
 (async()=>{
