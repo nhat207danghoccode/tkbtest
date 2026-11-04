@@ -687,6 +687,24 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
 .creator-marquee{color:#3730a3!important;}
 #themeBtn{background:#fff!important;color:#334155!important;border:1px solid #dce3ed!important;}
 
+
+.export-group{display:flex;align-items:center;gap:6px;margin-left:auto}
+.export-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:#fff;border:1.5px solid #cbd5e1;
+  color:#334155;font-size:11.5px;font-weight:700;
+  padding:7px 12px;border-radius:999px;cursor:pointer;
+  transition:all .2s ease;font-family:inherit;white-space:nowrap;
+}
+.export-btn:hover{border-color:#4f46e5;color:#4f46e5;background:#eef2ff}
+.export-btn:active{transform:scale(.96)}
+.export-btn svg{width:14px;height:14px}
+.export-btn.excel:hover{border-color:#16a34a;color:#16a34a;background:#f0fdf4}
+.export-btn.offline:hover{border-color:#0d9488;color:#0d9488;background:#f0fdfa}
+@media(max-width:520px){
+  .export-group{width:100%;justify-content:flex-start;margin-left:0;margin-top:4px}
+  .export-btn{font-size:11px;padding:6px 10px}
+}
 </style>
 </head>
 <body>
@@ -758,6 +776,16 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
     <div class="toggle-wrap" id="autoToggle" title="Tự cập nhật mỗi 5 phút">
       <span class="toggle-text">Tự động</span>
       <div class="toggle-track on" id="autoSwitch"></div>
+    </div>
+    <div class="export-group">
+      <button class="export-btn excel" id="exportExcelBtn" title="Tải file Excel">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        Excel
+      </button>
+      <button class="export-btn offline" id="exportOfflineBtn" title="Tải file HTML xem offline">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Offline
+      </button>
     </div>
   </div>
 </section>
@@ -1028,6 +1056,194 @@ $('autoToggle').onclick=()=>{
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWP()});
 window.addEventListener('pageshow',closeWP);
+
+
+
+function getFilteredRowsForExport(){
+  const mon=getMonday(currentDate), sun=addDays(mon,6);
+  const f=norm($('filter').value);
+  return rows.filter(r=>r._date>=mon&&r._date<=sun&&(!f||[r._class,r._subject,r.teacherName,r.room,r.sessionName,r._session].some(v=>norm(v).includes(f))))
+    .sort((a,b)=>a._date.localeCompare(b._date)
+      ||(a._session==='Sáng'?0:a._session==='Chiều'?1:2)-(b._session==='Sáng'?0:b._session==='Chiều'?1:2)
+      ||(Number(a.startPeriod)||0)-(Number(b.startPeriod)||0));
+}
+
+function buildExportHTML(rowsToExport){
+  const mon=getMonday(currentDate), sun=addDays(mon,6);
+  const wn=weekNum(mon);
+  const dayNames=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  const byDate=new Map();
+  rowsToExport.forEach(r=>{
+    if(!byDate.has(r._date))byDate.set(r._date,[]);
+    byDate.get(r._date).push(r);
+  });
+  const sortedDates=[...byDate.keys()].sort();
+
+  let tableHTML='';
+  sortedDates.forEach(date=>{
+    const d=new Date(date+'T12:00:00');
+    const dayRows=byDate.get(date);
+    dayRows.forEach((r,i)=>{
+      tableHTML+=`<tr>
+        ${i===0?`<td rowspan="${dayRows.length}" class="day-cell"><strong>${dayNames[d.getDay()]}</strong><br><span class="date-sub">${fmtFull(date)}</span></td>`:''}
+        <td><span class="session-badge ${norm(r._session)}">${r._session}</span></td>
+        <td class="time-cell">${r._periods}</td>
+        <td><strong>${r._subject}</strong></td>
+        <td>${clean(r.teacherName)||'—'}</td>
+        <td>${clean(r.room)||'—'}</td>
+        <td class="class-cell">${r._class}</td>
+      </tr>`;
+    });
+  });
+
+  return `<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thời khóa biểu Tuần ${wn} · CĐ Y tế Hà Tĩnh</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f7fa;color:#172033;padding:12px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.container{max-width:960px;margin:0 auto}
+.header{background:linear-gradient(135deg,#4f46e5,#06b6d4);color:#fff;padding:22px 20px;border-radius:16px;margin-bottom:14px;box-shadow:0 6px 24px rgba(79,70,229,.25)}
+.header h1{font-size:20px;font-weight:800;margin-bottom:4px}
+.header .sub{font-size:13px;opacity:.9;font-weight:600}
+.header .week-info{display:inline-block;background:rgba(255,255,255,.22);padding:5px 14px;border-radius:20px;font-size:13px;font-weight:800;margin-top:10px}
+.meta-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:12px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:14px;padding:14px 12px;box-shadow:0 2px 12px rgba(15,23,42,.06);border:1px solid #e2e8f0;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead{display:none}
+tbody tr{border-bottom:1px solid #eef2f7}
+tbody tr:last-child{border-bottom:none}
+td{padding:10px 8px;vertical-align:top}
+.day-cell{background:#f8fafc;border-right:1px solid #e2e8f0;white-space:nowrap;font-size:12px;border-radius:8px 0 0 8px;min-width:72px}
+.date-sub{font-size:10.5px;color:#64748b;font-weight:600}
+.session-badge{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;text-transform:uppercase;white-space:nowrap}
+.session-badge.sang{background:#fef3c7;color:#92400e}
+.session-badge.chieu{background:#dbeafe;color:#1d4ed8}
+.session-badge.toi{background:#f3e8ff;color:#7e22ce}
+.time-cell{font-weight:700;color:#4f46e5;white-space:nowrap;font-size:12px}
+.class-cell{font-size:11px;font-weight:700;color:#0f766e;white-space:nowrap}
+.footer{text-align:center;margin-top:16px;font-size:11px;color:#94a3b8;font-weight:600;padding:10px}
+.empty{text-align:center;padding:40px 20px;color:#94a3b8}
+@media(max-width:600px){
+  body{padding:8px}
+  .header{padding:16px 14px;border-radius:12px}
+  .header h1{font-size:17px}
+  .card{padding:10px 6px;border-radius:10px}
+  td{padding:8px 5px;font-size:11.5px}
+  .day-cell{min-width:56px;font-size:10.5px}
+  .time-cell{font-size:10.5px}
+}
+@media print{
+  body{background:#fff;padding:0}
+  .header{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card{box-shadow:none;border:1px solid #ddd}
+  .session-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>📅 Thời khóa biểu</h1>
+    <div class="sub">Trường Cao đẳng Y tế Hà Tĩnh</div>
+    <div class="week-info">Tuần ${wn} · ${fmtShort(mon)} – ${fmtFull(sun)}</div>
+  </div>
+  <div class="meta-bar">
+    <span>📊 ${rowsToExport.length} lịch học</span>
+    <span>🕐 Xuất lúc: ${new Date().toLocaleString('vi-VN')}</span>
+  </div>
+  <div class="card">
+    ${rowsToExport.length?`<table>
+      <thead><tr><th>Ngày</th><th>Buổi</th><th>Tiết</th><th>Môn học</th><th>Giảng viên</th><th>Phòng</th><th>Lớp</th></tr></thead>
+      <tbody>${tableHTML}</tbody>
+    </table>`:'<div class="empty">Không có lịch học</div>'}
+  </div>
+  <div class="footer">✦ Nguyễn Phi Nhật · Nhat032007 ✦</div>
+</div>
+</body>
+</html>`;
+}
+
+function downloadBlob(content, filename, mime){
+  const blob=new Blob([content],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$('exportExcelBtn').onclick=()=>{
+  const exportRows=getFilteredRowsForExport();
+  if(!exportRows.length){alert('Không có dữ liệu để xuất. Vui lòng chọn tuần có lịch học.');return}
+  const mon=getMonday(currentDate), sun=addDays(mon,6), wn=weekNum(mon);
+  const dayNames=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  
+  let rowsHTML='';
+  exportRows.forEach(r=>{
+    const d=new Date(r._date+'T12:00:00');
+    rowsHTML+=`<tr>
+      <td>${dayNames[d.getDay()]}</td>
+      <td>${fmtFull(r._date)}</td>
+      <td>${r._session}</td>
+      <td>${r._periods}</td>
+      <td>${r._subject}</td>
+      <td>${clean(r.teacherName)||''}</td>
+      <td>${clean(r.room)||''}</td>
+      <td>${r._class}</td>
+    </tr>`;
+  });
+  
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8">
+<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Tuần ${wn}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+<style>
+td,th{font-family:'Segoe UI',Arial,sans-serif;font-size:11pt;vertical-align:middle;padding:6px 8px}
+.title{font-size:16pt;font-weight:bold;color:#4f46e5}
+.subtitle{font-size:12pt;color:#0f766e;font-weight:600}
+.week-info{font-size:11pt;color:#475569}
+.header-cell{background:#4f46e5;color:#fff;font-weight:bold;font-size:11pt;text-align:center;border:1px solid #4338ca}
+.data-cell{border:1px solid #dce3ed}
+.day-cell{background:#f8fafc;font-weight:600}
+</style>
+</head><body>
+<table>
+  <tr><td colspan="8" class="title">THỜI KHÓA BIỂU</td></tr>
+  <tr><td colspan="8" class="subtitle">Trường Cao đẳng Y tế Hà Tĩnh</td></tr>
+  <tr><td colspan="8" class="week-info">Tuần ${wn} · ${fmtShort(mon)} – ${fmtFull(sun)} · Xuất lúc: ${new Date().toLocaleString('vi-VN')}</td></tr>
+  <tr><td colspan="8"></td></tr>
+  <tr>
+    <th class="header-cell">Thứ</th>
+    <th class="header-cell">Ngày</th>
+    <th class="header-cell">Buổi</th>
+    <th class="header-cell">Tiết</th>
+    <th class="header-cell">Môn học</th>
+    <th class="header-cell">Giảng viên</th>
+    <th class="header-cell">Phòng</th>
+    <th class="header-cell">Lớp</th>
+  </tr>
+  ${rowsHTML}
+</table>
+</body></html>`;
+  
+  downloadBlob('\ufeff'+html,`TKB_Tuan${wn}_${fmtShort(mon).replace('/','-')}.xls`,'application/vnd.ms-excel;charset=utf-8');
+};
+
+$('exportOfflineBtn').onclick=()=>{
+  const exportRows=getFilteredRowsForExport();
+  if(!exportRows.length){alert('Không có dữ liệu để xuất. Vui lòng chọn tuần có lịch học.');return}
+  const mon=getMonday(currentDate), wn=weekNum(mon);
+  const html=buildExportHTML(exportRows);
+  downloadBlob(html,`TKB_Tuan${wn}_offline.html`,'text/html;charset=utf-8');
+};
+
+
 
 schedule();
 (async()=>{
