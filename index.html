@@ -743,6 +743,61 @@ body::before,body::after{display:none!important}
 @media(max-width:420px){.next-week-inner{padding:24px 19px 20px}.next-week-title{font-size:21px}.next-week-actions{grid-template-columns:1fr}.next-week-btn{min-height:44px}}
 @media(prefers-reduced-motion:reduce){.next-week-overlay,.next-week-dialog,.next-week-btn{transition:none}}
 
+
+/* Creator credit: redesigned as a single, non-repeating signature strip */
+.creator-marquee{
+  width:100%; margin:-7px 0 17px; padding:0; overflow:visible;
+  border:0!important; border-radius:0!important; background:transparent!important;
+  box-shadow:none!important; white-space:normal; color:inherit!important;
+}
+.creator-credit-card{
+  position:relative; display:flex; align-items:center; justify-content:center; gap:13px;
+  width:max-content; max-width:100%; min-height:66px; margin:0 auto; padding:10px 20px 10px 13px;
+  border:1px solid rgba(126,92,190,.2); border-radius:18px;
+  background:linear-gradient(115deg,rgba(255,255,255,.94),rgba(247,242,255,.92) 52%,rgba(239,246,255,.94));
+  box-shadow:0 7px 22px rgba(91,65,145,.09),inset 0 1px 0 rgba(255,255,255,.95);
+  animation:creditAppear .65s cubic-bezier(.2,.8,.2,1) both;
+}
+.creator-credit-mark{
+  display:grid; place-items:center; flex:0 0 39px; width:39px; height:39px; border-radius:13px;
+  color:#fff; font-size:19px; background:linear-gradient(145deg,#9b7be8,#6f83d9);
+  box-shadow:0 4px 12px rgba(120,96,198,.24);
+}
+.creator-credit-copy{display:flex; flex-direction:column; gap:3px; min-width:0}
+.creator-credit-label{font-size:9px; line-height:1.2; font-weight:800; letter-spacing:.16em; color:#8a79ad}
+.creator-credit-copy strong{font-size:16px; line-height:1.25; font-weight:800; letter-spacing:-.025em; color:#393052}
+.creator-credit-handle{margin-left:4px; padding:6px 10px; border:1px solid rgba(139,116,194,.18); border-radius:999px; background:rgba(255,255,255,.72); color:#78649f; font-size:10px; font-weight:750; white-space:nowrap}
+@keyframes creditAppear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:420px){.creator-credit-card{gap:9px;padding:9px 11px}.creator-credit-mark{width:34px;height:34px;flex-basis:34px}.creator-credit-copy strong{font-size:14px}.creator-credit-label{font-size:8px}.creator-credit-handle{font-size:9px;padding:5px 7px}}
+@media(prefers-reduced-motion:reduce){.creator-credit-card{animation:none}}
+
+
+/* Liquid glass scrolling creator ribbon */
+.creator-marquee{
+  position:relative!important;isolation:isolate;width:100%;height:54px;overflow:hidden!important;
+  display:flex;align-items:center;margin:-5px 0 19px!important;padding:0!important;
+  border:1px solid rgba(255,255,255,.68)!important;border-radius:18px!important;
+  background:linear-gradient(110deg,rgba(255,255,255,.48),rgba(222,211,255,.24) 35%,rgba(208,231,255,.30) 70%,rgba(255,255,255,.42))!important;
+  -webkit-backdrop-filter:blur(22px) saturate(175%);backdrop-filter:blur(22px) saturate(175%);
+  box-shadow:0 8px 28px rgba(103,78,160,.12),inset 0 1px 0 rgba(255,255,255,.88),inset 0 -1px 0 rgba(255,255,255,.24)!important;
+  color:#51416f!important;white-space:nowrap;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 4%,#000 96%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 4%,#000 96%,transparent 100%);
+}
+.creator-marquee:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(115deg,transparent 12%,rgba(255,255,255,.46) 34%,transparent 53%);opacity:.75}
+.creator-marquee:after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.98),transparent);pointer-events:none}
+.creator-marquee-track{display:flex!important;align-items:center;width:max-content!important;flex:0 0 auto;animation:creatorScroll 27s linear infinite!important;will-change:transform}
+.creator-marquee-item{height:54px;min-height:54px;display:inline-flex;align-items:center;gap:11px;padding:0 42px 0 20px!important;font-family:inherit;font-size:12px;letter-spacing:.01em}
+.creator-marquee-item i{font-style:normal;font-size:17px;color:#9b79dc;text-shadow:0 0 12px rgba(166,129,226,.45)}
+.creator-marquee-item b{font-size:10px;font-weight:850;letter-spacing:.13em;color:#8267b5}
+.creator-marquee-item em{font-size:11px;font-style:normal;font-weight:500;color:#827991}
+.creator-marquee-item strong{font-size:14px;font-weight:850;letter-spacing:-.025em;background:linear-gradient(100deg,#7450c4,#b06bc2,#638bd0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.creator-marquee-item small{font-size:10px;font-weight:750;color:#8068ae;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.68);border-radius:999px;padding:5px 10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
+.creator-marquee:hover .creator-marquee-track{animation-play-state:paused!important}
+@keyframes creatorScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:520px){.creator-marquee{height:47px;margin:-3px 0 16px!important;border-radius:15px!important}.creator-marquee-item{height:47px;min-height:47px;gap:7px;padding-right:26px!important;padding-left:13px!important}.creator-marquee-item b{font-size:9px}.creator-marquee-item em{font-size:10px}.creator-marquee-item strong{font-size:12px}.creator-marquee-item small{font-size:9px;padding:4px 8px}}
+@media(prefers-reduced-motion:reduce){.creator-marquee-track{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -770,7 +825,10 @@ body::before,body::after{display:none!important}
   </div>
 </header>
 <div class="creator-marquee" aria-label="Thông tin tác giả">
-  <div class="creator-marquee-track"><span>✦ Website thời khóa biểu được phát triển bởi Nguyễn Phi Nhật · Nhat032007 · ✦ Website thời khóa biểu được phát triển bởi Nguyễn Phi Nhật · Nhat032007 · ✦</span><span aria-hidden="true">✦ Website thời khóa biểu được phát triển bởi Nguyễn Phi Nhật · Nhat032007 · ✦ Website thời khóa biểu được phát triển bởi Nguyễn Phi Nhật · Nhat032007 · ✦</span></div>
+  <div class="creator-marquee-track">
+    <span class="creator-marquee-item"><i>✦</i><b>THỜI KHÓA BIỂU</b><em>Thiết kế & phát triển bởi</em><strong>Nguyễn Phi Nhật</strong><small>@Nhat032007</small><i>✧</i></span>
+    <span class="creator-marquee-item" aria-hidden="true"><i>✦</i><b>THỜI KHÓA BIỂU</b><em>Thiết kế & phát triển bởi</em><strong>Nguyễn Phi Nhật</strong><small>@Nhat032007</small><i>✧</i></span>
+  </div>
 </div>
 
 <section class="controls-panel">
@@ -1483,6 +1541,67 @@ body{
   .timeline{padding:16px}
   .day-block{break-inside:avoid}
 }
+
+.creator-marquee{
+  position:relative!important;
+  width:94%;height:40px;overflow:hidden;
+  display:flex;align-items:center;
+  margin:-5px auto 16px!important;padding:0!important;
+  border:1px solid rgba(139,92,246,.20)!important;
+  border-radius:15px!important;
+  background:linear-gradient(105deg,rgba(250,247,255,.98),rgba(239,235,255,.96) 48%,rgba(237,247,255,.98))!important;
+  box-shadow:0 5px 18px rgba(91,65,160,.075)!important;
+  color:#433078!important;
+  white-space:nowrap;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+}
+.creator-marquee-track{
+  display:flex!important;align-items:center;width:max-content;
+  animation:creatorScroll 34s linear infinite!important;
+  will-change:transform;
+}
+.creator-marquee-item{
+  min-height:40px;display:inline-flex;align-items:center;gap:8px;
+  padding:0 22px 0 10px!important;
+  font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:11px;letter-spacing:.015em;
+}
+.creator-marquee-item i{
+  font-style:normal;font-size:12px;color:#9b7be8;
+  text-shadow:0 0 10px rgba(139,92,246,.28);
+}
+.creator-marquee-item b{
+  font-size:9px;font-weight:800;letter-spacing:.10em;
+  color:#7960b5;
+}
+.creator-marquee-item em{
+  font-size:10px;font-style:normal;font-weight:500;color:#7c7890;
+}
+.creator-marquee-item strong{
+  font-size:11px;font-weight:800;letter-spacing:-.015em;
+  background:linear-gradient(100deg,#7250c7,#a05bbd,#557fc4);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.creator-marquee-item small{
+  font-size:9px;font-weight:700;color:#8875b5;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(139,92,246,.14);
+  border-radius:999px;padding:3px 7px;
+}
+.creator-marquee:hover .creator-marquee-track{animation-play-state:paused!important}
+@keyframes creatorScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* Compact 15px Liquid Glass ribbon */
+.creator-marquee{height:15px!important;min-height:15px!important;border-radius:8px!important;margin:-3px auto 12px!important}
+.creator-marquee-item{height:15px!important;min-height:15px!important;gap:5px!important;padding:0 14px 0 8px!important;font-size:7px!important}
+.creator-marquee-item i{font-size:8px!important}
+.creator-marquee-item b{font-size:6px!important;letter-spacing:.06em!important}
+.creator-marquee-item em{font-size:7px!important}
+.creator-marquee-item strong{font-size:8px!important}
+.creator-marquee-item small{font-size:6px!important;padding:0 4px!important;border-radius:5px!important}
+@media(max-width:520px){.creator-marquee{width:94%;height:15px!important;min-height:15px!important;margin:-3px auto 10px!important;border-radius:7px!important}.creator-marquee-item{height:15px!important;min-height:15px!important;gap:4px!important;padding-right:12px!important;padding-left:7px!important}.creator-marquee-item b{font-size:6px!important}.creator-marquee-item em{font-size:6px!important}.creator-marquee-item strong{font-size:7px!important}.creator-marquee-item small{font-size:5px!important}}
+@media(prefers-reduced-motion:reduce){.creator-marquee-track{animation:none!important}}
+
 </style>
 </head>
 <body>
