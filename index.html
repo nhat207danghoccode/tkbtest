@@ -1069,8 +1069,42 @@ html:root:root[data-theme] body.v-notif .notif{display:block!important}
 html:root:root[data-theme] body .bnav{width:min(78vw,320px)!important}
 html:root:root[data-theme] body.v-study .bnav{opacity:.94!important}
 html:root:root[data-theme] body .bnav .bdg.off{display:none!important}
+html:root:root[data-theme] body.v-study .bnav{transform:translateX(-50%) translateY(calc(100% - 7px))!important;transition:transform .3s!important}
+html:root:root[data-theme] body.v-study .bnav:hover,html:root:root[data-theme] body.v-study .bnav.open{transform:translateX(-50%) translateY(0)!important}
 body::before,body::after{display:none!important}
 
+@media(min-width:900px){html:root:root[data-theme] body{background:linear-gradient(135deg,#cfe0ff,#e6defa 60%,#dbe8ff)!important}
+html:root:root[data-theme] body #fixedNurseBackground{left:0!important;transform:none!important;width:42vw!important;height:100vh!important;-webkit-mask-image:linear-gradient(to right,#000 82%,transparent)!important;mask-image:linear-gradient(to right,#000 82%,transparent)!important}
+html:root:root[data-theme] body .wrap{max-width:none!important;width:58vw!important;margin:0 0 0 42vw!important;padding:24px 40px 40px 12px!important}
+html:root:root[data-theme] body .top-header{padding:0!important}
+html:root:root[data-theme] body .credit{margin:16px 0!important}
+html:root:root[data-theme] body .sheet{margin:0!important;border-radius:32px!important;border-bottom:2px solid rgba(255,255,255,.8)!important;padding:22px 22px 110px!important;min-height:0!important}
+html:root:root[data-theme] body .week-nav{padding-bottom:14px!important}
+html:root:root[data-theme] body .nav-arrow{width:40px!important;height:40px!important}
+html:root:root[data-theme] body .week-badge{font-size:19px!important;padding:6px 22px!important}
+html:root:root[data-theme] body .date-range{font-size:13.5px!important}
+html:root:root[data-theme] body .search-box,html:root:root[data-theme] body .filter-pill{height:44px!important}
+html:root:root[data-theme] body .fake-ph{font-size:14px!important;left:42px!important}
+html:root:root[data-theme] body .chip{height:42px!important;font-size:13.5px!important;padding:0 12px!important}
+html:root:root[data-theme] body .quick-actions{flex-wrap:nowrap!important;min-width:0!important;overflow-x:auto!important}
+html:root:root[data-theme] body .ctrl-row-2{flex-wrap:wrap!important;gap:12px!important}
+html:root:root[data-theme] body .quick-actions{flex:1 1 auto!important}
+html:root:root[data-theme] body .toggle-text{font-size:12px!important}
+html:root:root[data-theme] body .chip.today-chip small,html:root:root[data-theme] body .chip.today-chip b{font-size:13px!important}
+html:root:root[data-theme] body .quick-actions{flex-wrap:wrap!important;overflow:visible!important}
+html:root:root[data-theme] body .ctrl-row-2{flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;justify-content:space-between!important}
+html:root:root[data-theme] body .quick-actions{width:auto!important;flex:1!important}
+html:root:root[data-theme] body .toggle-wrap{align-self:auto!important}
+html:root:root[data-theme] body .day-section-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(360px,1fr))!important;gap:16px!important}
+html:root:root[data-theme] body .day-section-title{font-size:14px!important;padding:6px 16px!important}
+html:root:root[data-theme] body .subject{font-size:16px!important}
+html:root:root[data-theme] body .info-row{font-size:14px!important}
+html:root:root[data-theme] body .col-time{width:88px!important}
+html:root:root[data-theme] body .bnav{left:calc(42vw + 29vw)!important;width:340px!important}
+html:root:root[data-theme] body.v-study .bnav{left:50%!important}
+html:root:root[data-theme] body .notif{max-width:none!important;width:58vw!important;margin:0 0 0 42vw!important;padding:24px 40px 130px 12px!important}
+html:root:root[data-theme] body .sticker{right:20px!important;width:104px!important}
+html:root:root[data-theme] body .ecg{left:20px!important}}
 </style>
 </head>
 <body>
@@ -1988,11 +2022,16 @@ function go(g){
   if(view==='study'&&g!=='study')commit(true);
   view=g;document.body.classList.toggle('v-study',g==='study');document.body.classList.toggle('v-notif',g==='notif');
   document.querySelectorAll('#bnav button').forEach(x=>x.classList.toggle('on',x.dataset.go===g));
-  if(g==='study'){const fr=document.getElementById('studyFrame');if(!fr.src)fr.src=STUDY_URL;startSession()}
+  nav.classList.remove('open');if(g!=='study')exitFS();
+  if(g==='study'){enterFS();const fr=document.getElementById('studyFrame');if(!fr.src)fr.src=STUDY_URL;startSession()}
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
   window.scrollTo(0,0);badge();
 }
+const nav=document.getElementById('bnav');let nt=null;
+nav.addEventListener('click',e=>{if(view==='study'&&!nav.classList.contains('open')){e.stopPropagation();e.preventDefault();nav.classList.add('open');clearTimeout(nt);nt=setTimeout(()=>nav.classList.remove('open'),4000)}},true);
 document.querySelectorAll('#bnav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
+const enterFS=()=>{try{const r=document.documentElement.requestFullscreen;r&&document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
+const exitFS=()=>{try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}};
 setInterval(()=>{if(view==='study'&&!document.hidden)commit(false)},15000);
 document.addEventListener('visibilitychange',()=>{if(view!=='study')return;if(document.hidden)commit(true);else startSession()});
 addEventListener('pagehide',()=>{if(view==='study')commit(true)});
