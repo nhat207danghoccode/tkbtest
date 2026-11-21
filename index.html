@@ -1069,14 +1069,18 @@ html:root:root[data-theme] body.v-notif .notif{display:block!important}
 html:root:root[data-theme] body .bnav{width:min(78vw,320px)!important}
 html:root:root[data-theme] body.v-study .bnav{opacity:.94!important}
 html:root:root[data-theme] body .bnav .bdg.off{display:none!important}
-html:root:root[data-theme] body.v-study .bnav{transform:translateX(-50%) translateY(calc(100% - 7px))!important;transition:transform .3s!important}
-html:root:root[data-theme] body.v-study .bnav:hover,html:root:root[data-theme] body.v-study .bnav.open{transform:translateX(-50%) translateY(0)!important}
+html:root:root[data-theme] body.v-study .bnav,html:root:root[data-theme] body.v-map .bnav{transition:width .25s ease,padding .25s ease,border-radius .25s ease,bottom .25s ease!important}
+html:root:root[data-theme] body.v-study .bnav:not(:hover):not(.open),html:root:root[data-theme] body.v-map .bnav:not(:hover):not(.open){width:176px!important;padding:3px 4px!important;border-radius:20px!important;bottom:6px!important;box-shadow:0 4px 16px rgba(90,100,220,.28),inset 0 1px 0 #fff!important}
+html:root:root[data-theme] body.v-study .bnav:not(:hover):not(.open) button,html:root:root[data-theme] body.v-map .bnav:not(:hover):not(.open) button{font-size:0!important;gap:0!important;padding:3px 0!important}
+html:root:root[data-theme] body.v-study .bnav:not(:hover):not(.open) svg,html:root:root[data-theme] body.v-map .bnav:not(:hover):not(.open) svg{width:18px!important;height:18px!important}
+html:root:root[data-theme] body.v-study .bnav:not(:hover):not(.open) button.on .ic,html:root:root[data-theme] body.v-map .bnav:not(:hover):not(.open) button.on .ic{margin-top:0!important;width:30px!important;height:30px!important;box-shadow:0 2px 8px rgba(80,90,255,.45),0 0 0 2px rgba(255,255,255,.7)!important}
+html:root:root[data-theme] body.v-study .bnav:not(:hover):not(.open) button.on svg,html:root:root[data-theme] body.v-map .bnav:not(:hover):not(.open) button.on svg{width:16px!important;height:16px!important}
+html:root:root[data-theme] body.v-study .bnav:not(:hover):not(.open) .bdg,html:root:root[data-theme] body.v-map .bnav:not(:hover):not(.open) .bdg{top:-3px!important;left:calc(50% + 2px)!important;min-width:13px!important;height:13px!important;font-size:8px!important;border-width:1.5px!important;border-radius:7px!important}
 html:root:root[data-theme] body .map-frame{display:block!important;visibility:hidden!important;pointer-events:none!important;position:fixed!important;inset:0!important;z-index:-1!important;width:100%!important;height:100%!important;border:0!important;background:#fff!important}
 html:root:root[data-theme] body.v-map .map-frame{visibility:visible!important;pointer-events:auto!important;z-index:50!important}
 html:root:root[data-theme] body.v-map .wrap,html:root:root[data-theme] body.v-map .sticker,html:root:root[data-theme] body.v-map .ecg{display:none!important}
 html:root:root[data-theme] body .bnav{width:min(90vw,400px)!important}
-html:root:root[data-theme] body.v-map .bnav{opacity:.94!important;transform:translateX(-50%) translateY(calc(100% - 7px))!important;transition:transform .3s!important}
-html:root:root[data-theme] body.v-map .bnav:hover,html:root:root[data-theme] body.v-map .bnav.open{transform:translateX(-50%) translateY(0)!important}
+html:root:root[data-theme] body.v-map .bnav{opacity:.94!important}
 body::before,body::after{display:none!important}
 
 @media(min-width:900px){html:root:root[data-theme] body{background:linear-gradient(135deg,#cfe0ff,#e6defa 60%,#dbe8ff)!important}
