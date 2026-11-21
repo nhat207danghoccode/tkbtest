@@ -1071,6 +1071,12 @@ html:root:root[data-theme] body.v-study .bnav{opacity:.94!important}
 html:root:root[data-theme] body .bnav .bdg.off{display:none!important}
 html:root:root[data-theme] body.v-study .bnav{transform:translateX(-50%) translateY(calc(100% - 7px))!important;transition:transform .3s!important}
 html:root:root[data-theme] body.v-study .bnav:hover,html:root:root[data-theme] body.v-study .bnav.open{transform:translateX(-50%) translateY(0)!important}
+html:root:root[data-theme] body .map-frame{display:block!important;visibility:hidden!important;pointer-events:none!important;position:fixed!important;inset:0!important;z-index:-1!important;width:100%!important;height:100%!important;border:0!important;background:#fff!important}
+html:root:root[data-theme] body.v-map .map-frame{visibility:visible!important;pointer-events:auto!important;z-index:50!important}
+html:root:root[data-theme] body.v-map .wrap,html:root:root[data-theme] body.v-map .sticker,html:root:root[data-theme] body.v-map .ecg{display:none!important}
+html:root:root[data-theme] body .bnav{width:min(90vw,400px)!important}
+html:root:root[data-theme] body.v-map .bnav{opacity:.94!important;transform:translateX(-50%) translateY(calc(100% - 7px))!important;transition:transform .3s!important}
+html:root:root[data-theme] body.v-map .bnav:hover,html:root:root[data-theme] body.v-map .bnav.open{transform:translateX(-50%) translateY(0)!important}
 body::before,body::after{display:none!important}
 
 @media(min-width:900px){html:root:root[data-theme] body{background:linear-gradient(135deg,#cfe0ff,#e6defa 60%,#dbe8ff)!important}
@@ -1102,6 +1108,8 @@ html:root:root[data-theme] body .info-row{font-size:14px!important}
 html:root:root[data-theme] body .col-time{width:88px!important}
 html:root:root[data-theme] body .bnav{left:calc(42vw + 29vw)!important;width:340px!important}
 html:root:root[data-theme] body.v-study .bnav{left:50%!important}
+html:root:root[data-theme] body.v-map .bnav{left:50%!important}
+html:root:root[data-theme] body .bnav{width:430px!important}
 html:root:root[data-theme] body .notif{max-width:none!important;width:58vw!important;margin:0 0 0 42vw!important;padding:24px 40px 130px 12px!important}
 html:root:root[data-theme] body .sticker{right:20px!important;width:104px!important}
 html:root:root[data-theme] body .ecg{left:20px!important}}
@@ -1158,9 +1166,11 @@ html:root:root[data-theme] body .ecg{left:20px!important}}
 <nav class="bnav" id="bnav">
   <button class="on" data-go="home"><span class="ic"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></span>Trang chủ</button>
   <button data-go="study"><span class="ic"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 014 4v13a3 3 0 00-3-3H2z"/><path d="M22 4h-6a4 4 0 00-4 4v13a3 3 0 013-3h7z"/></svg></span>Ôn tập</button>
+  <button data-go="map"><span class="ic"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"/><path d="M2 21h20"/><path d="M12 9v6M9 12h6"/></svg></span>Sơ đồ BV</button>
   <button data-go="notif"><span class="ic"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></span>Thông báo<span class="bdg" id="notifBadge">0</span></button>
 </nav>
 <iframe class="study-frame" id="studyFrame" title="Ôn tập" allow="fullscreen"></iframe>
+<iframe class="map-frame" id="mapFrame" title="Sơ đồ bệnh viện" allow="fullscreen"></iframe>
 <section class="notif" id="notifView"><div class="notif-in">
   <h2>Thông báo</h2><p class="sub">Lịch sử và thời gian bạn ôn tập</p>
   <div class="nsum" id="nSum"></div>
@@ -1993,7 +2003,7 @@ const _load=load;load=function(){updLabel();return _load.apply(this,arguments)};
 const sw=document.getElementById('autoSwitch');if(sw&&!sw.querySelector('i'))sw.innerHTML='<i></i>';
 new MutationObserver(()=>{if(!sw.querySelector('i'))sw.innerHTML='<i></i>'}).observe(sw,{childList:true});
 document.querySelector('.status-badge .refresh').onclick=()=>{try{load()}catch(e){}};
-const KEY='tkb_study_log',STUDY_URL='https://nhat207danghoccode.github.io/vaicanho/';
+const KEY='tkb_study_log',STUDY_URL='https://nhat207danghoccode.github.io/vaicanho/',MAP_URL='bv.html';
 const load_=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{"log":[],"seen":0}')}catch(e){return{log:[],seen:0}}};
 const save_=d=>{try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}};
 let view='home',cur=null;
@@ -2020,15 +2030,16 @@ function renderNotif(){
 }
 function go(g){
   if(view==='study'&&g!=='study')commit(true);
-  view=g;document.body.classList.toggle('v-study',g==='study');document.body.classList.toggle('v-notif',g==='notif');
+  view=g;document.body.classList.toggle('v-study',g==='study');document.body.classList.toggle('v-notif',g==='notif');document.body.classList.toggle('v-map',g==='map');
   document.querySelectorAll('#bnav button').forEach(x=>x.classList.toggle('on',x.dataset.go===g));
   nav.classList.remove('open');if(g!=='study')setTimeout(exitFS,60);
   if(g==='study'){enterFS();const fr=document.getElementById('studyFrame');if(!fr.src)fr.src=STUDY_URL;startSession()}
+  if(g==='map'){const mf=document.getElementById('mapFrame');if(!mf.getAttribute('src'))mf.src=MAP_URL}
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
   window.scrollTo(0,0);badge();
 }
 const nav=document.getElementById('bnav');let nt=null;
-nav.addEventListener('click',e=>{if(view==='study'&&!nav.classList.contains('open')&&!nav.matches(':hover')){e.stopPropagation();e.preventDefault();nav.classList.add('open');clearTimeout(nt);nt=setTimeout(()=>nav.classList.remove('open'),4000)}},true);
+nav.addEventListener('click',e=>{if((view==='study'||view==='map')&&!nav.classList.contains('open')&&!nav.matches(':hover')){e.stopPropagation();e.preventDefault();nav.classList.add('open');clearTimeout(nt);nt=setTimeout(()=>nav.classList.remove('open'),4000)}},true);
 document.querySelectorAll('#bnav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
 const enterFS=()=>{try{const r=document.documentElement.requestFullscreen;r&&document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
 const exitFS=()=>{try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}};
