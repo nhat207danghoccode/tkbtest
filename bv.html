@@ -169,6 +169,20 @@
   .hot:hover .ring,.hot.active .ring{opacity:.45;animation:ringPulse 1.6s var(--ease) infinite}
   @keyframes ringPulse{0%{r:11;opacity:.5}100%{r:22;opacity:0}}
 
+  /* Ghim định vị lớn (kiểu Google Maps) cho kết quả tìm kiếm */
+  .search-pin{pointer-events:none}
+  .search-pin .pin-body{transform-box:fill-box;transform-origin:50% 100%;animation:pinDrop .6s cubic-bezier(.34,1.56,.64,1) both;filter:drop-shadow(0 7px 6px rgba(15,23,42,.38))}
+  .search-pin .pin-bob{animation:pinBob 1.7s ease-in-out .65s infinite}
+  .search-pin .pin-head{fill:#ea4335;stroke:#b3261e;stroke-width:2.5;stroke-linejoin:round}
+  .search-pin .pin-dot{fill:#fff}
+  .search-pin .pin-text{font-family:'Inter',sans-serif;font-weight:800;font-size:15px;fill:#b3261e;text-anchor:middle;dominant-baseline:central;letter-spacing:-.02em}
+  .search-pin .pin-ground{fill:rgba(15,23,42,.28)}
+  .search-pin .pin-pulse{fill:none;stroke:#ea4335;stroke-width:3;transform-box:fill-box;transform-origin:center;animation:pinPulse 1.7s ease-out .5s infinite;opacity:0}
+  @keyframes pinDrop{0%{transform:translateY(-90px) scale(.7);opacity:0}55%{opacity:1}100%{transform:none;opacity:1}}
+  @keyframes pinBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes pinPulse{0%{transform:scale(.3);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+  @media(prefers-reduced-motion:reduce){.search-pin .pin-body,.search-pin .pin-bob,.search-pin .pin-pulse{animation:none;opacity:1}}
+
   .route{
     fill:none;stroke:#fff;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;
     filter:drop-shadow(0 3px 9px rgba(15,23,42,.35));
@@ -921,10 +935,34 @@ function drawMarkers(){
     g.addEventListener('click',()=>{
       viewport.querySelectorAll('.hot.active').forEach(el=>el.classList.remove('active'));
       g.classList.add('active');
+      hideSearchPin();
       renderEntityInfo2D(id);
     });
     viewport.appendChild(g);
   });
+}
+
+/* Ghim định vị lớn: mũi ghim nằm đúng toạ độ của điểm được tìm */
+function hideSearchPin(){
+  viewport.querySelectorAll('.search-pin').forEach(el=>el.remove());
+}
+function showSearchPin(id){
+  hideSearchPin();
+  if(!P[id]) return;
+  const [x,y]=P[id];
+  const g=document.createElementNS(SVGNS,'g');
+  g.classList.add('search-pin');
+  const pxPerUnit = (svg.getBoundingClientRect().width || 1280) / 1280;
+  const s = Math.min(2.6, Math.max(1, 62 / (80 * pxPerUnit)));   /* giữ ghim cao ~62px trên mọi màn hình */
+  g.setAttribute('transform',`translate(${x} ${y}) scale(${s.toFixed(2)})`);
+  g.innerHTML=`<circle class="pin-pulse" cx="0" cy="0" r="16"></circle>
+    <ellipse class="pin-ground" cx="0" cy="0" rx="10" ry="4"></ellipse>
+    <g class="pin-body"><g class="pin-bob">
+      <path class="pin-head" d="M0 0C-9-15-25-31-25-55A25 25 0 1 1 25-55C25-31 9-15 0 0Z"></path>
+      <circle class="pin-dot" cx="0" cy="-55" r="15"></circle>
+      <text class="pin-text" x="0" y="-55">${esc(id)}</text>
+    </g></g>`;
+  viewport.appendChild(g);
 }
 
 function dist(a,b){
@@ -1138,14 +1176,16 @@ function searchDepartments(q){
 
   function pick(r){
     activateMarker(r.id);
+    showSearchPin(r.id);
     renderEntityInfo2D(r.id, input.value);
     box.style.display = 'none';
-    infoEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    mapCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function render(){
     const q = input.value;
     clearBtn.style.display = q ? 'block' : 'none';
+    if (!q.trim()) hideSearchPin();
     current = searchDepartments(q);
     markMarkers(current);
     box.textContent = '';
