@@ -1113,7 +1113,7 @@ html[data-skin] #fixedNurseBackground .skin-art{display:block;position:absolute;
 html[data-skin] .sticker,html[data-skin] .ecg{display:none!important}
 .skin-btn{--W:min(100vw,560px);--sbg:rgba(255,255,255,.72);--sic:#2f55f0;--sbd:#fff;--slb:rgba(27,37,102,.85);position:absolute;z-index:70;top:calc(var(--W)*.19);right:calc(max(0px,50vw - 280px) + var(--W)*.03);display:flex;flex-direction:column;align-items:center;gap:calc(var(--W)*.008);border:0;background:none;padding:0;cursor:pointer;font:800 clamp(9px,calc(var(--W)*.026),11px)/1 Nunito,sans-serif;color:#fff}
 .skin-btn i{display:flex;align-items:center;justify-content:center;width:clamp(34px,calc(var(--W)*.088),48px);height:clamp(34px,calc(var(--W)*.088),48px);border-radius:50%;color:var(--sic);background:var(--sbg);border:1.5px solid var(--sbd);box-shadow:0 4px 12px rgba(60,70,200,.3),0 0 0 3px rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-@media(min-width:701px){.skin-btn{top:96px;right:24px}}
+@media(min-width:701px){.skin-btn{top:66px;right:24px}}
 .skin-btn i svg{width:56%;height:56%}
 .skin-btn span{padding:.38em .8em;border-radius:999px;background:var(--slb);white-space:nowrap}
 html[data-skin=neon] .skin-btn{--sbg:rgba(30,14,80,.8);--sic:#e9d5ff;--sbd:#c084fc;--slb:rgba(20,10,60,.9)}
@@ -1341,6 +1341,7 @@ html:root:root[data-theme][data-skin="night"] body .day-section-title,html:root:
 html[data-skin] .skin-stk.show{display:block}
 .skin-opt .sw svg{width:20px;height:20px}
 .skin-stk.r{right:max(0px,calc(50vw - 285px))}.skin-stk.l{left:max(0px,calc(50vw - 285px))}
+@media(min-width:900px){html[data-skin] #fixedNurseBackground .skin-art{left:0;transform:none;width:100%;height:100%;object-fit:cover;object-position:center top;-webkit-mask-image:none;mask-image:none}.skin-stk.r{right:20px}.skin-stk.l{left:calc(42vw + 12px)}.skin-btn{top:66px;right:calc(40px + 12px)}}
 body.v-study .skin-stk,body.v-map .skin-stk,body.v-notif .skin-stk{display:none!important}
 html:root:root[data-theme][data-skin="neon"] body .card{background:rgba(22,13,70,.94)!important;border:1px solid rgba(164,92,255,.55)!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 html:root:root[data-theme][data-skin="neon"] body .col-time{background:linear-gradient(160deg,#4c1d95,#6d28d9)!important}
