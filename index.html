@@ -2041,7 +2041,7 @@ function go(g){
   if(view==='study'&&g!=='study')commit(true);
   view=g;document.body.classList.toggle('v-study',g==='study');document.body.classList.toggle('v-notif',g==='notif');document.body.classList.toggle('v-map',g==='map');
   document.querySelectorAll('#bnav button').forEach(x=>x.classList.toggle('on',x.dataset.go===g));
-  nav.classList.remove('force');nav.classList.add('open');clearTimeout(nt);nt=setTimeout(()=>nav.classList.remove('open'),1400);if(g!=='study')setTimeout(exitFS,60);
+  clearTimeout(nt);nav.classList.remove('open');nav.classList.add('force');if(g!=='study')setTimeout(exitFS,60);
   if(g==='study'){enterFS();const fr=document.getElementById('studyFrame');if(!fr.src)fr.src=STUDY_URL;startSession()}
   if(g==='map'){const mf=document.getElementById('mapFrame');if(!mf.getAttribute('src'))mf.src=MAP_URL}
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
@@ -2049,18 +2049,6 @@ function go(g){
 }
 const nav=document.getElementById('bnav');let nt=null;
 nav.addEventListener('mouseleave',()=>nav.classList.remove('force'));
-nav.addEventListener('click',e=>{
-  const b=e.target.closest('button[data-go]');
-  if(!b)return;
-  if((view==='study'||view==='map')&&b.dataset.go==='home'&&!nav.classList.contains('open')){
-    e.preventDefault();
-    e.stopPropagation();
-    nav.classList.remove('force');
-    nav.classList.add('open');
-    clearTimeout(nt);
-    nt=setTimeout(()=>nav.classList.remove('open'),4000);
-  }
-},true);
 
 document.querySelectorAll('#bnav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
 const isIOS=/iP(ad|hone|od)/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
