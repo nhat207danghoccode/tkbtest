@@ -2044,6 +2044,18 @@ function go(g){
 }
 const nav=document.getElementById('bnav');let nt=null;
 nav.addEventListener('mouseleave',()=>nav.classList.remove('force'));
+nav.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-go]');
+  if(!b)return;
+  if((view==='study'||view==='map')&&b.dataset.go==='home'&&!nav.classList.contains('open')){
+    e.preventDefault();
+    e.stopPropagation();
+    nav.classList.remove('force');
+    nav.classList.add('open');
+    clearTimeout(nt);
+    nt=setTimeout(()=>nav.classList.remove('open'),4000);
+  }
+},true);
 
 document.querySelectorAll('#bnav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
 const enterFS=()=>{try{const r=document.documentElement.requestFullscreen;r&&document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
