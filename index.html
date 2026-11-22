@@ -2041,8 +2041,8 @@ function go(g){
   if(view==='study'&&g!=='study')commit(true);
   view=g;document.body.classList.toggle('v-study',g==='study');document.body.classList.toggle('v-notif',g==='notif');document.body.classList.toggle('v-map',g==='map');
   document.querySelectorAll('#bnav button').forEach(x=>x.classList.toggle('on',x.dataset.go===g));
-  clearTimeout(nt);nav.classList.remove('open');nav.classList.add('force');if(g!=='study')setTimeout(exitFS,60);
-  if(g==='study'){enterFS();const fr=document.getElementById('studyFrame');if(!fr.src)fr.src=STUDY_URL;startSession()}
+  clearTimeout(nt);nav.classList.remove('open');nav.classList.add('force');
+  if(g==='study'){const fr=document.getElementById('studyFrame');if(!fr.src)fr.src=STUDY_URL;startSession()}
   if(g==='map'){const mf=document.getElementById('mapFrame');if(!mf.getAttribute('src'))mf.src=MAP_URL}
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
   window.scrollTo(0,0);badge();
@@ -2051,9 +2051,6 @@ const nav=document.getElementById('bnav');let nt=null;
 nav.addEventListener('mouseleave',()=>nav.classList.remove('force'));
 
 document.querySelectorAll('#bnav button').forEach(b=>b.onclick=()=>go(b.dataset.go));
-const isIOS=/iP(ad|hone|od)/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-const enterFS=()=>{if(isIOS)return;try{const r=document.documentElement.requestFullscreen;r&&document.documentElement.requestFullscreen().catch(()=>{})}catch(e){}};
-const exitFS=()=>{if(isIOS)return;try{document.fullscreenElement&&document.exitFullscreen()}catch(e){}};
 setInterval(()=>{if(view==='study'&&!document.hidden)commit(false)},15000);
 document.addEventListener('visibilitychange',()=>{if(view!=='study')return;if(document.hidden)commit(true);else startSession()});
 addEventListener('pagehide',()=>{if(view==='study')commit(true)});
