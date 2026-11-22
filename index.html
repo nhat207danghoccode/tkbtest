@@ -798,6 +798,7 @@ body::before,body::after{display:none!important}
 @media(max-width:520px){.creator-marquee{height:47px;margin:-3px 0 16px!important;border-radius:15px!important}.creator-marquee-item{height:47px;min-height:47px;gap:7px;padding-right:26px!important;padding-left:13px!important}.creator-marquee-item b{font-size:9px}.creator-marquee-item em{font-size:10px}.creator-marquee-item strong{font-size:12px}.creator-marquee-item small{font-size:9px;padding:4px 8px}}
 @media(prefers-reduced-motion:reduce){.creator-marquee-track{animation:none!important}}
 
+#offlineBtn.busy,.export-btn.busy{opacity:.5!important;pointer-events:none;animation:offPulse 1s ease-in-out infinite}@keyframes offPulse{50%{opacity:.25}}
 </style>
 
 <style id="fixed-nurse-background-fix">
@@ -1133,6 +1134,7 @@ html:root:root[data-theme] body .ecg{left:20px!important}}
   <div class="brand-group"><div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5 5 0 00-7.1 0L12 7.3l-1.7-1.7a5 5 0 00-7.1 7.1L12 21l8.8-8.3a5 5 0 000-7.1z"/><path d="M3.5 12h4l1.5-3 2.5 6 1.5-3h4"/></svg></div>
     <div class="brand-text"><h1 class="brand-title">Thời khóa biểu</h1><span class="brand-sub">CĐ Y tế Hà Tĩnh</span></div></div>
   <div class="header-actions">
+    <button class="icon-btn" id="offlineBtn" title="Tải TKB offline (HTML)" aria-label="Tải thời khóa biểu offline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v1.5A2.5 2.5 0 006.5 21h11a2.5 2.5 0 002.5-2.5V17"/></svg></button>
     <button class="icon-btn" id="themeBtn" title="Sáng / Tối"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4" stroke-width="2"/></svg></button>
     <div class="status-badge"><div class="dot" id="statusDot"></div><span id="statusText">Đang kết nối</span><svg class="refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-15.5 6.2L3 16"/><path d="M3 12a9 9 0 0115.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></svg></div>
   </div>
@@ -1478,456 +1480,176 @@ function getFilteredRowsForExport(){
       ||(Number(a.startPeriod)||0)-(Number(b.startPeriod)||0));
 }
 
-function buildOfflineHTML(rowsToExport){
-  const mon=getMonday(currentDate), sun=addDays(mon,6);
-  const wn=weekNum(mon);
-  const dayNames=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
-  const dayShort=['CN','T2','T3','T4','T5','T6','T7'];
-  const byDate=new Map();
-  rowsToExport.forEach(r=>{
-    if(!byDate.has(r._date))byDate.set(r._date,[]);
-    byDate.get(r._date).push(r);
-  });
-  const sortedDates=[...byDate.keys()].sort();
-
-  let timelineHTML='';
-  sortedDates.forEach(date=>{
-    const d=new Date(date+'T12:00:00');
-    const dayRows=byDate.get(date);
-    const dow=d.getDay();
-    const isSun=dow===0;
-    const isSat=dow===6;
-    let sessionBlocks='';
-    dayRows.forEach(r=>{
-      const sc=norm(r._session);
-      const sIcon=r._session==='Sáng'?'☀':r._session==='Chiều'?'🌤':'🌙';
-      sessionBlocks+=`<div class="slot slot-${sc}">
-        <div class="slot-time">
-          <span class="slot-session">${sIcon} ${r._session}</span>
-          <span class="slot-periods">${r._periods}</span>
-        </div>
-        <div class="slot-body">
-          <div class="slot-subject">${r._subject}</div>
-          <div class="slot-meta">
-            ${clean(r.teacherName)?`<span class="slot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>${clean(r.teacherName)}</span>`:''}
-            ${clean(r.room)?`<span class="slot-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>${clean(r.room)}</span>`:''}
-            <span class="slot-tag slot-tag-class">${r._class}</span>
-          </div>
-        </div>
-      </div>`;
-    });
-    timelineHTML+=`<div class="day-block ${isSun?'is-sun':isSat?'is-sat':''}">
-      <div class="day-marker">
-        <div class="day-dow">${dayShort[dow]}</div>
-        <div class="day-num">${String(d.getDate()).padStart(2,'0')}</div>
-        <div class="day-mon">th${d.getMonth()+1}</div>
-      </div>
-      <div class="day-content">
-        ${sessionBlocks}
-      </div>
-    </div>`;
-  });
-
-  const firstDay=new Date(sortedDates[0]+'T12:00:00');
-  const lastDay=new Date(sortedDates[sortedDates.length-1]+'T12:00:00');
-
-  return `<!doctype html>
-<html lang="vi">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0f1a">
-<title>TKB Tuần ${wn} · ${fmtShort(mon)}–${fmtShort(sun)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const OFFLINE_CSS=`
+:root{--bg:#eef1fb;--card:#fff;--ink:#0f172a;--ink2:#475569;--mute:#94a3b8;--line:rgba(148,163,184,.28);--pri:#6366f1;--pri2:#4f46e5;--acc:#0d9488;--shadow:0 6px 24px rgba(30,41,90,.08);--sang:#f59e0b;--sangbg:#fffbeb;--chieu:#0ea5e9;--chieubg:#f0f9ff;--toi:#8b5cf6;--toibg:#f5f3ff;--bar:rgba(255,255,255,.82)}
+[data-theme=dark]{--bg:#0b0f1a;--card:#151c2e;--ink:#f1f5f9;--ink2:#cbd5e1;--mute:#64748b;--line:rgba(100,116,139,.28);--shadow:0 6px 24px rgba(0,0,0,.45);--sangbg:rgba(245,158,11,.1);--chieubg:rgba(14,165,233,.1);--toibg:rgba(139,92,246,.12);--bar:rgba(11,15,26,.82)}
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#0b1020;
-  --ink-2:#1c2440;
-  --paper:#f7f5f0;
-  --paper-2:#fffdf8;
-  --line:#e6e2d8;
-  --mute:#8a8578;
-  --accent:#e05e3d;
-  --accent-2:#c94a2b;
-  --teal:#0d9488;
-  --gold:#d4a017;
-  --blue:#3b6fd4;
-  --violet:#8b5cf6;
-}
-html,body{background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
-body{
-  font-family:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  line-height:1.5;
-  min-height:100vh;
-  padding:0 0 env(safe-area-inset-bottom);
-  background-image:
-    radial-gradient(circle at 0% 0%, rgba(224,94,61,.06) 0%, transparent 45%),
-    radial-gradient(circle at 100% 100%, rgba(13,148,136,.06) 0%, transparent 45%);
-  background-attachment:fixed;
+html{scroll-behavior:smooth;scroll-padding-top:150px}
+body{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.hero{position:relative;overflow:hidden;color:#fff;padding:28px 18px 70px;background:linear-gradient(135deg,#4f46e5 0%,#6366f1 45%,#0d9488 130%)}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.1)}
+.hero::before{width:320px;height:320px;top:-140px;right:-80px}
+.hero::after{width:200px;height:200px;bottom:-110px;left:-60px}
+.hero-in{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85;display:inline-flex;align-items:center;gap:8px}
+.eyebrow::before{content:"";width:22px;height:2px;background:#5eead4;border-radius:2px}
+.tools{display:flex;gap:8px}
+.tbtn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);font-size:16px;display:grid;place-items:center;transition:.2s}
+.tbtn:hover{background:rgba(255,255,255,.3);transform:translateY(-1px)}
+.hero h1{font-size:clamp(26px,6vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.hero h1 em{font-style:normal;color:#99f6e4}
+.school{margin-top:6px;font-size:13px;font-weight:600;opacity:.8}
+.range{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.17);font-size:12.5px;font-weight:700;backdrop-filter:blur(6px)}
+.pill b{font-size:15px}
+.bar{position:sticky;top:0;z-index:20;margin:-44px auto 0;max-width:760px;padding:0 12px}
+.bar-in{background:var(--bar);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:10px}
+.weeks{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.weeks::-webkit-scrollbar{display:none}
+.wtab{flex:none;padding:7px 14px;border-radius:12px;background:transparent;font-size:12.5px;font-weight:700;color:var(--ink2);border:1px solid var(--line);white-space:nowrap}
+.wtab small{display:block;font-size:10.5px;font-weight:600;color:var(--mute)}
+.wtab.on{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(99,102,241,.35)}
+.wtab.on small{color:rgba(255,255,255,.8)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.dchip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 0 6px;border-radius:14px;background:transparent;color:var(--mute);font-weight:700;transition:.2s}
+.dchip span{font-size:10px;letter-spacing:.04em}
+.dchip b{font-size:16px;color:var(--ink2)}
+.dchip i{width:5px;height:5px;border-radius:50%;background:transparent;margin-top:2px}
+.dchip.has{color:var(--ink2)}.dchip.has i{background:var(--pri)}
+.dchip.has:hover{background:rgba(99,102,241,.1)}
+.dchip.today{background:linear-gradient(135deg,var(--pri),var(--acc));color:#fff}
+.dchip.today b{color:#fff}.dchip.today i{background:#fff}
+.dchip:not(.has){opacity:.5;cursor:default}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.fchip{padding:6px 13px;border-radius:999px;background:transparent;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--ink2)}
+.fchip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.search{flex:1;min-width:130px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:12.5px;outline:0}
+.search:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+main{max-width:760px;margin:0 auto;padding:18px 12px 24px}
+.day{display:flex;gap:12px;margin-bottom:16px;animation:up .45s both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.mark{flex:none;width:58px;text-align:center;padding-top:4px;position:relative}
+.mark::after{content:"";position:absolute;left:50%;top:78px;bottom:-14px;width:2px;transform:translateX(-50%);background:linear-gradient(var(--line),transparent);border-radius:2px}
+.mark .dw{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--pri);text-transform:uppercase}
+.mark .dn{font-size:28px;font-weight:800;line-height:1.05;letter-spacing:-.03em}
+.mark .dm{font-size:11px;font-weight:600;color:var(--mute)}
+.day.today .mark .dn{background:linear-gradient(135deg,var(--pri),var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag-today{display:inline-block;margin-top:4px;padding:1px 8px;border-radius:99px;background:var(--acc);color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.05em}
+.slots{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.slot{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:18px;padding:13px 14px;box-shadow:var(--shadow);transition:.2s}
+.slot:hover{transform:translateY(-2px)}
+.slot.s1{--c:var(--sang);--bg:var(--sangbg)}.slot.s2{--c:var(--chieu);--bg:var(--chieubg)}.slot.s3{--c:var(--toi);--bg:var(--toibg)}
+.when{flex:none;width:78px;padding:8px 4px;border-radius:13px;background:var(--bg);text-align:center;align-self:flex-start}
+.when .ss{font-size:12px;font-weight:800;color:var(--c)}
+.when .pp{font-size:11px;font-weight:700;color:var(--ink2);margin-top:2px}
+.body{flex:1;min-width:0}
+.sub{font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.35;margin-bottom:7px;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:12.5px;color:var(--ink2);font-weight:600}
+.meta span{display:inline-flex;align-items:center;gap:5px}
+.cls{margin-left:auto;padding:2px 10px;border-radius:8px;background:rgba(99,102,241,.12);color:var(--pri2);font-weight:800;font-size:11.5px}
+[data-theme=dark] .cls{color:#a5b4fc}
+.empty{text-align:center;padding:56px 16px;color:var(--mute);font-weight:600}
+.empty div{font-size:42px;margin-bottom:8px}
+footer{text-align:center;padding:10px 16px 40px;color:var(--mute);font-size:11.5px;font-weight:600}
+footer b{color:var(--pri)}
+@media(max-width:480px){.day{gap:8px}.mark{width:46px}.mark .dn{font-size:23px}.slot{padding:11px;gap:9px;border-radius:16px}.when{width:62px}.sub{font-size:14px}.cls{margin-left:0}}
+@media print{body{background:#fff;color:#000}.bar,.tools{display:none}.hero{padding:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slot,.day{break-inside:avoid;box-shadow:none;animation:none}main{padding-top:10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+`;
+
+/* Chạy bên trong file offline (được nhúng bằng toString) */
+function offlineRuntime(){
+  var D=window.__TKB__,$=function(i){return document.getElementById(i)};
+  var DOW=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'],SH=['CN','T2','T3','T4','T5','T6','T7'];
+  var SESS={'Sáng':['s1','☀️'],'Chiều':['s2','🌤️'],'Tối':['s3','🌙']};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function pad(n){return n<10?'0'+n:''+n}
+  function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+  function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d')}
+  function dayOf(mon,i){var d=new Date(mon+'T12:00:00');d.setDate(d.getDate()+i);return d}
+  var todayStr=ymd(new Date()),wi=0,sess='',q='';
+  D.weeks.forEach(function(w,i){if(todayStr>=w.mon&&todayStr<=w.sun)wi=i});
+  /* theme */
+  var root=document.documentElement,saved=null;
+  try{saved=localStorage.getItem('tkb_off_theme')}catch(e){}
+  root.setAttribute('data-theme',saved||(window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+  $('thm').onclick=function(){var n=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('tkb_off_theme',n)}catch(e){}};
+  $('prt').onclick=function(){window.print()};
+  function match(r){
+    if(sess&&r.s!==sess)return false;
+    if(!q)return true;
+    return [r.t,r.te,r.r,r.c,r.s].some(function(v){return norm(v).indexOf(q)>-1});
+  }
+  function render(){
+    var w=D.weeks[wi],rows=w.rows.filter(match),by={};
+    rows.forEach(function(r){(by[r.d]=by[r.d]||[]).push(r)});
+    $('wn').textContent=w.wn;$('rg').textContent=w.range;
+    $('cnt').textContent=rows.length;$('dcnt').textContent=Object.keys(by).length;
+    /* week tabs */
+    if(D.weeks.length>1){
+      $('weeks').innerHTML=D.weeks.map(function(x,i){return '<button class="wtab'+(i===wi?' on':'')+'" data-w="'+i+'">Tuần '+x.wn+'<small>'+esc(x.range)+'</small></button>'}).join('');
+    }else $('weeks').style.display='none';
+    /* day strip */
+    var strip='';
+    for(var i=0;i<7;i++){var d=dayOf(w.mon,i),k=ymd(d);
+      strip+='<button class="dchip'+(by[k]?' has':'')+(k===todayStr?' today':'')+'" data-d="'+k+'"><span>'+SH[d.getDay()]+'</span><b>'+d.getDate()+'</b><i></i></button>';}
+    $('days').innerHTML=strip;
+    /* list */
+    var keys=Object.keys(by).sort(),out='';
+    keys.forEach(function(k,idx){
+      var d=new Date(k+'T12:00:00');
+      out+='<section class="day'+(k===todayStr?' today':'')+'" id="d'+k+'" style="animation-delay:'+Math.min(idx*60,360)+'ms"><div class="mark"><div class="dw">'+SH[d.getDay()]+'</div><div class="dn">'+pad(d.getDate())+'</div><div class="dm">th '+(d.getMonth()+1)+'</div>'+(k===todayStr?'<span class="tag-today">HÔM NAY</span>':'')+'</div><div class="slots">';
+      by[k].forEach(function(r){var sc=SESS[r.s]||['s1','📘'];
+        out+='<article class="slot '+sc[0]+'"><div class="when"><div class="ss">'+sc[1]+' '+esc(r.s)+'</div><div class="pp">'+esc(r.p)+'</div></div><div class="body"><div class="sub">'+esc(r.t)+'</div><div class="meta">'
+          +(r.te?'<span>👤 '+esc(r.te)+'</span>':'')+(r.r?'<span>📍 '+esc(r.r)+'</span>':'')+'<span class="cls">'+esc(r.c)+'</span></div></div></article>';});
+      out+='</div></section>';
+    });
+    $('list').innerHTML=out||'<div class="empty"><div>🗓️</div>Không có lịch học phù hợp</div>';
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-w],[data-d],[data-s]');if(!t)return;
+    if(t.dataset.w!=null){wi=+t.dataset.w;render();window.scrollTo(0,0)}
+    else if(t.dataset.d){var el=$('d'+t.dataset.d);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+    else if(t.dataset.s!=null){sess=t.dataset.s;document.querySelectorAll('.fchip').forEach(function(c){c.classList.toggle('on',c===t)});render()}
+  });
+  $('q').addEventListener('input',function(){q=norm(this.value.trim());render()});
+  render();
+  /* tự cuộn tới hôm nay */
+  setTimeout(function(){var el=$('d'+todayStr);if(el&&wi>=0)el.scrollIntoView({block:'start'})},60);
 }
 
-.hero{
-  position:relative;
-  padding:28px 20px 22px;
-  background:linear-gradient(160deg,#0b1020 0%,#1a2342 100%);
-  color:#fff;
-  overflow:hidden;
-  border-radius:0 0 28px 28px;
-  box-shadow:0 10px 40px rgba(11,16,32,.25);
-}
-.hero::before{
-  content:"";
-  position:absolute;inset:0;
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(224,94,61,.35) 0%, transparent 35%),
-    radial-gradient(circle at 85% 80%, rgba(13,148,136,.3) 0%, transparent 40%);
-  opacity:.7;
-  pointer-events:none;
-}
-.hero::after{
-  content:"";
-  position:absolute;
-  top:-50%; right:-20%;
-  width:70%; height:200%;
-  background:repeating-linear-gradient(45deg, transparent 0 20px, rgba(255,255,255,.02) 20px 21px);
-  pointer-events:none;
-}
-.hero-inner{position:relative;z-index:1;max-width:720px;margin:0 auto}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:10px;font-weight:800;letter-spacing:.15em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.7);
-  margin-bottom:10px;
-}
-.hero-eyebrow::before{
-  content:"";width:24px;height:1px;background:var(--accent);
-}
-.hero h1{
-  font-size:30px;font-weight:800;letter-spacing:-.03em;
-  line-height:1.1;margin-bottom:6px;
-}
-.hero h1 em{font-style:normal;color:var(--accent)}
-.hero-school{
-  font-size:13px;font-weight:600;color:rgba(255,255,255,.65);
-  margin-bottom:18px;
-}
-.hero-week{
-  display:flex;flex-wrap:wrap;align-items:center;gap:12px;
-  margin-top:18px;padding-top:18px;
-  border-top:1px solid rgba(255,255,255,.12);
-}
-.week-chip{
-  display:inline-flex;align-items:baseline;gap:6px;
-  background:var(--accent);
-  padding:6px 14px;border-radius:10px;
-  box-shadow:0 4px 14px rgba(224,94,61,.35);
-}
-.week-chip .num{font-size:19px;font-weight:800;line-height:1}
-.week-chip .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.9}
-.hero-range{
-  font-size:14px;font-weight:700;
-  color:rgba(255,255,255,.85);
-  letter-spacing:-.01em;
-}
-.hero-stats{
-  display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;
-}
-.hero-stat{
-  display:flex;align-items:center;gap:7px;
-  font-size:11.5px;font-weight:600;
-  color:rgba(255,255,255,.7);
-}
-.hero-stat b{color:#fff;font-weight:800;font-size:13px}
-.hero-stat::before{
-  content:"";width:6px;height:6px;border-radius:50%;
-  background:var(--accent);
-  box-shadow:0 0 8px var(--accent);
-}
-
-.timeline{
-  max-width:720px;margin:0 auto;
-  padding:22px 16px 40px;
-}
-.timeline-header{
-  display:flex;align-items:center;gap:8px;
-  padding:0 4px 14px;
-  font-size:11px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.12em;
-  color:var(--mute);
-}
-.timeline-header::before{
-  content:"";flex:1;height:1px;background:var(--line);
-}
-.timeline-header::after{
-  content:"";flex:1;height:1px;background:var(--line);
-}
-
-.day-block{
-  display:flex;gap:14px;
-  margin-bottom:14px;
-  animation:fadeUp .4s ease both;
-}
-.day-block:nth-child(2){animation-delay:.03s}
-.day-block:nth-child(3){animation-delay:.06s}
-.day-block:nth-child(4){animation-delay:.09s}
-.day-block:nth-child(5){animation-delay:.12s}
-.day-block:nth-child(6){animation-delay:.15s}
-.day-block:nth-child(7){animation-delay:.18s}
-.day-block:nth-child(8){animation-delay:.21s}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(8px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-.day-marker{
-  flex:0 0 56px;
-  padding-top:14px;
-  display:flex;flex-direction:column;
-  align-items:center;
-  position:relative;
-}
-.day-marker::after{
-  content:"";
-  position:absolute;
-  top:70px;bottom:-14px;left:50%;
-  width:1.5px;
-  background:linear-gradient(to bottom,var(--line),transparent);
-  transform:translateX(-50%);
-}
-.day-block:last-child .day-marker::after{display:none}
-.day-dow{
-  font-size:10px;font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.08em;
-  color:var(--mute);
-}
-.day-num{
-  font-size:24px;font-weight:800;
-  line-height:1;letter-spacing:-.03em;
-  color:var(--ink);
-  margin:2px 0;
-}
-.day-mon{
-  font-size:10px;font-weight:700;
-  color:var(--mute);
-  text-transform:uppercase;
-}
-.day-block.is-sun .day-dow,
-.day-block.is-sun .day-num,
-.day-block.is-sun .day-mon{color:var(--accent)}
-.day-block.is-sat .day-num{color:var(--teal)}
-
-.day-content{
-  flex:1;min-width:0;
-  display:flex;flex-direction:column;gap:8px;
-}
-
-.slot{
-  background:var(--paper-2);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px 15px;
-  display:flex;gap:12px;
-  position:relative;
-  overflow:hidden;
-  transition:all .2s ease;
-}
-.slot::before{
-  content:"";
-  position:absolute;
-  left:0;top:0;bottom:0;
-  width:3px;
-}
-.slot-sang::before{background:var(--gold)}
-.slot-chieu::before{background:var(--blue)}
-.slot-toi::before{background:var(--violet)}
-
-.slot-time{
-  flex:0 0 84px;
-  display:flex;flex-direction:column;gap:4px;
-  padding-left:4px;
-}
-.slot-session{
-  font-size:11px;font-weight:800;
-  text-transform:uppercase;letter-spacing:.05em;
-}
-.slot-sang .slot-session{color:#b8820e}
-.slot-chieu .slot-session{color:var(--blue)}
-.slot-toi .slot-session{color:var(--violet)}
-.slot-periods{
-  font-size:11px;font-weight:700;
-  color:var(--mute);
-  font-variant-numeric:tabular-nums;
-}
-
-.slot-body{flex:1;min-width:0}
-.slot-subject{
-  font-size:14px;font-weight:800;
-  color:var(--ink);
-  line-height:1.35;
-  letter-spacing:-.01em;
-  margin-bottom:6px;
-}
-.slot-meta{
-  display:flex;flex-wrap:wrap;gap:8px;
-  align-items:center;
-}
-.slot-tag{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:11px;font-weight:600;
-  color:#5a5548;
-}
-.slot-tag svg{width:11px;height:11px;opacity:.6}
-.slot-tag-class{
-  margin-left:auto;
-  background:#f0ece1;
-  color:var(--ink-2);
-  font-weight:800;
-  padding:2px 8px;
-  border-radius:6px;
-  font-size:10px;
-  letter-spacing:.02em;
-}
-
-.empty-offline{
-  text-align:center;padding:60px 20px;
-  color:var(--mute);font-size:14px;
-}
-
-.footer{
-  max-width:720px;margin:0 auto;
-  padding:20px 16px 30px;
-  text-align:center;
-  border-top:1px solid var(--line);
-}
-.footer-sign{
-  font-size:11px;font-weight:700;
-  color:var(--mute);
-  letter-spacing:.05em;
-}
-.footer-sign b{color:var(--accent)}
-.footer-meta{
-  font-size:10px;color:var(--mute);
-  margin-top:6px;font-weight:500;
-}
-
-@media (max-width:420px){
-  .hero{padding:22px 16px 20px}
-  .hero h1{font-size:25px}
-  .hero-school{font-size:12px}
-  .timeline{padding:16px 12px 30px}
-  .day-block{gap:10px}
-  .day-marker{flex-basis:46px}
-  .day-num{font-size:21px}
-  .slot{padding:11px 12px;gap:8px;border-radius:12px}
-  .slot-time{flex-basis:64px}
-  .slot-subject{font-size:13px}
-  .slot-tag{font-size:10px}
-  .slot-tag-class{font-size:9px;padding:2px 6px}
-}
-
-@media print{
-  body{background:#fff}
-  .hero{box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact;border-radius:0}
-  .slot{break-inside:avoid;box-shadow:none}
-  .timeline{padding:16px}
-  .day-block{break-inside:avoid}
-}
-
-.creator-marquee{
-  position:relative!important;
-  width:94%;height:40px;overflow:hidden;
-  display:flex;align-items:center;
-  margin:-5px auto 16px!important;padding:0!important;
-  border:1px solid rgba(139,92,246,.20)!important;
-  border-radius:15px!important;
-  background:linear-gradient(105deg,rgba(250,247,255,.98),rgba(239,235,255,.96) 48%,rgba(237,247,255,.98))!important;
-  box-shadow:0 5px 18px rgba(91,65,160,.075)!important;
-  color:#433078!important;
-  white-space:nowrap;
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
-  mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
-}
-.creator-marquee-track{
-  display:flex!important;align-items:center;width:max-content;
-  animation:creatorScroll 34s linear infinite!important;
-  will-change:transform;
-}
-.creator-marquee-item{
-  min-height:40px;display:inline-flex;align-items:center;gap:8px;
-  padding:0 22px 0 10px!important;
-  font-family:"Plus Jakarta Sans",sans-serif;
-  font-size:11px;letter-spacing:.015em;
-}
-.creator-marquee-item i{
-  font-style:normal;font-size:12px;color:#9b7be8;
-  text-shadow:0 0 10px rgba(139,92,246,.28);
-}
-.creator-marquee-item b{
-  font-size:9px;font-weight:800;letter-spacing:.10em;
-  color:#7960b5;
-}
-.creator-marquee-item em{
-  font-size:10px;font-style:normal;font-weight:500;color:#7c7890;
-}
-.creator-marquee-item strong{
-  font-size:11px;font-weight:800;letter-spacing:-.015em;
-  background:linear-gradient(100deg,#7250c7,#a05bbd,#557fc4);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.creator-marquee-item small{
-  font-size:9px;font-weight:700;color:#8875b5;
-  background:rgba(255,255,255,.72);
-  border:1px solid rgba(139,92,246,.14);
-  border-radius:999px;padding:3px 7px;
-}
-.creator-marquee:hover .creator-marquee-track{animation-play-state:paused!important}
-@keyframes creatorScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-/* Compact 15px Liquid Glass ribbon */
-.creator-marquee{height:15px!important;min-height:15px!important;border-radius:8px!important;margin:-3px auto 12px!important}
-.creator-marquee-item{height:15px!important;min-height:15px!important;gap:5px!important;padding:0 14px 0 8px!important;font-size:7px!important}
-.creator-marquee-item i{font-size:8px!important}
-.creator-marquee-item b{font-size:6px!important;letter-spacing:.06em!important}
-.creator-marquee-item em{font-size:7px!important}
-.creator-marquee-item strong{font-size:8px!important}
-.creator-marquee-item small{font-size:6px!important;padding:0 4px!important;border-radius:5px!important}
-@media(max-width:520px){.creator-marquee{width:94%;height:15px!important;min-height:15px!important;margin:-3px auto 10px!important;border-radius:7px!important}.creator-marquee-item{height:15px!important;min-height:15px!important;gap:4px!important;padding-right:12px!important;padding-left:7px!important}.creator-marquee-item b{font-size:6px!important}.creator-marquee-item em{font-size:6px!important}.creator-marquee-item strong{font-size:7px!important}.creator-marquee-item small{font-size:5px!important}}
-@media(prefers-reduced-motion:reduce){.creator-marquee-track{animation:none!important}}
-
-</style>
-</head>
+function buildOfflineHTML(weeks,meta){
+  const data=JSON.stringify({weeks,meta}).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
+  const first=weeks[0];
+  const title=`TKB Tuần ${first.wn} · CĐ Y tế Hà Tĩnh`;
+  const flt=meta.filter?`<span class="pill">🔎 <b>${esc(meta.filter)}</b></span>`:'';
+  return `<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>${esc(title)}</title>
+<style>${OFFLINE_CSS}</style></head>
 <body>
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-eyebrow">Thời khóa biểu</div>
-    <h1>Lịch học <em>tuần ${wn}</em></h1>
-    <div class="hero-school">Trường Cao đẳng Y tế Hà Tĩnh</div>
-    <div class="hero-week">
-      <div class="week-chip"><span class="num">${wn}</span><span class="lbl">Tuần</span></div>
-      <div class="hero-range">${fmtShort(mon)} – ${fmtFull(sun)}</div>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><b>${rowsToExport.length}</b> lịch học</div>
-      <div class="hero-stat"><b>${sortedDates.length}</b> ngày có tiết</div>
-    </div>
-  </div>
-</div>
-
-<div class="timeline">
-  <div class="timeline-header">Lịch trình</div>
-  ${rowsToExport.length?timelineHTML:'<div class="empty-offline">Không có lịch học trong tuần này</div>'}
-</div>
-
-<div class="footer">
-  <div class="footer-sign">✦ <b>Nguyễn Phi Nhật</b> · Nhat032007 ✦</div>
-  <div class="footer-meta">Xuất lúc ${new Date().toLocaleString('vi-VN')}</div>
-</div>
-</body>
-</html>`;
+<header class="hero"><div class="hero-in">
+  <div class="top"><span class="eyebrow">Thời khóa biểu · Offline</span>
+    <div class="tools"><button class="tbtn" id="thm" title="Sáng / Tối">🌓</button><button class="tbtn" id="prt" title="In">🖨️</button></div></div>
+  <h1>Lịch học tuần <em id="wn"></em></h1>
+  <div class="school">Trường Cao đẳng Y tế Hà Tĩnh</div>
+  <div class="range"><span class="pill">📅 <b id="rg"></b></span>${flt}<span class="pill"><b id="cnt">0</b> lịch học</span><span class="pill"><b id="dcnt">0</b> ngày có tiết</span></div>
+</div></header>
+<div class="bar"><div class="bar-in">
+  <div class="weeks" id="weeks"></div>
+  <div class="days" id="days"></div>
+  <div class="filters"><button class="fchip on" data-s="">Tất cả</button><button class="fchip" data-s="Sáng">☀️ Sáng</button><button class="fchip" data-s="Chiều">🌤️ Chiều</button><input class="search" id="q" placeholder="Tìm môn, giảng viên, phòng…" autocomplete="off"></div>
+</div></div>
+<main id="list"></main>
+<footer>✦ <b>Nguyễn Phi Nhật</b> · @Nhat032007 ✦<br>Xuất lúc ${esc(meta.exportedAt)} · xem được hoàn toàn không cần mạng</footer>
+<script>window.__TKB__=${data};</`+`script>
+<script>(${offlineRuntime.toString()})();</`+`script>
+</body></html>`;
 }
 
 function downloadBlob(content, filename, mime){
@@ -1942,13 +1664,48 @@ function downloadBlob(content, filename, mime){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-$('exportOfflineBtn').onclick=()=>{
-  const exportRows=getFilteredRowsForExport();
-  if(!exportRows.length){alert('Không có dữ liệu để xuất. Vui lòng chọn tuần có lịch học.');return}
-  const mon=getMonday(currentDate), wn=weekNum(mon);
-  const html=buildOfflineHTML(exportRows);
-  downloadBlob(html,`TKB_Tuan${wn}_${fmtShort(mon).replace('/','-')}.html`,'text/html;charset=utf-8');
-};
+let exportingOffline=false;
+async function exportOffline(){
+  if(exportingOffline)return;
+  exportingOffline=true;
+  const btns=[$('offlineBtn'),$('exportOfflineBtn')].filter(Boolean);
+  btns.forEach(b=>b.classList.add('busy'));
+  setStatus('Đang tạo file offline…','loading');
+  try{
+    const f=norm($('filter').value);
+    const keep=r=>!f||[r._class,r._subject,r.teacherName,r.room,r.sessionName,r._session].some(v=>norm(v).includes(f));
+    const ord=s=>s==='Sáng'?0:s==='Chiều'?1:2;
+    const mon0=getMonday(currentDate);
+    /* tuần đang xem + tối đa 3 tuần kế tiếp (nếu đã có dữ liệu) */
+    const jobs=[0,7,14,21].map((n,i)=>{
+      const mon=addDays(mon0,n);
+      const get=i===0?Promise.resolve(rows):getSnapshot(mon).then(s=>normalizeRows(findRows(s.data)));
+      return get.then(all=>({mon,all}));
+    });
+    const res=await Promise.allSettled(jobs);
+    const weeks=[];
+    res.forEach(x=>{
+      if(x.status!=='fulfilled')return;
+      const {mon,all}=x.value,sun=addDays(mon,6);
+      const list=all.filter(r=>r._date>=mon&&r._date<=sun&&keep(r))
+        .sort((a,b)=>a._date.localeCompare(b._date)||ord(a._session)-ord(b._session)||(Number(a.startPeriod)||0)-(Number(b.startPeriod)||0));
+      if(!list.length)return;
+      weeks.push({mon,sun,wn:weekNum(mon),range:`${fmtShort(mon)} – ${fmtFull(sun)}`,
+        rows:list.map(r=>({d:r._date,s:r._session,p:r._periods,t:r._subject,te:clean(r.teacherName),r:clean(r.room),c:r._class}))});
+    });
+    if(!weeks.length){alert('Không có dữ liệu để xuất. Vui lòng chọn tuần có lịch học.');return}
+    const html=buildOfflineHTML(weeks,{filter:$('filter').value.trim(),exportedAt:new Date().toLocaleString('vi-VN')});
+    const w0=weeks[0];
+    downloadBlob(html,`TKB_Tuan${w0.wn}${weeks.length>1?'-'+weeks[weeks.length-1].wn:''}_${w0.range.split(' ')[0].replace('/','-')}.html`,'text/html;charset=utf-8');
+    setStatus('Đã tải file offline','ok');
+  }catch(e){
+    setStatus('Lỗi','error');alert('Không tạo được file offline: '+(e&&e.message||e));
+  }finally{
+    exportingOffline=false;btns.forEach(b=>b.classList.remove('busy'));
+  }
+}
+$('exportOfflineBtn').onclick=exportOffline;
+$('offlineBtn').onclick=exportOffline;
 
 
 
@@ -2060,6 +1817,10 @@ function go(g){
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
   window.scrollTo(0,0);badge();
 }
+/* Tải sẵn "Sơ đồ BV" ngầm khi trình duyệt rảnh -> bấm tab là hiện ngay */
+(function(){const warm=()=>{const mf=document.getElementById('mapFrame');if(mf&&!mf.getAttribute('src'))mf.src=MAP_URL};
+const kick=()=>('requestIdleCallback' in window)?requestIdleCallback(warm,{timeout:4000}):setTimeout(warm,2500);
+if(document.readyState==='complete')setTimeout(kick,800);else addEventListener('load',()=>setTimeout(kick,800))})();
 const nav=document.getElementById('bnav');let nt=null;
 nav.addEventListener('mouseleave',()=>nav.classList.remove('force'));
 
