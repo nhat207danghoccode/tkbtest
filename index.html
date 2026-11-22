@@ -685,25 +685,6 @@ html body{--bg:#fff!important;--surface:#fff!important;--surface-raised:#fff!imp
 .class-group-grid{display:block!important;}
 .day-section-title{border-bottom:1px solid #e2e8f0!important;}
 .creator-marquee{color:#3730a3!important;}
-#themeBtn{background:#fff!important;color:#334155!important;border:1px solid #dce3ed!important;}
-
-.export-group{display:flex;align-items:center;gap:6px;margin-left:auto}
-.export-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  background:linear-gradient(135deg,#0d9488,#0f766e);
-  border:none;color:#fff;font-size:11.5px;font-weight:800;
-  padding:8px 14px;border-radius:999px;cursor:pointer;
-  transition:all .2s ease;font-family:inherit;white-space:nowrap;
-  box-shadow:0 3px 12px rgba(13,148,136,.3);
-  letter-spacing:.01em;
-}
-.export-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(13,148,136,.4)}
-.export-btn:active{transform:scale(.96)}
-.export-btn svg{width:14px;height:14px}
-@media(max-width:520px){
-  .export-group{width:100%;justify-content:flex-start;margin-left:0;margin-top:4px}
-  .export-btn{font-size:11px;padding:7px 12px}
-}
 
 html,body{background-color:#e9e4ff!important;color:#172033!important}
 body{background:#e9e4ff!important}
@@ -798,7 +779,7 @@ body::before,body::after{display:none!important}
 @media(max-width:520px){.creator-marquee{height:47px;margin:-3px 0 16px!important;border-radius:15px!important}.creator-marquee-item{height:47px;min-height:47px;gap:7px;padding-right:26px!important;padding-left:13px!important}.creator-marquee-item b{font-size:9px}.creator-marquee-item em{font-size:10px}.creator-marquee-item strong{font-size:12px}.creator-marquee-item small{font-size:9px;padding:4px 8px}}
 @media(prefers-reduced-motion:reduce){.creator-marquee-track{animation:none!important}}
 
-#offlineBtn.busy,.export-btn.busy{opacity:.5!important;pointer-events:none;animation:offPulse 1s ease-in-out infinite}@keyframes offPulse{50%{opacity:.25}}
+#offlineBtn.busy{opacity:.5!important;pointer-events:none;animation:offPulse 1s ease-in-out infinite}@keyframes offPulse{50%{opacity:.25}}
 </style>
 
 <style id="fixed-nurse-background-fix">
@@ -1134,8 +1115,7 @@ html:root:root[data-theme] body .ecg{left:20px!important}}
   <div class="brand-group"><div class="brand-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5 5 0 00-7.1 0L12 7.3l-1.7-1.7a5 5 0 00-7.1 7.1L12 21l8.8-8.3a5 5 0 000-7.1z"/><path d="M3.5 12h4l1.5-3 2.5 6 1.5-3h4"/></svg></div>
     <div class="brand-text"><h1 class="brand-title">Thời khóa biểu</h1><span class="brand-sub">CĐ Y tế Hà Tĩnh</span></div></div>
   <div class="header-actions">
-    <button class="icon-btn" id="offlineBtn" title="Tải TKB offline (HTML)" aria-label="Tải thời khóa biểu offline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v1.5A2.5 2.5 0 006.5 21h11a2.5 2.5 0 002.5-2.5V17"/></svg></button>
-    <button class="icon-btn" id="themeBtn" title="Sáng / Tối"><svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4" stroke-width="2"/></svg></button>
+    <button class="icon-btn" id="offlineBtn" title="Tải thời khóa biểu (xem offline)" aria-label="Tải thời khóa biểu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v1.5A2.5 2.5 0 006.5 21h11a2.5 2.5 0 002.5-2.5V17"/></svg></button>
     <div class="status-badge"><div class="dot" id="statusDot"></div><span id="statusText">Đang kết nối</span><svg class="refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 01-15.5 6.2L3 16"/><path d="M3 12a9 9 0 0115.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></svg></div>
   </div>
 </header>
@@ -1160,12 +1140,6 @@ html:root:root[data-theme] body .ecg{left:20px!important}}
       <button class="chip" data-filter=""><svg class="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Tất cả</button>
     </div>
     <div class="toggle-wrap" id="autoToggle" title="Tự cập nhật mỗi 5 phút"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><span class="toggle-text">Tự động cập nhật</span><div class="toggle-track on" id="autoSwitch"><i></i></div></div>
-    <div class="export-group">
-      <button class="export-btn" id="exportOfflineBtn" title="Tải file xem offline">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        Lưu offline
-      </button>
-    </div>
   </div>
 </section>
 <div class="stats-bar"><span id="countBadge"></span><span class="time-note" id="updateTime"></span></div>
@@ -1245,19 +1219,7 @@ const monOfWeek=w=>addDays(ANCHOR_MON,(w-ANCHOR_WEEK)*7);
 let currentDate=today(), rows=[], busy=false, autoOn=true, timer=null;
 const currentWeekNum=()=>weekNum(getMonday(today()));
 
-(function initTheme(){
-  document.documentElement.setAttribute('data-theme','light');
-  try{localStorage.setItem('tkb_theme_v2','light');localStorage.removeItem('theme')}catch(e){}
-  syncThemeIcon('light');
-})();
-function syncThemeIcon(){
-  $('themeIcon').innerHTML='<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" fill="none"/><path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>';
-}
-$('themeBtn').onclick=()=>{
-  document.documentElement.setAttribute('data-theme','light');
-  try{localStorage.setItem('tkb_theme_v2','light');localStorage.removeItem('theme')}catch(e){}
-  syncThemeIcon('light');
-};
+document.documentElement.setAttribute('data-theme','light');
 
 function buildPickerList(){
   const list=$('wpList');
@@ -1482,173 +1444,94 @@ function getFilteredRowsForExport(){
 
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const OFFLINE_CSS=`
-:root{--bg:#eef1fb;--card:#fff;--ink:#0f172a;--ink2:#475569;--mute:#94a3b8;--line:rgba(148,163,184,.28);--pri:#6366f1;--pri2:#4f46e5;--acc:#0d9488;--shadow:0 6px 24px rgba(30,41,90,.08);--sang:#f59e0b;--sangbg:#fffbeb;--chieu:#0ea5e9;--chieubg:#f0f9ff;--toi:#8b5cf6;--toibg:#f5f3ff;--bar:rgba(255,255,255,.82)}
-[data-theme=dark]{--bg:#0b0f1a;--card:#151c2e;--ink:#f1f5f9;--ink2:#cbd5e1;--mute:#64748b;--line:rgba(100,116,139,.28);--shadow:0 6px 24px rgba(0,0,0,.45);--sangbg:rgba(245,158,11,.1);--chieubg:rgba(14,165,233,.1);--toibg:rgba(139,92,246,.12);--bar:rgba(11,15,26,.82)}
+:root{--bg:#f3f5fa;--card:#fff;--ink:#0f172a;--ink2:#475569;--mute:#94a3b8;--line:#e2e8f0;--pri:#4338ca;--pri2:#6366f1;--s1:#d97706;--s1bg:#fff7e6;--s2:#0284c7;--s2bg:#eaf6fd;--s3:#7c3aed;--s3bg:#f3eefe}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:150px}
-body{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
-button{font:inherit;cursor:pointer;border:0;color:inherit}
-.hero{position:relative;overflow:hidden;color:#fff;padding:28px 18px 70px;background:linear-gradient(135deg,#4f46e5 0%,#6366f1 45%,#0d9488 130%)}
-.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.1)}
-.hero::before{width:320px;height:320px;top:-140px;right:-80px}
-.hero::after{width:200px;height:200px;bottom:-110px;left:-60px}
-.hero-in{position:relative;z-index:1;max-width:760px;margin:0 auto}
-.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
-.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85;display:inline-flex;align-items:center;gap:8px}
-.eyebrow::before{content:"";width:22px;height:2px;background:#5eead4;border-radius:2px}
-.tools{display:flex;gap:8px}
-.tbtn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);font-size:16px;display:grid;place-items:center;transition:.2s}
-.tbtn:hover{background:rgba(255,255,255,.3);transform:translateY(-1px)}
-.hero h1{font-size:clamp(26px,6vw,38px);font-weight:800;letter-spacing:-.03em;line-height:1.1}
-.hero h1 em{font-style:normal;color:#99f6e4}
-.school{margin-top:6px;font-size:13px;font-weight:600;opacity:.8}
-.range{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.17);font-size:12.5px;font-weight:700;backdrop-filter:blur(6px)}
-.pill b{font-size:15px}
-.bar{position:sticky;top:0;z-index:20;margin:-44px auto 0;max-width:760px;padding:0 12px}
-.bar-in{background:var(--bar);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:10px}
-.weeks{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
-.weeks::-webkit-scrollbar{display:none}
-.wtab{flex:none;padding:7px 14px;border-radius:12px;background:transparent;font-size:12.5px;font-weight:700;color:var(--ink2);border:1px solid var(--line);white-space:nowrap}
-.wtab small{display:block;font-size:10.5px;font-weight:600;color:var(--mute)}
-.wtab.on{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(99,102,241,.35)}
-.wtab.on small{color:rgba(255,255,255,.8)}
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.dchip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 0 6px;border-radius:14px;background:transparent;color:var(--mute);font-weight:700;transition:.2s}
-.dchip span{font-size:10px;letter-spacing:.04em}
-.dchip b{font-size:16px;color:var(--ink2)}
-.dchip i{width:5px;height:5px;border-radius:50%;background:transparent;margin-top:2px}
-.dchip.has{color:var(--ink2)}.dchip.has i{background:var(--pri)}
-.dchip.has:hover{background:rgba(99,102,241,.1)}
-.dchip.today{background:linear-gradient(135deg,var(--pri),var(--acc));color:#fff}
-.dchip.today b{color:#fff}.dchip.today i{background:#fff}
-.dchip:not(.has){opacity:.5;cursor:default}
-.filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.fchip{padding:6px 13px;border-radius:999px;background:transparent;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--ink2)}
-.fchip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.search{flex:1;min-width:130px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:12.5px;outline:0}
-.search:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
-main{max-width:760px;margin:0 auto;padding:18px 12px 24px}
-.day{display:flex;gap:12px;margin-bottom:16px;animation:up .45s both}
-@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.mark{flex:none;width:58px;text-align:center;padding-top:4px;position:relative}
-.mark::after{content:"";position:absolute;left:50%;top:78px;bottom:-14px;width:2px;transform:translateX(-50%);background:linear-gradient(var(--line),transparent);border-radius:2px}
-.mark .dw{font-size:11px;font-weight:800;letter-spacing:.08em;color:var(--pri);text-transform:uppercase}
-.mark .dn{font-size:28px;font-weight:800;line-height:1.05;letter-spacing:-.03em}
-.mark .dm{font-size:11px;font-weight:600;color:var(--mute)}
-.day.today .mark .dn{background:linear-gradient(135deg,var(--pri),var(--acc));-webkit-background-clip:text;background-clip:text;color:transparent}
-.tag-today{display:inline-block;margin-top:4px;padding:1px 8px;border-radius:99px;background:var(--acc);color:#fff;font-size:9.5px;font-weight:800;letter-spacing:.05em}
-.slots{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
-.slot{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:18px;padding:13px 14px;box-shadow:var(--shadow);transition:.2s}
-.slot:hover{transform:translateY(-2px)}
-.slot.s1{--c:var(--sang);--bg:var(--sangbg)}.slot.s2{--c:var(--chieu);--bg:var(--chieubg)}.slot.s3{--c:var(--toi);--bg:var(--toibg)}
-.when{flex:none;width:78px;padding:8px 4px;border-radius:13px;background:var(--bg);text-align:center;align-self:flex-start}
-.when .ss{font-size:12px;font-weight:800;color:var(--c)}
-.when .pp{font-size:11px;font-weight:700;color:var(--ink2);margin-top:2px}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+.head{background:linear-gradient(160deg,#312e81 0%,var(--pri) 55%,#4f46e5 100%);color:#fff;padding:26px 16px 30px}
+.head-in,.tabs-in,.wrap{max-width:760px;margin:0 auto}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+.head h1{margin-top:6px;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.head .sub{margin-top:6px;font-size:15px;font-weight:600;opacity:.92}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.18);padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:600}
+.pill b{font-weight:800}
+.tabs{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line)}
+.tabs-in{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tabs a{flex:none;text-decoration:none;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 14px;font-size:13px;font-weight:700;line-height:1.3;white-space:nowrap}
+.tabs a small{display:block;font-size:11px;font-weight:500;color:var(--mute)}
+.tabs a:active{background:#eef2ff;border-color:var(--pri2);color:var(--pri)}
+.wrap{padding:18px 12px 8px}
+.week{margin-bottom:30px;scroll-margin-top:64px}
+.week-h{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;margin:0 2px 14px;padding-bottom:9px;border-bottom:2px solid var(--pri2)}
+.week-h h2{font-size:19px;font-weight:800;color:var(--pri)}
+.week-h span{font-size:13px;font-weight:600;color:var(--ink2)}
+.day{margin-bottom:16px;scroll-margin-top:64px}
+.day h3{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 2px 8px;font-size:15px;font-weight:800}
+.day h3 span{font-size:13px;font-weight:600;color:var(--mute)}
+.day.today h3::after{content:"HÔM NAY";background:var(--pri2);color:#fff;font-size:10px;font-weight:800;letter-spacing:.06em;padding:2px 8px;border-radius:99px}
+.slot{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:12px;padding:12px;margin-bottom:8px;break-inside:avoid}
+.slot.s1{--c:var(--s1);--cb:var(--s1bg)}.slot.s2{--c:var(--s2);--cb:var(--s2bg)}.slot.s3{--c:var(--s3);--cb:var(--s3bg)}
+.when{flex:none;width:84px;align-self:flex-start;text-align:center;background:var(--cb,#f1f5f9);border-radius:9px;padding:7px 4px}
+.when b{display:block;font-size:13px;font-weight:800;color:var(--c,var(--ink2))}
+.when span{display:block;margin-top:1px;font-size:12px;font-weight:600;color:var(--ink2)}
 .body{flex:1;min-width:0}
-.sub{font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.35;margin-bottom:7px;overflow-wrap:anywhere}
-.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:12.5px;color:var(--ink2);font-weight:600}
+.body h4{font-size:15px;font-weight:700;line-height:1.35;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin-top:6px;font-size:13px;font-weight:500;color:var(--ink2)}
 .meta span{display:inline-flex;align-items:center;gap:5px}
-.cls{margin-left:auto;padding:2px 10px;border-radius:8px;background:rgba(99,102,241,.12);color:var(--pri2);font-weight:800;font-size:11.5px}
-[data-theme=dark] .cls{color:#a5b4fc}
-.empty{text-align:center;padding:56px 16px;color:var(--mute);font-weight:600}
-.empty div{font-size:42px;margin-bottom:8px}
-footer{text-align:center;padding:10px 16px 40px;color:var(--mute);font-size:11.5px;font-weight:600}
-footer b{color:var(--pri)}
-@media(max-width:480px){.day{gap:8px}.mark{width:46px}.mark .dn{font-size:23px}.slot{padding:11px;gap:9px;border-radius:16px}.when{width:62px}.sub{font-size:14px}.cls{margin-left:0}}
-@media print{body{background:#fff;color:#000}.bar,.tools{display:none}.hero{padding:18px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slot,.day{break-inside:avoid;box-shadow:none;animation:none}main{padding-top:10px}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+.meta svg{width:14px;height:14px;flex:none;stroke:var(--mute);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.meta em{font-style:normal;margin-left:auto;padding:1px 9px;border-radius:7px;background:#eef2ff;color:var(--pri);font-size:12px;font-weight:700}
+footer{max-width:760px;margin:0 auto;padding:6px 16px 34px;text-align:center;color:var(--mute);font-size:12px;line-height:1.7}
+footer b{color:var(--ink2)}
+@media(max-width:480px){.head h1{font-size:24px}.slot{gap:10px;padding:11px}.when{width:72px}.meta em{margin-left:0}}
+@media print{body{background:#fff}.tabs{display:none}.head{background:#312e81!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:16px}.slot{box-shadow:none}.week{break-before:auto}.when{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 `;
 
-/* Chạy bên trong file offline (được nhúng bằng toString) */
-function offlineRuntime(){
-  var D=window.__TKB__,$=function(i){return document.getElementById(i)};
-  var DOW=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'],SH=['CN','T2','T3','T4','T5','T6','T7'];
-  var SESS={'Sáng':['s1','☀️'],'Chiều':['s2','🌤️'],'Tối':['s3','🌙']};
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-  function pad(n){return n<10?'0'+n:''+n}
-  function ymd(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
-  function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d')}
-  function dayOf(mon,i){var d=new Date(mon+'T12:00:00');d.setDate(d.getDate()+i);return d}
-  var todayStr=ymd(new Date()),wi=0,sess='',q='';
-  D.weeks.forEach(function(w,i){if(todayStr>=w.mon&&todayStr<=w.sun)wi=i});
-  /* theme */
-  var root=document.documentElement,saved=null;
-  try{saved=localStorage.getItem('tkb_off_theme')}catch(e){}
-  root.setAttribute('data-theme',saved||(window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
-  $('thm').onclick=function(){var n=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('tkb_off_theme',n)}catch(e){}};
-  $('prt').onclick=function(){window.print()};
-  function match(r){
-    if(sess&&r.s!==sess)return false;
-    if(!q)return true;
-    return [r.t,r.te,r.r,r.c,r.s].some(function(v){return norm(v).indexOf(q)>-1});
-  }
-  function render(){
-    var w=D.weeks[wi],rows=w.rows.filter(match),by={};
-    rows.forEach(function(r){(by[r.d]=by[r.d]||[]).push(r)});
-    $('wn').textContent=w.wn;$('rg').textContent=w.range;
-    $('cnt').textContent=rows.length;$('dcnt').textContent=Object.keys(by).length;
-    /* week tabs */
-    if(D.weeks.length>1){
-      $('weeks').innerHTML=D.weeks.map(function(x,i){return '<button class="wtab'+(i===wi?' on':'')+'" data-w="'+i+'">Tuần '+x.wn+'<small>'+esc(x.range)+'</small></button>'}).join('');
-    }else $('weeks').style.display='none';
-    /* day strip */
-    var strip='';
-    for(var i=0;i<7;i++){var d=dayOf(w.mon,i),k=ymd(d);
-      strip+='<button class="dchip'+(by[k]?' has':'')+(k===todayStr?' today':'')+'" data-d="'+k+'"><span>'+SH[d.getDay()]+'</span><b>'+d.getDate()+'</b><i></i></button>';}
-    $('days').innerHTML=strip;
-    /* list */
-    var keys=Object.keys(by).sort(),out='';
-    keys.forEach(function(k,idx){
-      var d=new Date(k+'T12:00:00');
-      out+='<section class="day'+(k===todayStr?' today':'')+'" id="d'+k+'" style="animation-delay:'+Math.min(idx*60,360)+'ms"><div class="mark"><div class="dw">'+SH[d.getDay()]+'</div><div class="dn">'+pad(d.getDate())+'</div><div class="dm">th '+(d.getMonth()+1)+'</div>'+(k===todayStr?'<span class="tag-today">HÔM NAY</span>':'')+'</div><div class="slots">';
-      by[k].forEach(function(r){var sc=SESS[r.s]||['s1','📘'];
-        out+='<article class="slot '+sc[0]+'"><div class="when"><div class="ss">'+sc[1]+' '+esc(r.s)+'</div><div class="pp">'+esc(r.p)+'</div></div><div class="body"><div class="sub">'+esc(r.t)+'</div><div class="meta">'
-          +(r.te?'<span>👤 '+esc(r.te)+'</span>':'')+(r.r?'<span>📍 '+esc(r.r)+'</span>':'')+'<span class="cls">'+esc(r.c)+'</span></div></div></article>';});
-      out+='</div></section>';
-    });
-    $('list').innerHTML=out||'<div class="empty"><div>🗓️</div>Không có lịch học phù hợp</div>';
-  }
-  document.addEventListener('click',function(e){
-    var t=e.target.closest('[data-w],[data-d],[data-s]');if(!t)return;
-    if(t.dataset.w!=null){wi=+t.dataset.w;render();window.scrollTo(0,0)}
-    else if(t.dataset.d){var el=$('d'+t.dataset.d);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
-    else if(t.dataset.s!=null){sess=t.dataset.s;document.querySelectorAll('.fchip').forEach(function(c){c.classList.toggle('on',c===t)});render()}
-  });
-  $('q').addEventListener('input',function(){q=norm(this.value.trim());render()});
-  render();
-  /* tự cuộn tới hôm nay */
-  setTimeout(function(){var el=$('d'+todayStr);if(el&&wi>=0)el.scrollIntoView({block:'start'})},60);
-}
-
+/* File offline: toàn bộ lịch được dựng sẵn thành HTML tĩnh (không phụ thuộc JavaScript),
+   nên mở bằng bất kỳ trình duyệt / trình xem trước nào cũng thấy đủ thời khóa biểu. */
 function buildOfflineHTML(weeks,meta){
-  const data=JSON.stringify({weeks,meta}).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
-  const first=weeks[0];
-  const title=`TKB Tuần ${first.wn} · CĐ Y tế Hà Tĩnh`;
-  const flt=meta.filter?`<span class="pill">🔎 <b>${esc(meta.filter)}</b></span>`:'';
+  const DOW=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'];
+  const SC={'Sáng':'s1','Chiều':'s2','Tối':'s3'};
+  const I_USER='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>';
+  const I_PIN='<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+  const first=weeks[0],last=weeks[weeks.length-1];
+  const total=weeks.reduce((n,w)=>n+w.rows.length,0);
+  const wlabel=weeks.length>1?`${first.wn} – ${last.wn}`:`${first.wn}`;
+  const range=`${fmtShort(first.mon)} – ${fmtFull(last.sun)}`;
+  const title=`Thời khóa biểu tuần ${wlabel} · CĐ Y tế Hà Tĩnh`;
+  const flt=meta.filter?`<span class="pill">Lớp / bộ lọc: <b>${esc(meta.filter)}</b></span>`:'';
+  const tabs=weeks.length>1
+    ?`<nav class="tabs"><div class="tabs-in">${weeks.map(w=>`<a href="#w${w.wn}">Tuần ${w.wn}<small>${esc(w.range)}</small></a>`).join('')}</div></nav>`:'';
+  const body=weeks.map(w=>{
+    const by={};
+    w.rows.forEach(r=>{(by[r.d]=by[r.d]||[]).push(r)});
+    const days=Object.keys(by).sort().map(k=>{
+      const dt=new Date(k+'T12:00:00');
+      const slots=by[k].map(r=>`<article class="slot ${SC[r.s]||''}"><div class="when"><b>${esc(r.s)}</b><span>${esc(r.p)}</span></div><div class="body"><h4>${esc(r.t)}</h4><p class="meta">${r.te?`<span>${I_USER}${esc(r.te)}</span>`:''}${r.r?`<span>${I_PIN}${esc(r.r)}</span>`:''}<em>${esc(r.c)}</em></p></div></article>`).join('');
+      return `<section class="day" data-d="${k}"><h3>${DOW[dt.getDay()]}<span>${fmtShort(k)}/${k.slice(0,4)}</span></h3>${slots}</section>`;
+    }).join('');
+    return `<section class="week" id="w${w.wn}"><div class="week-h"><h2>Tuần ${w.wn}</h2><span>${esc(w.range)} · ${w.rows.length} buổi học</span></div>${days}</section>`;
+  }).join('');
+  /* Script nhỏ chỉ để tô sáng "Hôm nay"; không có nó nội dung vẫn đầy đủ */
+  const enhance=`(function(){try{var d=new Date(),p=function(n){return n<10?'0'+n:''+n},k=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()),e=document.querySelector('[data-d="'+k+'"]');if(e){e.classList.add('today');setTimeout(function(){e.scrollIntoView({block:'start'})},60)}}catch(x){}})();`;
   return `<!doctype html>
 <html lang="vi"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#4f46e5">
+<meta name="theme-color" content="#4338ca">
 <title>${esc(title)}</title>
 <style>${OFFLINE_CSS}</style></head>
 <body>
-<header class="hero"><div class="hero-in">
-  <div class="top"><span class="eyebrow">Thời khóa biểu · Offline</span>
-    <div class="tools"><button class="tbtn" id="thm" title="Sáng / Tối">🌓</button><button class="tbtn" id="prt" title="In">🖨️</button></div></div>
-  <h1>Lịch học tuần <em id="wn"></em></h1>
-  <div class="school">Trường Cao đẳng Y tế Hà Tĩnh</div>
-  <div class="range"><span class="pill">📅 <b id="rg"></b></span>${flt}<span class="pill"><b id="cnt">0</b> lịch học</span><span class="pill"><b id="dcnt">0</b> ngày có tiết</span></div>
+<header class="head"><div class="head-in">
+  <div class="eyebrow">Cao đẳng Y tế Hà Tĩnh · Bản xem offline</div>
+  <h1>Thời khóa biểu</h1>
+  <div class="sub">Tuần ${wlabel} · ${esc(range)}</div>
+  <div class="pills">${flt}<span class="pill"><b>${total}</b> buổi học</span><span class="pill">Xuất lúc ${esc(meta.exportedAt)}</span></div>
 </div></header>
-<div class="bar"><div class="bar-in">
-  <div class="weeks" id="weeks"></div>
-  <div class="days" id="days"></div>
-  <div class="filters"><button class="fchip on" data-s="">Tất cả</button><button class="fchip" data-s="Sáng">☀️ Sáng</button><button class="fchip" data-s="Chiều">🌤️ Chiều</button><input class="search" id="q" placeholder="Tìm môn, giảng viên, phòng…" autocomplete="off"></div>
-</div></div>
-<main id="list"></main>
-<footer>✦ <b>Nguyễn Phi Nhật</b> · @Nhat032007 ✦<br>Xuất lúc ${esc(meta.exportedAt)} · xem được hoàn toàn không cần mạng</footer>
-<script>window.__TKB__=${data};</`+`script>
-<script>(${offlineRuntime.toString()})();</`+`script>
+${tabs}
+<main class="wrap">${body}</main>
+<footer>Thiết kế bởi <b>Nguyễn Phi Nhật</b> · @Nhat032007<br>File này xem được hoàn toàn không cần mạng</footer>
+<script>${enhance}<\/script>
 </body></html>`;
 }
 
@@ -1668,7 +1551,7 @@ let exportingOffline=false;
 async function exportOffline(){
   if(exportingOffline)return;
   exportingOffline=true;
-  const btns=[$('offlineBtn'),$('exportOfflineBtn')].filter(Boolean);
+  const btns=[$('offlineBtn')].filter(Boolean);
   btns.forEach(b=>b.classList.add('busy'));
   setStatus('Đang tạo file offline…','loading');
   try{
@@ -1704,7 +1587,6 @@ async function exportOffline(){
     exportingOffline=false;btns.forEach(b=>b.classList.remove('busy'));
   }
 }
-$('exportOfflineBtn').onclick=exportOffline;
 $('offlineBtn').onclick=exportOffline;
 
 
