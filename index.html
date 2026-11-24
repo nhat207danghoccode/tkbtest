@@ -695,7 +695,7 @@ body::before,body::after{display:none!important}
 .controls-panel,.week-nav,.search-box,.status-badge,.class-group,.empty-state,.week-picker{box-shadow:0 8px 28px rgba(67,49,130,.10)!important;border-color:rgba(167,139,250,.22)!important}
 @media(max-width:520px){.top-header{padding:12px;border-radius:18px}}
 
-/* Popup hỏi xem thời khóa biểu tuần sau */
+
 .next-week-overlay{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,23,42,.52);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease}
 .next-week-overlay.show{opacity:1;visibility:visible}
 .next-week-dialog{width:min(440px,100%);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.72);border-radius:26px;background:linear-gradient(145deg,#fff 0%,#f7f8ff 100%);box-shadow:0 28px 90px rgba(26,25,74,.28);transform:translateY(18px) scale(.96);transition:transform .3s cubic-bezier(.16,1,.3,1);color:#172033}
@@ -725,7 +725,7 @@ body::before,body::after{display:none!important}
 @media(prefers-reduced-motion:reduce){.next-week-overlay,.next-week-dialog,.next-week-btn{transition:none}}
 
 
-/* Creator credit: redesigned as a single, non-repeating signature strip */
+
 .creator-marquee{
   width:100%; margin:-7px 0 17px; padding:0; overflow:visible;
   border:0!important; border-radius:0!important; background:transparent!important;
@@ -753,7 +753,7 @@ body::before,body::after{display:none!important}
 @media(prefers-reduced-motion:reduce){.creator-credit-card{animation:none}}
 
 
-/* Liquid glass scrolling creator ribbon */
+
 .creator-marquee{
   position:relative!important;isolation:isolate;width:100%;height:54px;overflow:hidden!important;
   display:flex;align-items:center;margin:-5px 0 19px!important;padding:0!important;
@@ -783,7 +783,7 @@ body::before,body::after{display:none!important}
 </style>
 
 <style id="fixed-nurse-background-fix">
-/* Fixed nurse artwork: never scales with dialogs/modals or content changes */
+
 html, body {
   width: 100%;
   min-width: 100%;
@@ -821,13 +821,13 @@ body {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
-/* Prevent iOS/Safari from zooming the whole page when the search field is opened. */
+
 input, textarea, select {
   font-size: 16px !important;
   -webkit-text-size-adjust: 100%;
 }
 .search-box input { font-size: 16px !important; }
-/* Keep modal/picker opening from changing the background's scale. */
+
 .next-week-overlay, .week-picker-overlay {
   transform: none !important;
 }
@@ -1106,7 +1106,7 @@ html:root:root[data-theme] body .sticker{right:20px!important;width:104px!import
 html:root:root[data-theme] body .ecg{left:20px!important}}
 </style>
 <style id="skins">
-/* ===== Theme skins (giao diện gốc = không có data-skin) ===== */
+
 html[data-skin] #fixedNurseBackground img:not(.skin-art){display:none!important}
 #fixedNurseBackground .skin-art{display:none}
 html[data-skin] #fixedNurseBackground .skin-art{display:block;position:absolute;top:0;left:50%;transform:translateX(-50%);width:min(100vw,560px);height:auto;-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}
@@ -1355,7 +1355,7 @@ html:root:root[data-theme][data-skin="neon"] body .empty-state{background:rgba(2
 @media(max-width:700px){html:root:root[data-theme][data-skin] body:not(.v-study):not(.v-map):not(.v-util) .bnav{width:min(86vw,484px)!important}}
 </style>
 <style id="dg-style">
-/* ===== Mức độ nguy hiểm thầy cô ===== */
+
 .dg-panel{flex:none;width:clamp(108px,31vw,148px);box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 8px 9px;border-radius:18px;text-align:center;border:1.5px solid rgba(255,255,255,.75);font-family:inherit;--c:#dc2626;--c2:#ef4444;--tint:#ffe3e8;--tint2:#fff1f3}
 .dg-panel{background:linear-gradient(160deg,var(--tint),var(--tint2))}
 .dg-panel.dg-high{--c:#c81414;--c2:#e11d2e;--tint:#ffd9df;--tint2:#fff0f2}
@@ -1375,7 +1375,7 @@ html:root:root[data-theme][data-skin="neon"] body .empty-state{background:rgba(2
 .dg-btn{width:100%;margin-top:3px;padding:7px 4px;border:0;border-radius:99px;font:800 11.5px/1 inherit;font-family:inherit;color:#fff;-webkit-text-fill-color:#fff;background:linear-gradient(135deg,#6366f1,#7c5cf0);box-shadow:0 4px 10px rgba(99,102,241,.35);cursor:pointer;touch-action:manipulation}
 .dg-btn:active{transform:scale(.96)}
 @media(max-width:380px){.dg-panel{width:104px;padding:8px 6px}.dg-pct{font-size:23px}}
-/* ===== Fix vỡ form TKB trên điện thoại: panel đánh giá xuống dòng riêng ===== */
+
 @media(max-width:560px){
 html:root:root[data-theme] body .card-body{flex-wrap:wrap!important;row-gap:10px!important}
 html:root:root[data-theme] body .card-body>.col-content{flex:1 1 0!important;min-width:0!important}
@@ -1469,8 +1469,6 @@ html:root:root[data-theme] body .card-body>.dg-panel{flex:0 0 100%!important;wid
     <div class="quick-actions">
       <button class="chip today-chip" id="btnToday"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg><span><b>Hôm nay</b><small id="todayWeek">Tuần</small></span></button>
       <button class="chip active" data-filter="19D"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"/></svg>Lớp 19D</button>
-      <button class="chip" data-filter="sang"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Sáng</button>
-      <button class="chip" data-filter="chieu"><svg class="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 116.7-9h1.8a4.5 4.5 0 010 9z"/></svg>Chiều</button>
       <button class="chip" data-filter=""><svg class="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Tất cả</button>
     </div>
     <div class="toggle-wrap" id="autoToggle" title="Tự cập nhật mỗi 5 phút"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><span class="toggle-text">Tự động cập nhật</span><div class="toggle-track on" id="autoSwitch"><i></i></div></div>
@@ -1538,7 +1536,7 @@ html:root:root[data-theme] body .card-body>.dg-panel{flex:0 0 100%!important;wid
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 (function(){
-/* Dữ liệu ban đầu (sửa/thêm giảng viên tại đây). d = % nguy hiểm, s = sao /5 */
+
 var firebaseConfig={apiKey:"AIzaSyB4e1G1TKy5HsCiFF7tezwOlWLMjMgEdw8",authDomain:"danhgiathayco-67c4c.firebaseapp.com",projectId:"danhgiathayco-67c4c",storageBucket:"danhgiathayco-67c4c.firebasestorage.app",messagingSenderId:"740433487052",appId:"1:740433487052:web:8e5b971607943008210e69"};
 var NAME_K='tkb_name',UID_K='tkb_uid';
 function key(n){return String(n||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim()}
@@ -1580,7 +1578,7 @@ function panel(name,subject){
    +'<div class="dg-stars">'+stars(c.s)+'<b>'+c.s.toFixed(1)+'/5</b></div>'
    +'<button class="dg-btn" type="button" '+data+'>Xem chi tiết ›</button></div>';
 }
-/* ---- popup chi tiết / đánh giá ---- */
+
 var ov,cur={};
 function build(){
   if(ov)return;
@@ -1634,7 +1632,7 @@ function refreshAll(){
     t.innerHTML=panel(b.dataset.t,b.dataset.s);p.replaceWith(t.firstChild);
   });
 }
-/* ---- Firebase ---- */
+
 try{
   firebase.initializeApp(firebaseConfig);db=firebase.firestore();
   var started=false;
@@ -1645,7 +1643,7 @@ try{
       remote=m;loaded=true;failed=false;refreshAll();
     },function(){loaded=true;failed=true;refreshAll()});
   }
-  /* đăng nhập ẩn danh: mỗi người 1 uid do Firebase cấp, chỉ sửa/xoá được đánh giá của chính mình */
+  
   firebase.auth().onAuthStateChanged(function(u){if(u){UID=u.uid;listen()}});
   firebase.auth().signInAnonymously().catch(function(){loaded=true;failed=true;refreshAll()});
 }catch(e){loaded=true;failed=true}
@@ -1926,7 +1924,7 @@ body{font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Roboto,Aria
 .week-h{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;margin:0 2px 14px;padding-bottom:9px;border-bottom:2px solid var(--pri2)}
 .week-h h2{font-size:19px;font-weight:800;color:var(--pri)}
 .week-h span{font-size:13px;font-weight:600;color:var(--ink2)}
-.day{margin-bottom:16px;scroll-margin-top:64px}
+.offline-class{margin:0 0 20px;border:1px solid var(--line);border-radius:15px;padding:12px;background:#fff}.offline-class-h{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#eef2ff;color:var(--pri);padding:10px 12px;border-radius:11px;margin-bottom:12px}.offline-class-h strong{font-size:15px;font-weight:800}.offline-class-h span{font-size:12px;font-weight:700;color:var(--ink2)}.day{margin-bottom:16px;scroll-margin-top:64px}
 .day h3{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 2px 8px;font-size:15px;font-weight:800}
 .day h3 span{font-size:13px;font-weight:600;color:var(--mute)}
 .day.today h3::after{content:"HÔM NAY";background:var(--pri2);color:#fff;font-size:10px;font-weight:800;letter-spacing:.06em;padding:2px 8px;border-radius:99px}
@@ -1947,8 +1945,7 @@ footer b{color:var(--ink2)}
 @media print{body{background:#fff}.tabs{display:none}.head{background:#312e81!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:16px}.slot{box-shadow:none}.week{break-before:auto}.when{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 `;
 
-/* File offline: toàn bộ lịch được dựng sẵn thành HTML tĩnh (không phụ thuộc JavaScript),
-   nên mở bằng bất kỳ trình duyệt / trình xem trước nào cũng thấy đủ thời khóa biểu. */
+
 function buildOfflineHTML(weeks,meta){
   const DOW=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'];
   const SC={'Sáng':'s1','Chiều':'s2','Tối':'s3'};
@@ -1963,16 +1960,20 @@ function buildOfflineHTML(weeks,meta){
   const tabs=weeks.length>1
     ?`<nav class="tabs"><div class="tabs-in">${weeks.map(w=>`<a href="#w${w.wn}">Tuần ${w.wn}<small>${esc(w.range)}</small></a>`).join('')}</div></nav>`:'';
   const body=weeks.map(w=>{
-    const by={};
-    w.rows.forEach(r=>{(by[r.d]=by[r.d]||[]).push(r)});
-    const days=Object.keys(by).sort().map(k=>{
-      const dt=new Date(k+'T12:00:00');
-      const slots=by[k].map(r=>`<article class="slot ${SC[r.s]||''}"><div class="when"><b>${esc(r.s)}</b><span>${esc(r.p)}</span></div><div class="body"><h4>${esc(r.t)}</h4><p class="meta">${r.te?`<span>${I_USER}${esc(r.te)}</span>`:''}${r.r?`<span>${I_PIN}${esc(r.r)}</span>`:''}<em>${esc(r.c)}</em></p></div></article>`).join('');
-      return `<section class="day" data-d="${k}"><h3>${DOW[dt.getDay()]}<span>${fmtShort(k)}/${k.slice(0,4)}</span></h3>${slots}</section>`;
+    const classes={};
+    w.rows.forEach(r=>{(classes[r.c||'Chưa phân lớp']=classes[r.c||'Chưa phân lớp']||[]).push(r)});
+    const classBlocks=Object.keys(classes).sort((a,b)=>a.localeCompare(b,'vi')).map((cn,ci)=>{
+      const by={}; classes[cn].forEach(r=>{(by[r.d]=by[r.d]||[]).push(r)});
+      const days=Object.keys(by).sort().map(k=>{
+        const dt=new Date(k+'T12:00:00');
+        const slots=by[k].map(r=>`<article class="slot ${SC[r.s]||''}"><div class="when"><b>${esc(r.s)}</b><span>${esc(r.p)}</span></div><div class="body"><h4>${esc(r.t)}</h4><p class="meta">${r.te?`<span>${I_USER}${esc(r.te)}</span>`:''}${r.r?`<span>${I_PIN}${esc(r.r)}</span>`:''}</p></div></article>`).join('');
+        return `<section class="day" data-d="${k}"><h3>${DOW[dt.getDay()]}<span>${fmtShort(k)}/${k.slice(0,4)}</span></h3>${slots}</section>`;
+      }).join('');
+      return `<section class="offline-class"><div class="offline-class-h"><strong>${esc(cn)}</strong><span>${classes[cn].length} lịch</span></div>${days}</section>`;
     }).join('');
-    return `<section class="week" id="w${w.wn}"><div class="week-h"><h2>Tuần ${w.wn}</h2><span>${esc(w.range)} · ${w.rows.length} buổi học</span></div>${days}</section>`;
+    return `<section class="week" id="w${w.wn}"><div class="week-h"><h2>Tuần ${w.wn}</h2><span>${esc(w.range)} · ${w.rows.length} buổi học</span></div>${classBlocks}</section>`;
   }).join('');
-  /* Script nhỏ chỉ để tô sáng "Hôm nay"; không có nó nội dung vẫn đầy đủ */
+  
   const enhance=`(function(){try{var d=new Date(),p=function(n){return n<10?'0'+n:''+n},k=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()),e=document.querySelector('[data-d="'+k+'"]');if(e){e.classList.add('today');setTimeout(function(){e.scrollIntoView({block:'start'})},60)}}catch(x){}})();`;
   return `<!doctype html>
 <html lang="vi"><head><meta charset="utf-8">
@@ -2018,7 +2019,7 @@ async function exportOffline(){
     const keep=r=>!f||[r._class,r._subject,r.teacherName,r.room,r.sessionName,r._session].some(v=>norm(v).includes(f));
     const ord=s=>s==='Sáng'?0:s==='Chiều'?1:2;
     const mon0=getMonday(currentDate);
-    /* tuần đang xem + tối đa 3 tuần kế tiếp (nếu đã có dữ liệu) */
+    
     const jobs=[0,7,14,21].map((n,i)=>{
       const mon=addDays(mon0,n);
       const get=i===0?Promise.resolve(rows):getSnapshot(mon).then(s=>normalizeRows(findRows(s.data)));
@@ -2114,8 +2115,7 @@ const KEY='tkb_study_log',STUDY_URL='https://nhat207danghoccode.github.io/vaican
 const load_=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{"log":[],"seen":0}')}catch(e){return{log:[],seen:0}}};
 const save_=d=>{try{localStorage.setItem(KEY,JSON.stringify(d))}catch(e){}};
 let view='home',cur=null;
-/* iOS Safari: cuộn mượt (smooth) trong iframe bị bỏ qua => nút "Đi đến câu" và "về đầu trang" của vaicanho không chạy.
-   Vá cuộn trong iframe thành cuộn tức thì (cùng origin nên truy cập được). */
+
 function patchStudy(){try{
   const fr=document.getElementById('studyFrame'),w=fr.contentWindow;if(!w||!w.document||!w.document.body||w.__instScroll)return;
   w.__instScroll=1;const d=w.document,st=w.scrollTo.bind(w);
@@ -2159,7 +2159,7 @@ function go(g){
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
   window.scrollTo(0,0);badge();
 }
-/* Tải sẵn "Sơ đồ BV" ngầm khi trình duyệt rảnh -> bấm tab là hiện ngay */
+
 (function(){const warm=()=>{const mf=document.getElementById('mapFrame');if(mf&&!mf.getAttribute('src'))mf.src=MAP_URL};
 const kick=()=>('requestIdleCallback' in window)?requestIdleCallback(warm,{timeout:4000}):setTimeout(warm,2500);
 if(document.readyState==='complete')setTimeout(kick,800);else addEventListener('load',()=>setTimeout(kick,800))})();
