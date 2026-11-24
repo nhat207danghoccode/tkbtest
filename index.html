@@ -1429,6 +1429,14 @@ html:root:root[data-theme] body .card-body>.dg-panel{flex:0 0 100%!important;wid
 .dg-acts{display:flex;gap:8px;margin-top:14px}
 .dg-save{flex:1;border:0;border-radius:99px;padding:13px;font:900 14px/1 inherit;font-family:inherit;color:#fff;background:linear-gradient(135deg,#6366f1,#7c5cf0);box-shadow:0 6px 16px rgba(99,102,241,.4);cursor:pointer}
 .dg-del{border:0;border-radius:99px;padding:13px 16px;font:800 13px/1 inherit;font-family:inherit;color:#c81414;background:#ffe7ea;cursor:pointer}
+.dg-in{width:100%;border:1.5px solid #dfe3f7;border-radius:14px;padding:10px 12px;font:600 13.5px/1.2 inherit;font-family:inherit;color:#1b2566;background:#f8f9ff;outline:0}
+.dg-in:focus{border-color:#6366f1}
+.dg-rv{max-height:150px;overflow:auto;margin:-4px 0 4px;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch}
+.dg-rv .it{background:#f3f4fd;border-radius:12px;padding:8px 10px}
+.dg-rv .r1{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:#1b2566}
+.dg-rv i{font-style:normal;font-weight:900;font-size:12px}
+.dg-rv i.high{color:#c81414}.dg-rv i.mid{color:#ea6a0a}.dg-rv i.safe{color:#059669}
+.dg-rv p{margin:3px 0 0;font-size:12px;font-weight:600;color:#4b5599;line-height:1.35;overflow-wrap:anywhere}
 .dg-note{font-size:11px;font-weight:600;color:#7d89bd;margin-top:10px;line-height:1.4;text-align:center}
 </style>
 </head>
@@ -1525,23 +1533,28 @@ html:root:root[data-theme] body .card-body>.dg-panel{flex:0 0 100%!important;wid
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 (function(){
 /* Dữ liệu ban đầu (sửa/thêm giảng viên tại đây). d = % nguy hiểm, s = sao /5 */
-var SEED={};
-var W=5,SK='tkb_gv_rate';
+var firebaseConfig={apiKey:"AIzaSyB4e1G1TKy5HsCiFF7tezwOlWLMjMgEdw8",authDomain:"danhgiathayco-67c4c.firebaseapp.com",projectId:"danhgiathayco-67c4c",storageBucket:"danhgiathayco-67c4c.firebasestorage.app",messagingSenderId:"740433487052",appId:"1:740433487052:web:8e5b971607943008210e69"};
+var NAME_K='tkb_name',UID_K='tkb_uid';
 function key(n){return String(n||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim()}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
-function ld(){try{return JSON.parse(localStorage.getItem(SK)||'{}')||{}}catch(e){return{}}}
-function sv(o){try{localStorage.setItem(SK,JSON.stringify(o))}catch(e){}}
-function seedOf(k){if(SEED[k])return SEED[k];for(var s in SEED){if(k.indexOf(s)>-1)return SEED[s]}return null}
+var db=null,remote={},loaded=false,failed=false;
+function mkUid(){var u;try{u=localStorage.getItem(UID_K)}catch(e){}if(!u){u='u'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);try{localStorage.setItem(UID_K,u)}catch(e){}}return u}
+var UID='';
+function dk(k){return k.replace(/\s+/g,'_')}
+function sOf(d){return Math.round((5-d*0.04)*10)/10}
 function calc(name){
-  var k=key(name),sd=seedOf(k),me=ld()[k];
-  if(!sd&&!me)return null;
-  var d,s;
-  if(sd&&me){d=(sd.d*W+me.d)/(W+1);s=(sd.s*W+me.s)/(W+1)}
-  else if(sd){d=sd.d;s=sd.s}else{d=me.d;s=me.s}
-  return{d:Math.round(d),s:Math.round(s*10)/10,me:me||null,seed:!!sd}
+  var L=remote[key(name)];
+  if(!L||!L.length)return null;
+  var sum=0,me=null;
+  L.forEach(function(x){sum+=x.d;if(x.u===UID)me=x});
+  var d=Math.round(sum/L.length);
+  return{d:d,s:sOf(d),n:L.length,list:L,me:me};
 }
 function lvl(d){return d>=70?'high':d>=35?'mid':'safe'}
 var LT={high:'Khá nghiêm',mid:'Trung bình',safe:'An toàn'};
@@ -1557,13 +1570,13 @@ function panel(name,subject){
   if(!c){
     return '<div class="dg-panel dg-none" data-k="'+esc(k)+'"><div class="dg-title">'+WARN+'<span>Mức độ nguy hiểm</span></div>'
      +'<div class="dg-pct">--</div><div class="dg-bar"><i style="width:0"></i></div>'
-     +'<div class="dg-lvl">Chưa có đánh giá</div><div class="dg-sl">Hãy là người đầu tiên!</div>'
+     +'<div class="dg-lvl">'+(!loaded?'Đang tải…':failed?'Lỗi kết nối':'Chưa có đánh giá')+'</div><div class="dg-sl">'+(loaded&&!failed?'Hãy là người đầu tiên!':'')+'</div>'
      +'<button class="dg-btn" type="button" '+data+'>Đánh giá ngay ›</button></div>';
   }
   var L=lvl(c.d);
   return '<div class="dg-panel dg-'+L+'" data-k="'+esc(k)+'"><div class="dg-title">'+WARN+'<span>Mức độ nguy hiểm</span></div>'
    +'<div class="dg-pct">'+c.d+'%</div><div class="dg-bar"><i style="width:'+c.d+'%"></i></div>'
-   +'<div class="dg-lvl">'+ICO[L]+LT[L]+'</div><div class="dg-sl">Đánh giá từ sinh viên:</div>'
+   +'<div class="dg-lvl">'+ICO[L]+LT[L]+'</div><div class="dg-sl">Từ '+c.n+' sinh viên:</div>'
    +'<div class="dg-stars">'+stars(c.s)+'<b>'+c.s.toFixed(1)+'/5</b></div>'
    +'<button class="dg-btn" type="button" '+data+'>Xem chi tiết ›</button></div>';
 }
@@ -1581,40 +1594,61 @@ function close(){if(ov)ov.classList.remove('open')}
 function open(name,subject){
   build();cur={n:name,s:subject};
   var c=calc(name),me=c&&c.me,L=c?lvl(c.d):'none';
-  var d0=me?me.d:(c?c.d:50),s0=me?me.s:0,cm=me?me.c||'':'';
-  var sum=c?'<div class="dg-sum dg-'+L+'"><div class="big">'+c.d+'%</div><div class="mid"><b>'+LT[L]+'</b><span>'+stars(c.s)+' '+c.s.toFixed(1)+'/5 từ sinh viên</span></div></div>'
+  var d0=me?me.d:(c?c.d:50),cm=me?me.c||'':'',nm0='';
+  try{nm0=me?me.name:(localStorage.getItem(NAME_K)||'')}catch(e){}
+  var sum=c?'<div class="dg-sum dg-'+L+'"><div class="big">'+c.d+'%</div><div class="mid"><b>'+LT[L]+'</b><span>'+stars(c.s)+' '+c.s.toFixed(1)+'/5 · '+c.n+' lượt đánh giá</span></div></div>'
            :'<div class="dg-sum"><div class="big">--</div><div class="mid"><b>Chưa có đánh giá</b><span>Hãy cho điểm để mọi người tham khảo</span></div></div>';
+  var rv='';
+  if(c){rv='<div class="dg-rv">'+c.list.slice().sort(function(a,b){return (b.t||0)-(a.t||0)}).slice(0,20).map(function(x){
+    return '<div class="it"><div class="r1"><b>'+esc(x.name||'Ẩn danh')+'</b><i class="'+lvl(x.d)+'">'+x.d+'%</i></div>'+(x.c?'<p>'+esc(x.c)+'</p>':'')+'</div>'}).join('')+'</div>'}
   var sh=ov.firstChild;
-  sh.innerHTML='<div class="dg-hd"><div><h3>'+esc(name)+'</h3><p>'+esc(subject||'')+'</p></div><button class="dg-x" type="button" aria-label="Đóng">✕</button></div>'+sum
+  sh.innerHTML='<div class="dg-hd"><div><h3>'+esc(name)+'</h3><p>'+esc(subject||'')+'</p></div><button class="dg-x" type="button" aria-label="Đóng">✕</button></div>'+sum+rv
+   +'<div class="dg-lab"><span>Tên của bạn</span></div><input class="dg-in" id="dgN" maxlength="30" placeholder="VD: Minh - ĐD19D" value="'+esc(nm0)+'">'
    +'<div class="dg-lab"><span>Bạn thấy thầy/cô nguy hiểm cỡ nào?</span><em id="dgV"></em></div>'
    +'<input class="dg-range" id="dgR" type="range" min="0" max="100" step="1" value="'+d0+'"><div class="dg-scale"><span>An toàn</span><span>Trung bình</span><span>Khá nghiêm</span></div>'
-   +'<div class="dg-lab"><span>Chấm sao cho thầy/cô</span></div><div class="dg-pick" id="dgP">'+[1,2,3,4,5].map(function(i){return '<button type="button" data-v="'+i+'">★</button>'}).join('')+'</div>'
    +'<div class="dg-lab"><span>Nhận xét (không bắt buộc)</span></div><textarea class="dg-ta" id="dgC" maxlength="140" placeholder="VD: Hay điểm danh, cho nhiều bài tập...">'+esc(cm)+'</textarea>'
    +'<div class="dg-acts"><button class="dg-save" id="dgS" type="button">'+(me?'Cập nhật đánh giá':'Lưu đánh giá')+'</button>'+(me?'<button class="dg-del" id="dgD" type="button">Xóa</button>':'')+'</div>'
-   +'<div class="dg-note">Đánh giá được lưu trên thiết bị này và chỉ mang tính tham khảo.</div>';
-  var r=sh.querySelector('#dgR'),v=sh.querySelector('#dgV'),stv=s0;
+   +'<div class="dg-note" id="dgNote">Đánh giá được chia sẻ cho mọi người xem, mỗi thiết bị 1 đánh giá cho mỗi thầy/cô.</div>';
+  var r=sh.querySelector('#dgR'),v=sh.querySelector('#dgV'),note=sh.querySelector('#dgNote');
   function upd(){var d=+r.value,l=lvl(d);v.textContent=d+'% · '+LT[l];v.style.color=l==='high'?'#c81414':l==='mid'?'#ea6a0a':'#059669'}
   r.addEventListener('input',upd);upd();
-  var btns=sh.querySelectorAll('#dgP button');
-  function paint(){btns.forEach(function(b){b.classList.toggle('on',+b.dataset.v<=stv)})}
-  btns.forEach(function(b){b.onclick=function(){stv=+b.dataset.v;paint()}});paint();
   sh.querySelector('.dg-x').onclick=close;
+  function fail(m){note.textContent=m;note.style.color='#c81414'}
+  var docId=dk(key(name))+'__'+UID;
   sh.querySelector('#dgS').onclick=function(){
-    if(!stv){btns[0].parentNode.style.outline='2px solid #f59e0b';btns[0].parentNode.style.borderRadius='12px';return}
-    var o=ld();o[key(name)]={d:+r.value,s:stv,c:sh.querySelector('#dgC').value.trim(),t:Date.now()};sv(o);refresh(name,subject);close();
+    var inp=sh.querySelector('#dgN'),nm=inp.value.trim();
+    if(!nm){inp.focus();inp.style.borderColor='#f59e0b';return fail('Vui lòng nhập tên của bạn.')}
+    if(!db||!UID)return fail('Chưa kết nối được máy chủ, thử lại sau.');
+    try{localStorage.setItem(NAME_K,nm)}catch(e){}
+    db.collection('ratings').doc(docId).set({k:key(name),teacher:name,u:UID,name:nm,d:+r.value,c:sh.querySelector('#dgC').value.trim(),t:Date.now()})
+      .catch(function(){alert('Không lưu được đánh giá. Kiểm tra mạng hoặc quyền Firestore.')});
+    close();
   };
   var del=sh.querySelector('#dgD');
-  if(del)del.onclick=function(){var o=ld();delete o[key(name)];sv(o);refresh(name,subject);close()};
+  if(del)del.onclick=function(){if(db)db.collection('ratings').doc(docId).delete().catch(function(){});close()};
   ov.classList.add('open');
 }
-function refresh(name){
-  var k=key(name);
+function refreshAll(){
   document.querySelectorAll('.dg-panel').forEach(function(p){
-    if(p.dataset.k!==k)return;
-    var b=p.querySelector('.dg-btn'),h=panel(b.dataset.t,b.dataset.s),t=document.createElement('div');
-    t.innerHTML=h;p.replaceWith(t.firstChild);
+    var b=p.querySelector('.dg-btn'),t=document.createElement('div');
+    t.innerHTML=panel(b.dataset.t,b.dataset.s);p.replaceWith(t.firstChild);
   });
 }
+/* ---- Firebase ---- */
+try{
+  firebase.initializeApp(firebaseConfig);db=firebase.firestore();
+  var started=false;
+  function listen(){
+    if(started)return;started=true;
+    db.collection('ratings').onSnapshot(function(snap){
+      var m={};snap.forEach(function(doc){var x=doc.data();if(!x||!x.k||typeof x.d!=='number')return;x.id=doc.id;(m[x.k]=m[x.k]||[]).push(x)});
+      remote=m;loaded=true;failed=false;refreshAll();
+    },function(){loaded=true;failed=true;refreshAll()});
+  }
+  /* đăng nhập ẩn danh: mỗi người 1 uid do Firebase cấp, chỉ sửa/xoá được đánh giá của chính mình */
+  firebase.auth().onAuthStateChanged(function(u){if(u){UID=u.uid;listen()}});
+  firebase.auth().signInAnonymously().catch(function(){loaded=true;failed=true;refreshAll()});
+}catch(e){loaded=true;failed=true}
 document.addEventListener('click',function(e){
   var b=e.target.closest&&e.target.closest('.dg-btn');if(!b)return;
   e.preventDefault();e.stopPropagation();open(b.dataset.t,b.dataset.s);
