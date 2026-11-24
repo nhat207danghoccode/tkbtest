@@ -285,11 +285,12 @@
   .card.in { opacity: 1; transform: none; }
 
   /* nhạc */
-  .music-card.playing { animation: cardGlow 3.2s ease-in-out infinite; }
-  @keyframes cardGlow {
-    0%,100% { box-shadow: 0 10px 34px rgba(3,4,26,.55), inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 40px rgba(124,92,255,.08); }
-    50% { box-shadow: 0 10px 44px rgba(90,60,255,.45), inset 0 1px 0 rgba(255,255,255,.2), inset 0 0 60px rgba(124,92,255,.2); }
-  }
+  /* nhẹ cho điện thoại: không animate box-shadow, không blur nền (iframe + blur gây giật) */
+  .music-card { backdrop-filter: none; -webkit-backdrop-filter: none; background: linear-gradient(145deg, rgba(44,46,112,.9), rgba(20,22,66,.92)); }
+  .music-card.playing { box-shadow: 0 10px 40px rgba(90,60,255,.4), inset 0 1px 0 rgba(255,255,255,.18), inset 0 0 50px rgba(124,92,255,.16); }
+  .music-card button, .seg button, .pill-btn { touch-action: manipulation; }
+  .music-card.yt .yt-wrap { transition-duration: .28s; }
+  .yt-frame { transform: translateZ(0); }
   .play { position: relative; }
   .play.playing::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(155,123,255,.75); animation: ring 1.8s ease-out infinite; pointer-events: none; }
   @keyframes ring { from { transform: scale(1); opacity: .9; } to { transform: scale(1.75); opacity: 0; } }
@@ -668,7 +669,11 @@
   function floatNotes(on) { clearInterval(noteTimer); if (on) { spawnNote(); noteTimer = setInterval(spawnNote, 700); } }
 
   const fmt = s => !isFinite(s) ? '00:00' : `${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
-  function ui(p) {
+  let uiState = null, pendingUntil = 0;
+  function ui(p, force) {
+    p = !!p;
+    if (!force && p === uiState) return;
+    uiState = p;
     icoPlay.style.display = p ? 'none' : 'block';
     icoPause.style.display = p ? 'block' : 'none';
     art.classList.toggle('playing', p);
@@ -699,6 +704,7 @@
         onStateChange: ev => {
           if (mode !== 'yt') return;
           const s = ev.data;
+          pendingUntil = 0;
           if (s === 1) { ui(true); ytMeta(); }
           else if (s === 2 || s === 5) ui(false);
           else if (s === 0) {
@@ -742,7 +748,16 @@
     dur.textContent = fmt(d); cur.textContent = fmt(tm);
     fill.style.width = d ? (tm / d * 100) + '%' : '0%';
   }
-  setInterval(() => { if (mode === 'yt') sync(); }, 300);
+  // đồng bộ tiến trình + trạng thái phát/dừng với video (bấm play/pause ngay trong video cũng cập nhật giao diện)
+  function pollYT() {
+    if (mode !== 'yt' || !ytReady) return;
+    sync();
+    if (performance.now() < pendingUntil) return;      // đang chờ video phản hồi sau khi bấm nút
+    let st; try { st = yt.getPlayerState(); } catch (e) { return; }
+    if (st === 1) ui(true);                            // đang phát
+    else if (st === 2 || st === 0 || st === 5) ui(false); // tạm dừng / hết / sẵn sàng
+  }
+  setInterval(pollYT, 150);
 
   // ---- sự kiện MP3 ----
   audio.addEventListener('play', () => { if (mode === 'mp3') ui(true); });
@@ -753,7 +768,18 @@
   audio.addEventListener('error', () => { if (mode === 'mp3') artistEl.textContent = 'Không tìm thấy 2.mp3 (để cùng thư mục)'; });
 
   // ---- nút điều khiển ----
-  playBtnEl.onclick = () => { A.playing() ? A.pause() : A.play(); };
+  playBtnEl.onclick = () => {
+    if (mode === 'yt') {
+      if (!ytReady) { A.play(); return; }
+      const st = yt.getPlayerState();
+      const isPlaying = (st === 1 || st === 3) && uiState;  // đang phát (kể cả buffering)
+      pendingUntil = performance.now() + 1500;
+      if (isPlaying) { ui(false); yt.pauseVideo(); }
+      else { ui(true); yt.playVideo(); }
+    } else {
+      A.playing() ? A.pause() : A.play();
+    }
+  };
   document.getElementById('progress').addEventListener('click', e => {
     const d = A.dur(); if (!d) return;
     const r = e.currentTarget.getBoundingClientRect();
