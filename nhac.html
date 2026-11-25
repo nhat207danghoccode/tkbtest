@@ -15,8 +15,8 @@
     --blue: #4f7cff;
     --text: #ffffff;
     --muted: #9aa3d6;
-    --card-a: rgba(44, 46, 112, 0.55);
-    --card-b: rgba(20, 22, 66, 0.62);
+    --card-a: rgba(44, 46, 112, 0.80);
+    --card-b: rgba(20, 22, 66, 0.86);
     --border: rgba(140, 125, 255, 0.28);
     --radius: 26px;
   }
@@ -26,16 +26,17 @@
 
   body {
     background: var(--bg);
-    background-image:
-      radial-gradient(120% 60% at 50% 0%, #1b1a5e 0%, rgba(27,26,94,0) 70%),
-      radial-gradient(80% 50% at 100% 100%, rgba(79,124,255,0.18) 0%, transparent 60%),
-      radial-gradient(70% 40% at 0% 70%, rgba(124,92,255,0.14) 0%, transparent 60%);
-    background-attachment: fixed;
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
     padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   }
+
+  body::before { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background-image:
+      radial-gradient(120% 60% at 50% 0%, #1b1a5e 0%, rgba(27,26,94,0) 70%),
+      radial-gradient(80% 50% at 100% 100%, rgba(79,124,255,0.18) 0%, transparent 60%),
+      radial-gradient(70% 40% at 0% 70%, rgba(124,92,255,0.14) 0%, transparent 60%); }
 
   /* ============ HERO SCENE (sao, trăng, núi) ============ */
   .hero {
@@ -108,7 +109,6 @@
     border-radius: var(--radius);
     padding: 18px;
     margin-bottom: 14px;
-    backdrop-filter: blur(22px) saturate(140%); -webkit-backdrop-filter: blur(22px) saturate(140%);
     box-shadow: 0 10px 34px rgba(3,4,26,.55), inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 40px rgba(124,92,255,.08);
     animation: fadeUp .6s ease backwards;
   }
@@ -257,25 +257,28 @@
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
 
+  html.bg-off *, html.bg-off *::before, html.bg-off *::after { animation-play-state: paused !important; }
+  html.bg-off .aurora, html.bg-off .hero { visibility: hidden; }
+
   /* nền aurora trôi */
   .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-  .aurora i { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .45; }
-  .aurora i:nth-child(1) { width: 320px; height: 320px; background: #5b3df0; left: -90px; top: 38%; animation: blob1 16s ease-in-out infinite alternate; }
-  .aurora i:nth-child(2) { width: 290px; height: 290px; background: #2f6bff; right: -100px; top: 62%; animation: blob2 21s ease-in-out infinite alternate; }
-  .aurora i:nth-child(3) { width: 220px; height: 220px; background: #b44bff; left: 40%; top: 18%; opacity: .25; animation: blob1 25s ease-in-out infinite alternate-reverse; }
+  .aurora i { position: absolute; border-radius: 50%; opacity: .55; will-change: transform; background: radial-gradient(closest-side, var(--c), transparent); }
+  .aurora i:nth-child(1) { width: 480px; height: 480px; --c: #5b3df0; left: -90px; top: 38%; animation: blob1 16s ease-in-out infinite alternate; }
+  .aurora i:nth-child(2) { width: 440px; height: 440px; --c: #2f6bff; right: -100px; top: 62%; animation: blob2 21s ease-in-out infinite alternate; }
+  .aurora i:nth-child(3) { width: 340px; height: 340px; --c: #b44bff; left: 40%; top: 18%; opacity: .25; animation: blob1 25s ease-in-out infinite alternate-reverse; }
   @keyframes blob1 { to { transform: translate(130px,-90px) scale(1.25); } }
   @keyframes blob2 { to { transform: translate(-120px,-120px) scale(1.15); } }
 
   .shooting.s2 { top: 36px; right: 58%; width: 80px; animation-delay: 7s; animation-duration: 12s; }
   .moon { animation: moonGlow 5s ease-in-out infinite alternate; }
   @keyframes moonGlow {
-    from { box-shadow: 0 0 36px 8px rgba(170,150,255,.4), 0 0 80px 26px rgba(120,100,255,.2); transform: translateY(0); }
-    to   { box-shadow: 0 0 52px 14px rgba(190,170,255,.6), 0 0 110px 40px rgba(120,100,255,.32); transform: translateY(-5px); }
+    from { transform: translateY(0); }
+    to   { transform: translateY(-5px); }
   }
   .logo { animation: logoPulse 3s ease-in-out infinite; }
   @keyframes logoPulse {
-    0%,100% { filter: drop-shadow(0 0 10px rgba(124,92,255,.55)); transform: scale(1); }
-    50% { filter: drop-shadow(0 0 22px rgba(165,135,255,.95)); transform: scale(1.06) rotate(-3deg); }
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.06) rotate(-3deg); }
   }
   .icon-btn.cog:hover svg { transform: rotate(90deg); }
   .icon-btn svg { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
@@ -586,7 +589,7 @@
 (function () {
   // ---------- Sao ----------
   const stars = document.getElementById('stars');
-  for (let i = 0; i < 70; i++) {
+  for (let i = 0; i < 36; i++) {
     const s = document.createElement('i');
     s.className = 'star';
     const size = Math.random() < .15 ? 2.5 : Math.random() * 1.4 + .8;
@@ -662,6 +665,7 @@
   // nốt nhạc bay
   let noteTimer = null;
   function spawnNote() {
+    if (document.documentElement.classList.contains('bg-off')) return;
     const s = document.createElement('span');
     s.className = 'pnote';
     s.textContent = ['♪','♫','♩','♬'][Math.floor(Math.random() * 4)];
@@ -762,7 +766,11 @@
     if (st === 1) ui(true);                            // đang phát
     else if (st === 2 || st === 0 || st === 5) ui(false); // tạm dừng / hết / sẵn sàng
   }
-  setInterval(pollYT, 150);
+  setInterval(pollYT, 300);
+  addEventListener('message', e => {
+    if (e.source !== parent || !e.data || typeof e.data !== 'object' || !('tkbVisible' in e.data)) return;
+    document.documentElement.classList.toggle('bg-off', !e.data.tkbVisible);
+  });
 
   // ---- sự kiện MP3 ----
   audio.addEventListener('play', () => { if (mode === 'mp3') ui(true); });

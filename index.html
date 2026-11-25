@@ -1051,7 +1051,8 @@ html:root:root[data-theme] body.v-study .bnav button{pointer-events:auto!importa
 @supports (-webkit-touch-callout:none){
   html:root:root[data-theme] body.v-study .study-frame{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;transform:none!important}
 }
-html:root:root[data-theme] body.v-study .wrap,html:root:root[data-theme] body.v-study .sticker,html:root:root[data-theme] body.v-study .ecg,html:root:root[data-theme] body.v-notif .wrap,html:root:root[data-theme] body.v-notif .sticker{display:none!important}
+html:root:root[data-theme] body.v-study .wrap,html:root:root[data-theme] body.v-study .sticker,html:root:root[data-theme] body.v-study .ecg{visibility:hidden!important}
+html:root:root[data-theme] body.v-notif .wrap,html:root:root[data-theme] body.v-notif .sticker{display:none!important}
 html:root:root[data-theme] body.v-notif .notif{display:block!important}
 html:root:root[data-theme] body .bnav{width:min(78vw,320px)!important}
 html:root:root[data-theme] body.v-study .bnav{opacity:.94!important}
@@ -1065,7 +1066,9 @@ html:root:root[data-theme] body.v-study .bnav:is(:not(:hover),.force):not(.open)
 html:root:root[data-theme] body.v-study .bnav:is(:not(:hover),.force):not(.open) .bdg,html:root:root[data-theme] body.v-map .bnav:is(:not(:hover),.force):not(.open) .bdg,html:root:root[data-theme] body.v-study .bnav:is(:not(:hover),.force):not(.open) .bdg,html:root:root[data-theme] body.v-util .bnav:is(:not(:hover),.force):not(.open) .bdg{top:-3px!important;left:calc(50% + 2px)!important;min-width:13px!important;height:13px!important;font-size:8px!important;border-width:1.5px!important;border-radius:7px!important}
 html:root:root[data-theme] body .map-frame,html:root:root[data-theme] body .util-frame{display:block!important;visibility:hidden!important;pointer-events:none!important;position:fixed!important;inset:0!important;z-index:-1!important;width:100%!important;height:100%!important;border:0!important;background:#fff!important}
 html:root:root[data-theme] body.v-map .map-frame,html:root:root[data-theme] body.v-util .util-frame{visibility:visible!important;pointer-events:auto!important;z-index:50!important}
-html:root:root[data-theme] body.v-map .wrap,html:root:root[data-theme] body.v-map .sticker,html:root:root[data-theme] body.v-map .ecg,html:root:root[data-theme] body.v-util .wrap,html:root:root[data-theme] body.v-util .sticker,html:root:root[data-theme] body.v-util .ecg{display:none!important}
+html:root:root[data-theme] body.v-map .wrap,html:root:root[data-theme] body.v-map .sticker,html:root:root[data-theme] body.v-map .ecg,html:root:root[data-theme] body.v-util .wrap,html:root:root[data-theme] body.v-util .sticker,html:root:root[data-theme] body.v-util .ecg{visibility:hidden!important}
+body.v-study,body.v-map,body.v-util{overflow:hidden!important}
+body.v-study .wrap *,body.v-map .wrap *,body.v-util .wrap *{animation-play-state:paused!important}
 html:root:root[data-theme] body .bnav{width:min(90vw,400px)!important}
 html:root:root[data-theme] body.v-map .bnav,html:root:root[data-theme] body.v-util .bnav{opacity:.94!important}
 body::before,body::after{display:none!important}
@@ -2170,6 +2173,8 @@ function renderNotif(){
     h+=`<div class="nitem"><div class="nic">📖</div><div class="ntx"><b>Đã ôn tập ${fmtDur(x.end-x.start)}</b><span>${hm(x.start)} – ${hm(x.end)}</span></div></div>`});
   list.innerHTML=h;
 }
+const tellUtil=()=>{const uf=document.getElementById('utilFrame');try{uf&&uf.contentWindow&&uf.contentWindow.postMessage({tkbVisible:view==='util'},'*')}catch(e){}};
+document.getElementById('utilFrame').addEventListener('load',tellUtil);
 function go(g){
   if(view==='study'&&g!=='study')commit(true);
   view=g;document.body.classList.toggle('v-study',g==='study');document.body.classList.toggle('v-notif',g==='notif');document.body.classList.toggle('v-map',g==='map');document.body.classList.toggle('v-util',g==='util');
@@ -2179,10 +2184,10 @@ function go(g){
   if(g==='map'){const mf=document.getElementById('mapFrame');if(!mf.getAttribute('src'))mf.src=MAP_URL}
   if(g==='util'){const uf=document.getElementById('utilFrame');if(!uf.getAttribute('src'))uf.src='nhac.html'}
   if(g==='notif'){const d=load_();d.seen=d.log.length;save_(d);renderNotif()}
-  window.scrollTo(0,0);badge();
+  window.scrollTo(0,0);badge();tellUtil();
 }
 
-(function(){const warm=()=>{const mf=document.getElementById('mapFrame');if(mf&&!mf.getAttribute('src'))mf.src=MAP_URL};
+(function(){const warm=()=>{const mf=document.getElementById('mapFrame');if(mf&&!mf.getAttribute('src'))mf.src=MAP_URL;setTimeout(()=>{const uf=document.getElementById('utilFrame');if(uf&&!uf.getAttribute('src'))uf.src='nhac.html'},1800)};
 const kick=()=>('requestIdleCallback' in window)?requestIdleCallback(warm,{timeout:4000}):setTimeout(warm,2500);
 if(document.readyState==='complete')setTimeout(kick,800);else addEventListener('load',()=>setTimeout(kick,800))})();
 const nav=document.getElementById('bnav');let nt=null;
