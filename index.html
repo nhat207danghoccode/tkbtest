@@ -2276,5 +2276,28 @@ apply(saved);
 (()=>{const b=document.getElementById('tkbGuideBtn'),m=document.getElementById('tkbGuideMenu'),o=document.getElementById('tkbGuideOverlay'),p=document.getElementById('tkbGuidePlayer'),t=document.getElementById('tkbGuideTitle');const skin=document.getElementById('skinBtn');function place(){if(!skin)return;const r=skin.getBoundingClientRect();if(!r.width)return;const sx=window.pageXOffset||0,sy=window.pageYOffset||0;b.style.left=Math.max(8,Math.min(document.documentElement.clientWidth-b.offsetWidth-8,r.left+sx+(r.width-b.offsetWidth)/2))+'px';b.style.top=(r.bottom+sy+8)+'px';b.style.right='auto';m.style.left=Math.max(8,Math.min(document.documentElement.clientWidth-m.offsetWidth-8,r.left+sx+(r.width-m.offsetWidth)/2))+'px';m.style.top=(r.bottom+sy+8+b.offsetHeight+8)+'px';m.style.right='auto'}place();window.addEventListener('resize',place);window.addEventListener('load',place);if(skin){new ResizeObserver(place).observe(skin)}new MutationObserver(place).observe(document.body,{attributes:true,attributeFilter:['class']});function hide(){m.classList.remove('open');b.classList.remove('active');b.setAttribute('aria-expanded','false')}b.onclick=e=>{e.stopPropagation();let q=m.classList.toggle('open');place();b.classList.toggle('active',q);b.setAttribute('aria-expanded',q)};document.addEventListener('click',e=>{if(!m.contains(e.target)&&!b.contains(e.target))hide()});m.querySelectorAll('.option').forEach(x=>{const play=()=>{t.textContent='Hướng dẫn '+x.dataset.label;p.src=x.dataset.url;o.classList.add('open');document.body.style.overflow='hidden';hide()};x.onclick=play;x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();play()}}});function close(){o.classList.remove('open');p.src='about:blank';document.body.style.overflow=''}document.getElementById('tkbGuideExit').onclick=close;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&o.classList.contains('open'))close()})})();
 </script>
 
+<!-- OFFLINE-SW:start -->
+<script>
+(function(){
+  if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;
+  var p=document.createElement('div');
+  p.style.cssText='position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:2147483647;background:#1e293b;color:#fff;font:600 12px/1 system-ui,sans-serif;padding:8px 14px;border-radius:999px;box-shadow:0 4px 16px rgba(0,0,0,.3);display:none;pointer-events:none';
+  p.textContent='📴 Đang offline · hiển thị dữ liệu đã lưu';
+  function sync(){p.style.display=navigator.onLine?'none':'block'}
+  addEventListener('online',sync);addEventListener('offline',sync);
+  addEventListener('load',function(){
+    document.body.appendChild(p);sync();
+    navigator.serviceWorker.register('./sw.js').then(function(){return navigator.serviceWorker.ready}).then(function(){
+      if(!navigator.onLine)return;
+      var d=new Date();d.setHours(12);d.setDate(d.getDate()-((d.getDay()+6)%7));
+      for(var i=-1;i<=4;i++){var x=new Date(d);x.setDate(x.getDate()+i*7);
+        var s=x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+        fetch('./data/week-'+s+'.json?v='+Date.now(),{cache:'no-store'}).catch(function(){});}
+    }).catch(function(){});
+  });
+})();
+</script>
+<!-- OFFLINE-SW:end -->
+
 </body>
 </html>
