@@ -80,22 +80,40 @@ def main():
         target = OUT / f"week-{week.isoformat()}.json"
         try:
             payload, method = fetch_week(session, week)
-            record = {
-                "ok": True,
-                "weekStart": week.isoformat(),
-                "fetchedAt": datetime.now(TZ).isoformat(timespec="seconds"),
-                "source": method,
-                "data": payload,
-            }
-            target.write_text(json.dumps(record, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+            # Compare timetable content only. fetchedAt changes on every poll,
+            # so rewriting it would cause a commit even when the timetable is identical.
+            previous = None
+            if target.exists():
+                try:
+                    previous = json.loads(target.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    previous = None
+
+            if (
+                isinstance(previous, dict)
+                and previous.get("ok") is True
+                and previous.get("data") == payload
+            ):
+                print(f"UNCHANGED {week}: timetable is identical")
+            else:
+                record = {
+                    "ok": True,
+                    "weekStart": week.isoformat(),
+                    "fetchedAt": datetime.now(TZ).isoformat(timespec="seconds"),
+                    "source": method,
+                    "data": payload,
+                }
+                target.write_text(
+                    json.dumps(record, ensure_ascii=False, separators=(",", ":")),
+                    encoding="utf-8",
+                )
+                print(f"CHANGED {week}: saved timetable ({method})")
+
             successes += 1
-            print(f"OK {week}: {method}")
         except Exception as exc:
             failures.append(f"{week}: {exc}")
             print(f"ERROR {week}: {exc}", file=sys.stderr)
             # Keep the last good snapshot if the upstream server is temporarily unavailable.
-            if not target.exists():
-                target.write_text(json.dumps({"ok": False, "weekStart": week.isoformat(), "error": str(exc)}, ensure_ascii=False), encoding="utf-8")
     status = {
         "updatedAt": datetime.now(TZ).isoformat(timespec="seconds"),
         "weeksTotal": len(weeks),
