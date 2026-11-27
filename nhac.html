@@ -343,6 +343,38 @@ button:active{transform:scale(.95)}
 .pm-set input:focus{border-color:#b3a6ff;box-shadow:0 0 0 3px rgba(139,123,255,.25)}
 .stp{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:26px;line-height:1;background:rgba(150,130,255,.26);border:1px solid var(--line);color:#fff}
 .stp:active{transform:scale(.92)}
+
+/* lịch lâm sàng */
+#lcTeam{flex-wrap:nowrap;margin-bottom:14px}
+#lcTeam .chp{flex:1;text-align:center;padding:12px 0;font-size:15px;border-radius:16px}
+.lc-hero{position:relative;overflow:hidden;margin-bottom:14px;padding:18px 16px;border-radius:26px;--a:#8b7bff;background:radial-gradient(120% 130% at 0% 0%,rgba(157,140,255,.38),rgba(50,40,150,.16) 60%,rgba(20,20,70,.3));border:1px solid rgba(190,170,255,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 16px 36px -14px rgba(90,60,230,.5);animation:exIn .5s cubic-bezier(.2,.8,.2,1) backwards}
+.lc-top{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.lc-txt{min-width:0;flex:1}
+.lc-tag{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--a)}
+.lc-tag i{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor;animation:blink 1.4s ease-in-out infinite}
+.lc-dept{font-size:23px;font-weight:800;line-height:1.25;margin:8px 0 6px;letter-spacing:-.3px}
+.lc-dept em,.lc-name em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.6px;padding:2px 8px;margin-left:8px;border-radius:999px;vertical-align:middle;color:var(--a);background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14)}
+.lc-sub{font-size:12.5px;line-height:1.65;color:#d3d0f5}
+.lc-num{flex-shrink:0;min-width:84px;text-align:center;padding:12px 10px;border-radius:20px;background:rgba(5,6,24,.5);border:1px solid rgba(255,255,255,.08)}
+.lc-num b{display:block;font-size:40px;font-weight:800;line-height:1;letter-spacing:-1px;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#fff,var(--a));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lc-num span{display:block;margin-top:6px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--mut)}
+.lc-hero .ex-bar{margin-top:14px}
+.lc-hero .ex-bar i{background:var(--a);width:var(--w,0)}
+.lc-hero .lc-prog{margin-top:8px;font-size:12px;color:var(--mut)}
+.lc-it{display:flex;gap:12px;align-items:center;margin-bottom:10px;padding:13px 12px;border-radius:24px;--a:#8b7bff;background:rgba(30,20,110,.45);border:1px solid rgba(176,156,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.07);animation:exIn .5s cubic-bezier(.2,.8,.2,1) calc(var(--i)*70ms) backwards}
+.lc-n{flex:0 0 40px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:17px;font-weight:800;color:var(--a);background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 2px var(--a)}
+.lc-m{min-width:0;flex:1}
+.lc-name{font-size:16px;font-weight:700;line-height:1.35}
+.lc-w{margin-top:3px;font-size:12px;font-weight:700;color:var(--a)}
+.lc-d{margin-top:3px;font-size:13px;line-height:1.6;color:var(--mut)}
+.lc-chip{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:14px;font-size:13px;font-weight:700;white-space:nowrap;color:#d7d0ff;background:rgba(150,130,255,.16)}
+.lc-chip svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.lc-it.live{border-color:rgba(53,232,184,.5)}
+.lc-it.live .lc-chip{color:var(--mint);background:rgba(20,210,170,.14)}
+.lc-it.break .lc-chip{color:#ffd28a;background:rgba(255,184,79,.14)}
+.lc-it.done{opacity:.55}
+.lc-it.done .lc-chip{color:var(--mut);background:rgba(160,150,220,.14)}
+@media(max-width:380px){.lc-name{font-size:15px}.lc-chip{padding:6px 8px;font-size:12px}.lc-num{min-width:72px}.lc-num b{font-size:34px}}
 </style>
 </head>
 <body data-tab="home">
@@ -420,6 +452,13 @@ button:active{transform:scale(.95)}
     <div class="sec-head"><div class="sec-t"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><h3>Lịch thi</h3><svg class="spark" viewBox="0 0 24 24"><path d="M12 1c1 6 5 10 11 11-6 1-10 5-11 11-1-6-5-10-11-11 6-1 10-5 11-11Z"/></svg></div>
      <button class="pill" id="allBtn">Xem tất cả <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
     <div id="examList"></div>
+   </section>
+   <section class="card" id="lcCard">
+    <div class="sec-head"><div class="sec-t"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 7.5v9M7.5 12h9"/></svg><h3>Lịch lâm sàng</h3><svg class="spark" viewBox="0 0 24 24"><path d="M12 1c1 6 5 10 11 11-6 1-10 5-11 11-1-6-5-10-11-11 6-1 10-5 11-11Z"/></svg></div></div>
+    <div class="chips" id="lcTeam"><button class="chp" data-t="1D">Tổ 1D</button><button class="chp" data-t="2D">Tổ 2D</button></div>
+    <div id="lcHero"></div>
+    <div id="lcList"></div>
+    <div class="muted" id="lcNote">Cao đẳng Điều dưỡng · Học kỳ 2 · 2026–2027</div>
    </section>
   </div>
 
@@ -965,6 +1004,58 @@ function addNote(){const v=ni.value.trim();if(!v)return;notes.unshift({t:Date.no
 ni.addEventListener('keydown',e=>{if(e.key==='Enter')addNote()});$('noteAdd').onclick=addNote;
 nl.addEventListener('click',e=>{const b=e.target.closest('.del');if(!b)return;notes=notes.filter(n=>String(n.t)!==b.dataset.t);lsSet('nt_notes',notes);renderNotes()});
 renderNotes();renderCustom();
+
+// ---------- Lịch lâm sàng (Tổ 1D / Tổ 2D) ----------
+const LC_SAN='#ff8fa8',LC_PHU='#d9a0ff',LC_UB='#ffb84f',LC_PT='#4fd1ff',LC_BV='#35e8b8',LC_PH='#8fa6ff';
+const LC={
+ '1D':[
+  {w:'20–21',k:'Sản (CSPN)',c:LC_SAN,r:[['2026-12-21','2027-01-03']]},
+  {w:'22–23',k:'Phụ (CSPN)',c:LC_PHU,r:[['2027-01-04','2027-01-17']]},
+  {w:'24–25, 28–29',k:'Ung bướu',n:'TH',c:LC_UB,r:[['2027-01-18','2027-01-31'],['2027-02-15','2027-02-28']]},
+  {w:'34–35',k:'Bệnh viện SKTT',c:LC_BV,r:[['2027-03-29','2027-04-11']]},
+  {w:'36–37',k:'PHCN',c:LC_PH,r:[['2027-04-12','2027-04-25']]}],
+ '2D':[
+  {w:'20–21',k:'Phụ (CSPN)',c:LC_PHU,r:[['2026-12-21','2027-01-03']]},
+  {w:'22–23',k:'Sản (CSPN)',c:LC_SAN,r:[['2027-01-04','2027-01-17']]},
+  {w:'24–25, 28–29',k:'PTTK',n:'TH',c:LC_PT,r:[['2027-01-18','2027-01-31'],['2027-02-15','2027-02-28']]},
+  {w:'34–35',k:'PHCN',c:LC_PH,r:[['2027-03-29','2027-04-11']]},
+  {w:'36–37',k:'Bệnh viện SKTT',c:LC_BV,r:[['2027-04-12','2027-04-25']]}]
+};
+let LCT=ls('nt_clin_team','1D');if(!LC[LCT])LCT='1D';
+const LD=864e5,lcT=s=>{const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2]).getTime()},
+ lcShort=s=>{const p=s.split('-');return p[2]+'/'+p[1]},lcLong=s=>{const p=s.split('-');return p[2]+'/'+p[1]+'/'+p[0]},
+ lcRange=x=>lcLong(x[0])+' – '+lcLong(x[1]);
+let lcDay='';
+function lcState(it,T){
+ const R=it.r.map(x=>[lcT(x[0]),lcT(x[1])]);
+ if(T>R[R.length-1][1])return{s:'done'};
+ if(T<R[0][0])return{s:'next',d:Math.round((R[0][0]-T)/LD)};
+ const total=R.reduce((a,x)=>a+Math.round((x[1]-x[0])/LD)+1,0);let before=0;
+ for(let i=0;i<R.length;i++){
+  if(T>=R[i][0]&&T<=R[i][1])return{s:'live',day:before+Math.round((T-R[i][0])/LD)+1,total,left:Math.round((R[i][1]-T)/LD)+1,end:it.r[i][1],more:i<R.length-1?it.r[i+1][0]:null};
+  if(T<R[i][0])return{s:'break',d:Math.round((R[i][0]-T)/LD),on:it.r[i][0]};
+  before+=Math.round((R[i][1]-R[i][0])/LD)+1}
+}
+function lcRender(){
+ const list=LC[LCT],n=new Date();n.setHours(0,0,0,0);const T=n.getTime();lcDay=n.toDateString();
+ document.querySelectorAll('#lcTeam .chp').forEach(b=>b.classList.toggle('on',b.dataset.t===LCT));
+ const st=list.map(it=>lcState(it,T));
+ let hi=st.findIndex(x=>x.s==='live'||x.s==='break');if(hi<0)hi=st.findIndex(x=>x.s==='next');
+ const hero=$('lcHero');
+ if(hi<0){hero.innerHTML=`<div class="lc-hero"><div class="lc-tag"><i></i>Hoàn thành</div><div class="lc-dept">Đã xong lịch lâm sàng ✨</div><div class="lc-sub">Tổ ${LCT} đã học hết các đợt thực hành.</div></div>`}
+ else{const it=list[hi],s=st[hi],nm=esc(it.k)+(it.n?`<em>${esc(it.n)}</em>`:''),rg=it.r.map(lcRange).join('<br>');
+  let tag,num,lab,sub=`Tuần ${it.w}<br>${rg}`,bar='';
+  if(s.s==='live'){tag='Đang thực tập';num=s.left;lab='ngày còn lại';
+   sub=`Tuần ${it.w}<br>Đến hết ngày ${lcLong(s.end)}`+(s.more?` · tiếp tục ${lcShort(s.more)}`:'');
+   bar=`<div class="ex-bar"><i style="--w:${Math.round(s.day/s.total*100)}%"></i></div><div class="lc-prog">Ngày ${s.day}/${s.total} của đợt</div>`}
+  else if(s.s==='break'){tag='Nghỉ giữa đợt';num=s.d;lab='ngày nữa';sub=`Tuần ${it.w}<br>Quay lại ngày ${lcLong(s.on)}`}
+  else{tag='Đợt tiếp theo';num=s.d;lab='ngày nữa';}
+  hero.innerHTML=`<div class="lc-hero" style="--a:${it.c}"><div class="lc-top"><div class="lc-txt"><div class="lc-tag"><i></i>${tag}</div><div class="lc-dept">${nm}</div><div class="lc-sub">${sub}</div></div><div class="lc-num"><b>${num}</b><span>${lab}</span></div></div>${bar}</div>`}
+ $('lcList').innerHTML=list.map((it,i)=>{const s=st[i],
+  chip=s.s==='done'?I_OK+'Đã xong':s.s==='live'?I_FIRE+'Đang học':s.s==='break'?'Nghỉ giữa đợt':I_CLOCK+'Còn '+s.d+' ngày';
+  return `<div class="lc-it ${s.s}" style="--a:${it.c};--i:${i}"><div class="lc-n">${i+1}</div><div class="lc-m"><div class="lc-name">${esc(it.k)}${it.n?`<em>${esc(it.n)}</em>`:''}</div><div class="lc-w">Tuần ${it.w}</div><div class="lc-d">${it.r.map(lcRange).join('<br>')}</div></div><span class="lc-chip">${chip}</span></div>`}).join('')}
+$('lcTeam').addEventListener('click',e=>{const b=e.target.closest('.chp');if(!b||b.dataset.t===LCT)return;LCT=b.dataset.t;lsSet('nt_clin_team',LCT);lcRender();toast('Lịch lâm sàng Tổ '+LCT)});
+lcRender();setInterval(()=>{if(new Date().toDateString()!==lcDay)lcRender()},60000);
 
 })();
 </script>
