@@ -774,13 +774,14 @@ setInterval(()=>{if(mode==='yt'&&ytReady){try{const v=yt.getVideoData(),h=hist.f
 
 
 // ---------- Lịch thi ----------
+// ---------- Lịch thi ----------
 const BASE_EXAMS=[
- {subject:"Pháp luật",date:"2026-12-07T07:30:00",session:"Sáng"},
- {subject:"Sức khỏe - NCSK & hành vi con người - Dinh dưỡng - Tiết chế",date:"2026-12-10T13:00:00",session:"Chiều"},
- {subject:"Điều dưỡng cơ sở 2",date:"2026-12-14T07:30:00",session:"Sáng"},
- {subject:"Giao tiếp, GDSK trong thực hành Điều dưỡng",date:"2026-12-17T13:00:00",session:"Chiều"},
- {subject:"Chăm sóc sức khỏe người lớn bệnh Nội khoa",date:"2026-12-21T07:30:00",session:"Sáng"},
- {subject:"Chăm sóc sức khỏe người lớn bệnh Ngoại khoa",date:"2026-12-24T13:00:00",session:"Chiều"}];
+ {subject:"Pháp luật",date:"2026-12-07",session:"Sáng"},
+ {subject:"Sức khỏe - NCSK & hành vi con người - Dinh dưỡng - Tiết chế",date:"2026-12-10",session:"Chiều"},
+ {subject:"Điều dưỡng cơ sở 2",date:"2026-12-14",session:"Sáng"},
+ {subject:"Giao tiếp, GDSK trong thực hành Điều dưỡng",date:"2026-12-17",session:"Chiều"},
+ {subject:"Chăm sóc sức khỏe người lớn bệnh Nội khoa",date:"2026-12-21",session:"Sáng"},
+ {subject:"Chăm sóc sức khỏe người lớn bệnh Ngoại khoa",date:"2026-12-24",session:"Chiều"}];
 const DOW=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'];
 const svg=d=>`<svg viewBox="0 0 24 24">${d}</svg>`;
 const I_BOOK=svg('<path d="M2 5c3-1.5 6-1.5 10 1 4-2.5 7-2.5 10-1v14c-3-1.5-6-1.5-10 1-4-2.5-7-2.5-10-1ZM12 6v14"/>'),
@@ -821,9 +822,9 @@ function tickExams(){
   const t=new Date(e.date),dist=t.getTime()-now,done=dist<=0,days=Math.floor(dist/864e5),
    h=Math.floor(dist%864e5/36e5),m=Math.floor(dist%36e5/6e4),sc=Math.floor(dist%6e4/1e3);
   row.classList.toggle('done',done);row.classList.toggle('soon',!done&&days<=5);row.classList.toggle('today',t.toDateString()===today);
-  row.querySelector('.chip-left').innerHTML=done?I_OK+'Đã xong':I_FIRE+(days>0?`${days}n ${h}h`:h>0?`${h}h ${m}p`:`${m}p ${sc}s`);
+  row.querySelector('.chip-left').innerHTML=done?I_OK+'Đã xong':I_FIRE+(days>0?`${days} ngày`:'Hôm nay');
   if(!done)row.querySelector('.ex-bar i').style.width=Math.max(0,Math.min(100,100-dist/WINDOW*100))+'%';
-  row.querySelector('.ex-when').textContent=`${DOW[t.getDay()]}, ${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()} · ${pad(t.getHours())}:${pad(t.getMinutes())}`+(done?' · Đã thi xong':` · Còn ${days} ngày ${h} giờ ${m} phút ${sc} giây`)})}
+  row.querySelector('.ex-when').textContent=`${DOW[t.getDay()]}, ${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()} · Ca ${e.session}`+(done?' · Đã thi xong':` · Còn ${days} ngày`)})}
 
 const nextBox=$('nextBox');let shownNext=null;
 function bigCD(now){
@@ -833,9 +834,9 @@ function bigCD(now){
  if(shownNext!==k){shownNext=k;const C=2*Math.PI*52;
   nextBox.innerHTML=`<div class="hero-grid"><div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--g1)"/><stop offset="1" style="stop-color:var(--g2)"/></linearGradient></defs><circle class="rt" cx="60" cy="60" r="52"/><circle class="rp" id="rp" cx="60" cy="60" r="52" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rc"><b id="tD">0</b><span>ngày</span></div></div>
   <div class="hero-txt"><div class="next-label"><i></i>Môn thi tiếp theo</div><div class="next-name">${esc(e.subject)}</div><div class="next-when">${DOW[t.getDay()]}, ${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()}<br>Ca ${e.session} · ${pad(t.getHours())}:${pad(t.getMinutes())}</div></div></div>
-  <div class="hms"><div class="hm"><b id="tH">00</b><span>giờ</span></div><i>:</i><div class="hm"><b id="tM">00</b><span>phút</span></div><i>:</i><div class="hm"><b id="tS">00</b><span>giây</span></div></div>`}
+  `}
  nextBox.className='next'+(days<=5?' soon':'');
- $('tD').textContent=days;$('tH').textContent=pad(Math.floor(dist%864e5/36e5));$('tM').textContent=pad(Math.floor(dist%36e5/6e4));$('tS').textContent=pad(Math.floor(dist%6e4/1e3));
+$('tD').textContent=days;
  $('rp').style.strokeDashoffset=(2*Math.PI*52)*Math.min(1,dist/WINDOW)}
 tickExams();setInterval(tickExams,1000);
 
