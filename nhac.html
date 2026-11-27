@@ -833,7 +833,7 @@ function bigCD(now){
  const e=vis[i],t=new Date(e.date),dist=t.getTime()-now,days=Math.floor(dist/864e5),k=key(e);
  if(shownNext!==k){shownNext=k;const C=2*Math.PI*52;
   nextBox.innerHTML=`<div class="hero-grid"><div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--g1)"/><stop offset="1" style="stop-color:var(--g2)"/></linearGradient></defs><circle class="rt" cx="60" cy="60" r="52"/><circle class="rp" id="rp" cx="60" cy="60" r="52" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rc"><b id="tD">0</b><span>ngày</span></div></div>
-  <div class="hero-txt"><div class="next-label"><i></i>Môn thi tiếp theo</div><div class="next-name">${esc(e.subject)}</div><div class="next-when">${DOW[t.getDay()]}, ${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()}<br>Ca ${e.session} · ${pad(t.getHours())}:${pad(t.getMinutes())}</div></div></div>
+  <div class="hero-txt"><div class="next-label"><i></i>Môn thi tiếp theo</div><div class="next-name">${esc(e.subject)}</div><div class="next-when">${DOW[t.getDay()]}, ${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()}<br>Ca ${e.session}</div></div></div>
   `}
  nextBox.className='next'+(days<=5?' soon':'');
 $('tD').textContent=days;
