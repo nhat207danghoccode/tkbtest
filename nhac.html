@@ -375,6 +375,12 @@ button:active{transform:scale(.95)}
 .lc-it.done{opacity:.55}
 .lc-it.done .lc-chip{color:var(--mut);background:rgba(160,150,220,.14)}
 @media(max-width:380px){.lc-name{font-size:15px}.lc-chip{padding:6px 8px;font-size:12px}.lc-num{min-width:72px}.lc-num b{font-size:34px}}
+.qn{position:sticky;top:0;z-index:40;display:flex;gap:8px;overflow-x:auto;margin:0 -14px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;scrollbar-width:none;background:linear-gradient(#16115e 70%,rgba(22,17,94,0))}
+.qn::-webkit-scrollbar{display:none}
+.qn a{flex:0 0 auto;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:700;color:#ece7ff;text-decoration:none;background:rgba(150,130,255,.2);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.qn a:active,.qn a.on{background:linear-gradient(135deg,#9a8bff,#6a56f0);color:#fff;border-color:transparent}
+#player,#srCard,#exCard,#lcCard,#addCard{scroll-margin-top:62px}
+html{scroll-behavior:smooth}
 </style>
 </head>
 <body data-tab="home">
@@ -391,6 +397,7 @@ button:active{transform:scale(.95)}
  <g fill="#cfc4ff" opacity=".7"><circle cx="40" cy="108" r="3"/><circle cx="60" cy="96" r="2"/><circle cx="420" cy="104" r="3"/><circle cx="440" cy="118" r="2"/></g></svg>
 
 <div class="app">
+ <nav class="qn" id="qn" aria-label="Đi nhanh"><a href="#player">♫ Nhạc</a><a href="#exCard">Lịch thi</a><a href="#lcCard">Lâm sàng</a><a href="#addCard">Thêm môn</a></nav>
  <header id="hdr"><div class="bgimg"></div>
   
   <div class="greet"><h1 id="greetT">Chào buổi sáng!</h1>
@@ -448,7 +455,7 @@ button:active{transform:scale(.95)}
   <div class="muted" id="ytMsg"></div><div id="srList"></div></section>
   <section class="card" id="cdCard"><div class="next" id="nextBox"></div></section>
   <div class="page active" id="p-home">
-   <section class="card">
+   <section class="card" id="exCard">
     <div class="sec-head"><div class="sec-t"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg><h3>Lịch thi</h3><svg class="spark" viewBox="0 0 24 24"><path d="M12 1c1 6 5 10 11 11-6 1-10 5-11 11-1-6-5-10-11-11 6-1 10-5 11-11Z"/></svg></div>
      <button class="pill" id="allBtn">Xem tất cả <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
     <div id="examList"></div>
@@ -466,7 +473,6 @@ button:active{transform:scale(.95)}
    
    
    <section class="card"><div class="lbl">Gần đây</div><div id="ytHist"></div></section>
-   <section class="card"><div class="lbl">Hẹn giờ tắt nhạc</div><div class="chips" id="sleepChips"><button class="chp on" data-s="0">Tắt</button><button class="chp" data-s="15">15 phút</button><button class="chp" data-s="30">30 phút</button><button class="chp" data-s="45">45 phút</button><button class="chp" data-s="60">60 phút</button></div><div class="muted" id="sleepMsg"></div></section>
   </div>
 
   <div class="page" id="p-tools">
@@ -479,16 +485,11 @@ button:active{transform:scale(.95)}
    <section class="card"><div class="cal-head"><div class="lbl" style="margin:0">Lịch tháng <span id="calMonthNum"></span></div>
     <div class="cal-nav"><button class="cal-ar" id="calPrev" aria-label="Trước"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button><span class="cal-lb" id="calLabel"></span><button class="cal-ar" id="calNext" aria-label="Sau"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button></div></div>
     <div class="cal-w"><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div></div><div class="cal-g" id="calGrid"></div><div class="cal-info" id="calInfo">Ngày có viền đỏ là ngày có lịch thi.</div></section>
-   <section class="card keep"><div class="lbl">Tập trung (Pomodoro)</div>
-    <div class="chips" id="pmModes" style="justify-content:center;margin-bottom:14px"><button class="chp on" data-m="25">Học 25’</button><button class="chp" data-m="5">Nghỉ 5’</button><button class="chp" data-m="15">Nghỉ dài 15’</button></div>
-    <div class="pm-set"><button class="stp" id="pmMinus" aria-label="Giảm 5 phút">−</button><input id="pmMin" type="number" inputmode="numeric" min="1" max="180" value="25" aria-label="Số phút"><span>phút</span><button class="stp" id="pmPlus" aria-label="Tăng 5 phút">+</button></div>
-    <div class="pm-ring"><svg viewBox="0 0 120 120"><circle class="a" cx="60" cy="60" r="54"/><circle class="b" id="pmRing" cx="60" cy="60" r="54"/></svg><div class="pm-t"><b id="pmTime">25:00</b><span id="pmLbl">Sẵn sàng</span></div></div>
-    <div class="pm-btns"><button class="btn" id="pmGo">Bắt đầu</button><button class="btn ghost" id="pmReset">Đặt lại</button></div></section>
    <section class="card"><div class="lbl">Ghi chú nhanh</div><div class="nt-top"><input class="in" id="noteInput" placeholder="Nhập ghi chú rồi nhấn Enter…" autocomplete="off"><button class="btn" id="noteAdd">Thêm</button></div><div id="notesList" style="margin-top:8px"></div></section>
   </div>
 
   <div class="page" id="p-add">
-   <section class="card"><div class="lbl">Thêm môn thi mới</div>
+   <section class="card" id="addCard"><div class="lbl">Thêm môn thi mới</div>
     <input class="in" id="addSub" placeholder="Tên môn thi" autocomplete="off">
     <div class="row2"><input class="in" type="date" id="addDate"><input class="in" type="time" id="addTime" value="07:30"></div>
     <button class="btn full" id="addGo">+ Thêm vào lịch thi</button></section>
@@ -771,11 +772,7 @@ ytHist.addEventListener('click',e=>{const t=e.target.closest('.t'),x=e.target.cl
  if(x){hist.splice(+x.dataset.x,1);lsSet('nt_yt_hist',hist);renderHist()}});
 renderHist();
 setInterval(()=>{if(mode==='yt'&&ytReady){try{const v=yt.getVideoData(),h=hist.find(z=>z.id===(v&&v.video_id));if(h&&v.title&&h.title!==v.title){h.title=v.title;lsSet('nt_yt_hist',hist);renderHist()}}catch(e){}}},3000);
-let sleepT=null;
-$('sleepChips').addEventListener('click',e=>{const b=e.target.closest('.chp');if(!b)return;
- document.querySelectorAll('#sleepChips .chp').forEach(c=>c.classList.toggle('on',c===b));
- clearTimeout(sleepT);const m=+b.dataset.s;
- if(m){sleepT=setTimeout(()=>{A.pause();ui(false);$('sleepMsg').textContent='Đã tắt nhạc theo hẹn giờ.'},m*60000);$('sleepMsg').textContent=`Nhạc sẽ tự tắt sau ${m} phút.`}else $('sleepMsg').textContent=''});
+
 
 // ---------- Lịch thi ----------
 const BASE_EXAMS=[
@@ -794,14 +791,15 @@ const I_BOOK=svg('<path d="M2 5c3-1.5 6-1.5 10 1 4-2.5 7-2.5 10-1v14c-3-1.5-6-1.
  I_CHEV=svg('<path d="m9 6 6 6-6 6"/>'),I_OK=svg('<path d="M20 6 9 17l-5-5"/>'),
  I_TRASH=svg('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
  I_EMPTY=svg('<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15.5l2 2 4-4"/>');
-let custom=ls('nt_exam_custom',[]),deleted=ls('nt_exam_del',[]),exams=[],vis=[],rows=[],showAll=false,sig=null;
+let custom=ls('nt_exam_custom',[]),deleted=ls('nt_exam_del',[]),exams=[],vis=[],rows=[],showAll=true,collapsed=false,sig=null;
 const key=e=>e.date+'|'+e.subject;
 const buildExams=()=>{exams=BASE_EXAMS.concat(custom).sort((a,b)=>new Date(a.date)-new Date(b.date))};buildExams();
 const endOfDay=s=>{const d=new Date(s);d.setHours(24,0,0,0);return d.getTime()};
 const exList=$('examList'),allBtn=$('allBtn'),WINDOW=30*86400000;
 function renderExams(){
- allBtn.style.display=vis.length>4?'':'none';
- allBtn.firstChild.textContent=showAll?'Thu gọn ':'Xem tất cả ';
+ allBtn.style.display=vis.length?'':'none';
+ allBtn.firstChild.textContent=collapsed?'Xem tất cả ':'Thu gọn ';
+ exList.style.display=collapsed?'none':'';
  if(!vis.length){exList.innerHTML=`<div class="empty"><div class="empty-ic">${I_EMPTY}</div><b>Hiện tại không có lịch thi</b><span>Bạn đã thi xong hết rồi, nghỉ ngơi thôi ✨</span></div>`;rows=[];return}
  const shown=showAll?vis:vis.slice(0,4),today=new Date().toDateString();
  exList.innerHTML=shown.map((e,i)=>{const d=new Date(e.date);
@@ -815,11 +813,11 @@ function renderExams(){
 exList.addEventListener('click',e=>{const row=e.target.closest('.ex');if(!row)return;
  if(e.target.closest('.ex-del')){const ex=vis[+row.dataset.n];row.classList.add('out');setTimeout(()=>{deleted.push(key(ex));lsSet('nt_exam_del',deleted);tickExams();toast('Đã xóa môn thi')},300);return}
  row.classList.toggle('open')});
-allBtn.onclick=()=>{showAll=!showAll;sig=null;tickExams()};
+allBtn.onclick=()=>{collapsed=!collapsed;sig=null;tickExams()};
 function tickExams(){
  const now=Date.now(),today=new Date().toDateString();
  vis=exams.filter(e=>!deleted.includes(key(e))&&now<endOfDay(e.date));
- const s=vis.map(key).join('#')+showAll;if(s!==sig){sig=s;renderExams()};bigCD(now);
+ const s=vis.map(key).join('#')+showAll+collapsed;if(s!==sig){sig=s;renderExams()};bigCD(now);
  rows.forEach(row=>{const e=vis[+row.dataset.n];if(!e)return;
   const t=new Date(e.date),dist=t.getTime()-now,done=dist<=0,days=Math.floor(dist/864e5),
    h=Math.floor(dist%864e5/36e5),m=Math.floor(dist%36e5/6e4),sc=Math.floor(dist%6e4/1e3);
@@ -976,25 +974,6 @@ $('calPrev').onclick=()=>shiftM(-1);$('calNext').onclick=()=>shiftM(1);renderCal
   
   
 
-// pomodoro (tùy chỉnh được thời gian)
-const PC=2*Math.PI*54,ring=$('pmRing');ring.style.strokeDasharray=PC;
-let pmTotal=60,pmLeft=60,pmRun=false,pmT=null,pmEnd=0;
-function pmDraw(){$('pmTime').textContent=`${pad(Math.floor(pmLeft/60))}:${pad(pmLeft%60)}`;ring.style.strokeDashoffset=PC*(1-pmLeft/pmTotal);$('pmGo').textContent=pmRun?'Tạm dừng':'Bắt đầu';$('pmLbl').textContent=pmRun?'Đang tập trung':pmLeft===pmTotal?'Sẵn sàng':'Tạm dừng'}
-function pmStop(){pmRun=false;clearInterval(pmT)}
-function setMin(m){m=Math.max(1,Math.min(180,Math.round(+m)||25));pmStop();pmTotal=pmLeft=m*60;$('pmMin').value=m;lsSet('nt_pm_min',m);
- document.querySelectorAll('#pmModes .chp').forEach(c=>c.classList.toggle('on',+c.dataset.m===m));pmDraw()}
-$('pmGo').onclick=()=>{
- if(pmRun){pmLeft=Math.max(1,Math.ceil((pmEnd-Date.now())/1000));pmStop();pmDraw();return}
- pmRun=true;pmEnd=Date.now()+pmLeft*1000;
- pmT=setInterval(()=>{pmLeft=Math.ceil((pmEnd-Date.now())/1000);
-  if(pmLeft<=0){pmStop();pmLeft=pmTotal;toast('Hết giờ rồi! 🎉');try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}pmDraw()},250);pmDraw()};
-$('pmReset').onclick=()=>{pmStop();pmLeft=pmTotal;pmDraw()};
-$('pmModes').addEventListener('click',e=>{const bt=e.target.closest('.chp');if(bt)setMin(bt.dataset.m)});
-$('pmMinus').onclick=()=>setMin((+$('pmMin').value||25)-5);
-$('pmPlus').onclick=()=>setMin((+$('pmMin').value||25)+5);
-$('pmMin').addEventListener('change',()=>setMin($('pmMin').value));
-$('pmMin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('pmMin').blur()}});
-setMin(ls('nt_pm_min',25));
 
 // ghi chú
 let notes=ls('nt_notes',[]);const nl=$('notesList'),ni=$('noteInput');
@@ -1056,6 +1035,9 @@ function lcRender(){
   return `<div class="lc-it ${s.s}" style="--a:${it.c};--i:${i}"><div class="lc-n">${i+1}</div><div class="lc-m"><div class="lc-name">${esc(it.k)}${it.n?`<em>${esc(it.n)}</em>`:''}</div><div class="lc-w">Tuần ${it.w}</div><div class="lc-d">${it.r.map(lcRange).join('<br>')}</div></div><span class="lc-chip">${chip}</span></div>`}).join('')}
 $('lcTeam').addEventListener('click',e=>{const b=e.target.closest('.chp');if(!b||b.dataset.t===LCT)return;LCT=b.dataset.t;lsSet('nt_clin_team',LCT);lcRender();toast('Lịch lâm sàng Tổ '+LCT)});
 lcRender();setInterval(()=>{if(new Date().toDateString()!==lcDay)lcRender()},60000);
+
+// thanh gợi ý đầu trang
+document.querySelectorAll('#qn a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('#qn a').forEach(x=>x.classList.toggle('on',x===a))}));
 
 })();
 </script>
