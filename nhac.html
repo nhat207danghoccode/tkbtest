@@ -819,7 +819,7 @@ function tickExams(){
  vis=exams.filter(e=>!deleted.includes(key(e))&&now<endOfDay(e.date));
  const s=vis.map(key).join('#')+showAll+collapsed;if(s!==sig){sig=s;renderExams()};bigCD(now);
  rows.forEach(row=>{const e=vis[+row.dataset.n];if(!e)return;
-  const t=new Date(e.date),dist=t.getTime()-now,done=dist<=0,days=Math.floor(dist/864e5),
+  const t=new Date(e.date),tn=new Date(t.getFullYear(),t.getMonth(),t.getDate()).getTime(),nowD=new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()).getTime(),dist=tn-nowD,done=dist<0,days=Math.round(dist/864e5),
    h=Math.floor(dist%864e5/36e5),m=Math.floor(dist%36e5/6e4),sc=Math.floor(dist%6e4/1e3);
   row.classList.toggle('done',done);row.classList.toggle('soon',!done&&days<=5);row.classList.toggle('today',t.toDateString()===today);
   row.querySelector('.chip-left').innerHTML=done?I_OK+'Đã xong':I_FIRE+(days>0?`${days} ngày`:'Hôm nay');
@@ -830,7 +830,7 @@ const nextBox=$('nextBox');let shownNext=null;
 function bigCD(now){
  const i=vis.findIndex(e=>new Date(e.date).getTime()>now);
  if(i<0){shownNext=null;nextBox.className='next';nextBox.innerHTML='<div class="nonext">'+(vis.length?'Hôm nay có môn thi, cố lên nha 💪':'Hết lịch thi rồi, nghỉ ngơi thôi ✨')+'</div>';return}
- const e=vis[i],t=new Date(e.date),dist=t.getTime()-now,days=Math.floor(dist/864e5),k=key(e);
+ const e=vis[i],t=new Date(e.date),tn=new Date(t.getFullYear(),t.getMonth(),t.getDate()).getTime(),nowD=new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()).getTime(),dist=tn-nowD,days=Math.round(dist/864e5),k=key(e);
  if(shownNext!==k){shownNext=k;const C=2*Math.PI*52;
   nextBox.innerHTML=`<div class="hero-grid"><div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--g1)"/><stop offset="1" style="stop-color:var(--g2)"/></linearGradient></defs><circle class="rt" cx="60" cy="60" r="52"/><circle class="rp" id="rp" cx="60" cy="60" r="52" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="rc"><b id="tD">0</b><span>ngày</span></div></div>
   <div class="hero-txt"><div class="next-label"><i></i>Môn thi tiếp theo</div><div class="next-name">${esc(e.subject)}</div><div class="next-when">${DOW[t.getDay()]}, ${pad(t.getDate())}/${pad(t.getMonth()+1)}/${t.getFullYear()}<br>Ca ${e.session}</div></div></div>
@@ -1048,3 +1048,5 @@ document.querySelectorAll('#qn a').forEach(a=>a.addEventListener('click',functio
 </script>
 </body>
 </html>
+
+
