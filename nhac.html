@@ -375,12 +375,11 @@ button:active{transform:scale(.95)}
 .lc-it.done{opacity:.55}
 .lc-it.done .lc-chip{color:var(--mut);background:rgba(160,150,220,.14)}
 @media(max-width:380px){.lc-name{font-size:15px}.lc-chip{padding:6px 8px;font-size:12px}.lc-num{min-width:72px}.lc-num b{font-size:34px}}
-.qn{position:sticky;top:0;z-index:40;display:flex;gap:8px;overflow-x:auto;margin:0 -14px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;scrollbar-width:none;background:linear-gradient(#16115e 70%,rgba(22,17,94,0))}
+.qn{position:-webkit-sticky;position:sticky;top:0;z-index:40;display:flex;gap:8px;overflow-x:auto;margin:0 -14px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;scrollbar-width:none;background:linear-gradient(#16115e 70%,rgba(22,17,94,0))}
 .qn::-webkit-scrollbar{display:none}
-.qn a{flex:0 0 auto;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:700;color:#ece7ff;text-decoration:none;background:rgba(150,130,255,.2);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.qn a{flex:0 0 auto;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:700;color:#ece7ff;text-decoration:none;background:#3a2fa8;border:1px solid var(--line);cursor:pointer;-webkit-touch-callout:none}
 .qn a:active,.qn a.on{background:linear-gradient(135deg,#9a8bff,#6a56f0);color:#fff;border-color:transparent}
 #player,#srCard,#exCard,#lcCard,#addCard{scroll-margin-top:62px}
-html{scroll-behavior:smooth}
 </style>
 </head>
 <body data-tab="home">
@@ -1036,8 +1035,13 @@ function lcRender(){
 $('lcTeam').addEventListener('click',e=>{const b=e.target.closest('.chp');if(!b||b.dataset.t===LCT)return;LCT=b.dataset.t;lsSet('nt_clin_team',LCT);lcRender();toast('Lịch lâm sàng Tổ '+LCT)});
 lcRender();setInterval(()=>{if(new Date().toDateString()!==lcDay)lcRender()},60000);
 
-// thanh gợi ý đầu trang
-document.querySelectorAll('#qn a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('#qn a').forEach(x=>x.classList.toggle('on',x===a))}));
+// thanh gợi ý đầu trang (cuộn thủ công, chạy được trên Safari/iOS cũ)
+function qnScroll(y){const y0=window.pageYOffset||document.documentElement.scrollTop||0,d=y-y0,t0=Date.now(),D=350;
+ (function f(){const p=Math.min((Date.now()-t0)/D,1),e=1-Math.pow(1-p,3);window.scrollTo(0,y0+d*e);if(p<1)setTimeout(f,16)})()}
+document.querySelectorAll('#qn a').forEach(a=>a.addEventListener('click',function(e){
+ e.preventDefault();const t=document.getElementById(a.getAttribute('href').slice(1));if(!t)return;
+ const nb=$('qn').offsetHeight||56,y=t.getBoundingClientRect().top+(window.pageYOffset||document.documentElement.scrollTop||0)-nb-6;
+ qnScroll(Math.max(0,y));document.querySelectorAll('#qn a').forEach(x=>x.classList.toggle('on',x===a))}));
 
 })();
 </script>
