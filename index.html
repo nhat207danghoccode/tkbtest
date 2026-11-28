@@ -1737,13 +1737,47 @@ $('wpClose').addEventListener('click',e=>{e.preventDefault();e.stopPropagation()
 $('wpPanel').addEventListener('click',e=>e.stopPropagation());
 closeWP();
 
-async function getSnapshot(weekStart){
+// ===== 2 cơ chế lấy dữ liệu: (1) Worker trực tiếp  (2) bản lưu ./data/week-*.json =====
+const LIVE_API='https://tkb.nhatnguyenphi2k7.workers.dev';
+const LIVE_TIMEOUT=9000;
+function termOf(ds){const[y,m]=ds.split('-').map(Number);const a=m>=8;return{year:`${a?y:y-1} - ${a?y+1:y}`,sem:a?'1':'2'}}
+async function liveJSON(path){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),LIVE_TIMEOUT);
+  try{
+    const r=await fetch(LIVE_API+path,{headers:{Accept:'application/json'},cache:'no-store',signal:c.signal});
+    if(r.status===404)return null;
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return await r.json();
+  }finally{clearTimeout(t)}
+}
+async function getLive(weekStart){
+  const {year,sem}=termOf(weekStart);
+  const q=o=>new URLSearchParams(o).toString();
+  let data=await liveJSON('/api/attendance/general-schedules/week?'+q({date:weekStart,schoolYear:year,semester:sem}));
+  if(data===null){
+    const jobs=[];
+    for(let i=0;i<7;i++){
+      const p={date:addDays(weekStart,i),schoolYear:year,semester:sem};
+      if(i===0)p.includePlannedSubjects='true';
+      jobs.push(liveJSON('/api/attendance/general-schedules?'+q(p)).then(x=>x?findRows(x):[]));
+    }
+    data=(await Promise.all(jobs)).flat();
+  }
+  if(!normalizeRows(findRows(data)).length)throw new Error('Live không có dữ liệu');
+  return {ok:true,data,source:'live'};
+}
+async function getFile(weekStart){
   const url=`./data/week-${weekStart}.json?v=${Date.now()}`;
   let r; try{r=await fetch(url,{cache:'no-store'})}catch{throw new Error('Mất kết nối mạng.')}
   if(!r.ok)throw Object.assign(new Error('Chưa có dữ liệu tuần này.'),{status:r.status});
   const s=await r.json();
   if(!s||s.ok!==true)throw new Error(s?.error||'Lỗi dữ liệu.');
+  s.source='snapshot';
   return s;
+}
+async function getSnapshot(weekStart){
+  try{return await getLive(weekStart)}catch(e){/* live lỗi -> dùng bản lưu */}
+  return getFile(weekStart);
 }
 function findRows(data){if(Array.isArray(data)){if(data.some(x=>x&&typeof x==='object'&&('subjectName'in x||'className'in x||'startPeriod'in x)))return data;for(const x of data){const r=findRows(x);if(r.length)return r}return []}if(data&&typeof data==='object'){for(const k of['items','data','results','schedules','generalSchedules','records','value'])if(k in data){const r=findRows(data[k]);if(r.length)return r}for(const v of Object.values(data)){if(v&&typeof v==='object'){const r=findRows(v);if(r.length)return r}}}return []}
 function sessionName(r){const s=clean(r.sessionName).toLowerCase();if(s.includes('sang'))return 'Sáng';if(s.includes('chieu'))return 'Chiều';if(s.includes('toi'))return 'Tối';const n=Number(r.session);return n===0?'Sáng':n===1?'Chiều':n===2?'Tối':clean(r.sessionName)||'Chưa rõ'}
@@ -1878,7 +1912,7 @@ async function load(){
     const snap=await getSnapshot(mon);
     rows=normalizeRows(findRows(snap.data));
     render();
-    setStatus('Đã cập nhật','ok');
+    setStatus(snap.source==='live'?'Đã cập nhật · trực tiếp':'Đã cập nhật · bản lưu','ok');
     const n=new Date();
     $('updateTime').textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
   }catch(e){
