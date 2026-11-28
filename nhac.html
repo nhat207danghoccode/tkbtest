@@ -985,18 +985,20 @@ nl.addEventListener('click',e=>{const b=e.target.closest('.del');if(!b)return;no
 renderNotes();renderCustom();
 
 // ---------- Lịch lâm sàng (Tổ 1D / Tổ 2D) ----------
-const LC_SAN='#ff8fa8',LC_PHU='#d9a0ff',LC_UB='#ffb84f',LC_PT='#4fd1ff',LC_BV='#35e8b8',LC_PH='#8fa6ff';
+const LC_SAN='#ff8fa8',LC_PHU='#d9a0ff',LC_UB='#ffb84f',LC_PT='#4fd1ff',LC_BV='#35e8b8',LC_PH='#8fa6ff',LC_NHI='#b6f04f';
 const LC={
  '1D':[
   {w:'20–21',k:'Sản (CSPN)',c:LC_SAN,r:[['2026-12-21','2027-01-03']]},
   {w:'22–23',k:'Phụ (CSPN)',c:LC_PHU,r:[['2027-01-04','2027-01-17']]},
   {w:'24–25, 28–29',k:'Ung bướu',n:'TH',c:LC_UB,r:[['2027-01-18','2027-01-31'],['2027-02-15','2027-02-28']]},
+  {w:'30–33',k:'Nhi',c:LC_NHI,r:[['2027-03-01','2027-03-28']]},
   {w:'34–35',k:'Bệnh viện SKTT',c:LC_BV,r:[['2027-03-29','2027-04-11']]},
   {w:'36–37',k:'PHCN',c:LC_PH,r:[['2027-04-12','2027-04-25']]}],
  '2D':[
   {w:'20–21',k:'Phụ (CSPN)',c:LC_PHU,r:[['2026-12-21','2027-01-03']]},
   {w:'22–23',k:'Sản (CSPN)',c:LC_SAN,r:[['2027-01-04','2027-01-17']]},
   {w:'24–25, 28–29',k:'PTTK',n:'TH',c:LC_PT,r:[['2027-01-18','2027-01-31'],['2027-02-15','2027-02-28']]},
+  {w:'30–33',k:'Nhi',c:LC_NHI,r:[['2027-03-01','2027-03-28']]},
   {w:'34–35',k:'PHCN',c:LC_PH,r:[['2027-03-29','2027-04-11']]},
   {w:'36–37',k:'Bệnh viện SKTT',c:LC_BV,r:[['2027-04-12','2027-04-25']]}]
 };
