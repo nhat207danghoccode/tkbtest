@@ -1764,6 +1764,7 @@ async function getLive(weekStart){
     data=(await Promise.all(jobs)).flat();
   }
   if(!normalizeRows(findRows(data)).length)throw new Error('Live không có dữ liệu');
+  saveLive(weekStart,findRows(data));
   return {ok:true,data,source:'live'};
 }
 async function getFile(weekStart){
@@ -1775,9 +1776,26 @@ async function getFile(weekStart){
   s.source='snapshot';
   return s;
 }
+const LIVE_KEY='tkb_live_';
+function saveLive(ws,rows){
+  try{
+    localStorage.setItem(LIVE_KEY+ws,JSON.stringify({rows,t:Date.now()}));
+    const ks=Object.keys(localStorage).filter(k=>k.startsWith(LIVE_KEY)).sort();
+    ks.slice(0,Math.max(0,ks.length-8)).forEach(k=>localStorage.removeItem(k));
+  }catch(e){}
+}
+function loadLive(ws){
+  try{const o=JSON.parse(localStorage.getItem(LIVE_KEY+ws)||'null');
+    if(o&&Array.isArray(o.rows)&&o.rows.length)return {ok:true,data:o.rows,source:'cache'};
+  }catch(e){}
+  return null;
+}
 async function getSnapshot(weekStart){
   try{return await getLive(weekStart)}catch(e){/* live lỗi -> dùng bản lưu */}
-  return getFile(weekStart);
+  try{return await getFile(weekStart)}catch(e){
+    const c=loadLive(weekStart);if(c)return c;
+    throw e;
+  }
 }
 function findRows(data){if(Array.isArray(data)){if(data.some(x=>x&&typeof x==='object'&&('subjectName'in x||'className'in x||'startPeriod'in x)))return data;for(const x of data){const r=findRows(x);if(r.length)return r}return []}if(data&&typeof data==='object'){for(const k of['items','data','results','schedules','generalSchedules','records','value'])if(k in data){const r=findRows(data[k]);if(r.length)return r}for(const v of Object.values(data)){if(v&&typeof v==='object'){const r=findRows(v);if(r.length)return r}}}return []}
 function sessionName(r){const s=clean(r.sessionName).toLowerCase();if(s.includes('sang'))return 'Sáng';if(s.includes('chieu'))return 'Chiều';if(s.includes('toi'))return 'Tối';const n=Number(r.session);return n===0?'Sáng':n===1?'Chiều':n===2?'Tối':clean(r.sessionName)||'Chưa rõ'}
@@ -1912,7 +1930,7 @@ async function load(){
     const snap=await getSnapshot(mon);
     rows=normalizeRows(findRows(snap.data));
     render();
-    setStatus(snap.source==='live'?'Đã cập nhật · trực tiếp':'Đã cập nhật · bản lưu','ok');
+    setStatus(snap.source==='live'?'Đã cập nhật · trực tiếp':snap.source==='cache'?'Offline · lịch đã lưu':'Đã cập nhật · bản lưu','ok');
     const n=new Date();
     $('updateTime').textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
   }catch(e){
